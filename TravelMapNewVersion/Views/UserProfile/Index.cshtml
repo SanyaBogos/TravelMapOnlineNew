@@ -1,0 +1,110 @@
+﻿    @model Guid
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section scripts{
+	<script src="~/Scripts/angular.js"></script>
+	<script src="~/Scripts/Views/UserProfile/index.js"></script>
+}
+
+<h2>Your Profile</h2>
+This is your ID. Learn it by heart!! @Html.DisplayFor(m => Model)
+<br/>
+<div ng-app="app" ng-controller="UPCtrl" ng-init="init('@Model')">
+	
+	Surname:
+	<div ng-hide="editSurname" ng-model="model.Surname">
+		{{model.Surname}}
+		<a ng-click="editSurname = !editSurname">Edit</a>
+	</div>
+	<div ng-show="editSurname">
+		<input ng-model="model.Surname" type="text" />
+		<a ng-click="editSurname = !editSurname">Save</a>
+	</div>
+
+	Phone:
+	<div ng-hide="editPhone" ng-model="model.Phone">
+		{{model.Phone}}
+		<a ng-click="editPhone = !editPhone">Edit</a>
+	</div>
+	<div ng-show="editPhone">
+		<input ng-model="model.Phone" type="text"/>
+		<a ng-click="editPhone = !editPhone">Save</a>
+	</div>
+
+	Email:
+	<div ng-hide="editEmail" ng-model="model.Email">
+		{{model.Email}}
+		<a ng-click="editEmail = !editEmail">Edit</a>
+	</div>
+	<div ng-show="editEmail">
+		<input ng-model="model.Email" type="text" />
+		<a ng-click="saveEmail()">Save</a>
+	</div>
+
+	@* ***** Use for testing ***** *@
+	@*<p class="content">
+		<b>The Value of "myData" is:</b><span>{{editPhone}} : {{profile.name}} : {{model}} : {{model.Phone}}</span>
+		<span>{{userId}}</span>
+	</p>*@
+</div>
+
+
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Surname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Photo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Follower.UserId)
+        </th>
+        <th></th>
+    </tr>
+
+    <tr>
+        <td>
+            @Html.DisplayFor(model => Model.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(model => Model.Surname)
+        </td>
+        <td>
+            @Html.DisplayFor(model => Model.BirthDate)
+        </td>
+
+        <td>
+            
+	@Html.DisplayFor(model => Model.Photo)
+            @if (Model.Photo != null)
+            {
+                @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(Model.Photo) + "\" width=\"189\" height=\"255\" />")
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(model => Model.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(model => Model.Follower.UserId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
+            @Html.ActionLink("Details", "Details", new { id = Model.UserId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = Model.UserId })
+        </td>
+    </tr>
+
+</table>*@

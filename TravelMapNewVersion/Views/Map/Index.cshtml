@@ -1,0 +1,46 @@
+﻿@*<script src="~/Scripts/Map/mapDecorator.js"></script>*@
+@section scripts{
+    <script src="~/Scripts/Map/anmap/ammap.js"></script>
+    <script src="~/Scripts/Map/anmap/continentsLow.js"></script>
+    <script src="~/Scripts/Map/anmap/worldLow.js"></script>
+    <script src="~/Scripts/Map/mapDecorator.js"></script>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="~/Scripts/Map/popUp.js"></script>
+
+    <script type="text/javascript">
+        var userMap=[];
+        //var newUserCountry='';
+        var userCountries = @Html.Raw(Json.Encode(Model));
+        for(var i = 0;i<userCountries.length;i++)
+        {       
+            userMap.push({id: userCountries[i], showAsSelected: true});            
+        }
+        AmMyMaps(userMap);
+        //$(".b-popup").show();
+    </script>
+}
+
+@section styles{
+    <link href="~/Content/ammap.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/popUp.css" rel="stylesheet" />
+}
+
+<div ng-app="app" ng-controller="PopUpController">
+    <div id="mapdiv"></div>
+    <!--<div ng-show="currentCountry != null">-->
+        <div class="b-popup" ng-show="currentCountry">
+            <div class="b-popup-content">
+                Country: {{currentCountry}}
+                <br />
+                Message:
+                <input type="textarea" value="{{message}}" />
+
+                <input type="button" value="Ok" />
+                <input type="button"  value="Cancel" ng-click="clickCancel()" />
+            </div>
+        </div>
+    @*</div>*@
+
+</div>

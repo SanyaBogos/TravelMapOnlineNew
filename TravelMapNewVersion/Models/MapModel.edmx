@@ -1,0 +1,732 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Title" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="FileId" />
+          </Key>
+          <Property Name="FileId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FileTypeId" Type="uniqueidentifier" />
+          <Property Name="URL" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="FileType">
+          <Key>
+            <PropertyRef Name="FileTypeId" />
+          </Key>
+          <Property Name="FileTypeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Follower">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FollowerId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Post">
+          <Key>
+            <PropertyRef Name="PostId" />
+          </Key>
+          <Property Name="PostId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Text" Type="varchar(max)" />
+          <Property Name="TypeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ParentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PostFile">
+          <Key>
+            <PropertyRef Name="PostFileId" />
+          </Key>
+          <Property Name="PostFileId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PostId" Type="uniqueidentifier" />
+          <Property Name="FileId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="PostType">
+          <Key>
+            <PropertyRef Name="PostTypeId" />
+          </Key>
+          <Property Name="PostTypeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Travel">
+          <Key>
+            <PropertyRef Name="PostId" />
+          </Key>
+          <Property Name="PostId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CountryId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="UserMap">
+          <Key>
+            <PropertyRef Name="UserMapId" />
+          </Key>
+          <Property Name="UserMapId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" />
+          <Property Name="CountryId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar(max)" />
+          <Property Name="Surname" Type="nvarchar(max)" />
+          <Property Name="BirthDate" Type="datetime" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar(max)" />
+          <Property Name="Photo" Type="varbinary(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="File_fk1">
+          <End Role="FileType" Type="Self.FileType" Multiplicity="0..1" />
+          <End Role="File" Type="Self.File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileType">
+              <PropertyRef Name="FileTypeId" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="FileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Post_Post">
+          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+          <End Role="Post1" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Post1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Follower_fk1">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Follower" Type="Self.Follower" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Follower">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Follower_fk2">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="Follower" Type="Self.Follower" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Follower">
+              <PropertyRef Name="FollowerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Post_fk1">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Post_fk2">
+          <End Role="PostType" Type="Self.PostType" Multiplicity="1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostType">
+              <PropertyRef Name="PostTypeId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PostFile_fk1">
+          <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PostFile_fk2">
+          <End Role="File" Type="Self.File" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="FileId" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Travel_fk1">
+          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+          <End Role="Travel" Type="Self.Travel" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Travel_fk2">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserMap_fk1">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="UserMap" Type="Self.UserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMap">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserMap_fk2">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="UserMap" Type="Self.UserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="UserMap">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Follower" EntityType="Self.Follower" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PostType" EntityType="Self.PostType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Travel" EntityType="Self.Travel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMap" EntityType="Self.UserMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="File_fk1" Association="Self.File_fk1">
+            <End Role="FileType" EntitySet="FileType" />
+            <End Role="File" EntitySet="File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Post_Post" Association="Self.FK_Post_Post">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="Post1" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk1" Association="Self.Follower_fk1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Follower" EntitySet="Follower" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk2" Association="Self.Follower_fk2">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Follower" EntitySet="Follower" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk1" Association="Self.Post_fk1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk2" Association="Self.Post_fk2">
+            <End Role="PostType" EntitySet="PostType" />
+            <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk1" Association="Self.PostFile_fk1">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="PostFile" EntitySet="PostFile" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk2" Association="Self.PostFile_fk2">
+            <End Role="File" EntitySet="File" />
+            <End Role="PostFile" EntitySet="PostFile" />
+          </AssociationSet>
+          <AssociationSet Name="Travel_fk1" Association="Self.Travel_fk1">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="Travel" EntitySet="Travel" />
+          </AssociationSet>
+          <AssociationSet Name="Travel_fk2" Association="Self.Travel_fk2">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Travel" EntitySet="Travel" />
+          </AssociationSet>
+          <AssociationSet Name="UserMap_fk1" Association="Self.UserMap_fk1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserMap" EntitySet="UserMap" />
+          </AssociationSet>
+          <AssociationSet Name="UserMap_fk2" Association="Self.UserMap_fk2">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="UserMap" EntitySet="UserMap" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Countries" EntityType="Model.Country" />
+          <EntitySet Name="Files" EntityType="Model.File" />
+          <EntitySet Name="FileTypes" EntityType="Model.FileType" />
+          <EntitySet Name="Followers" EntityType="Model.Follower" />
+          <EntitySet Name="Posts" EntityType="Model.Post" />
+          <EntitySet Name="PostFiles" EntityType="Model.PostFile" />
+          <EntitySet Name="PostTypes" EntityType="Model.PostType" />
+          <EntitySet Name="Travels" EntityType="Model.Travel" />
+          <EntitySet Name="UserMaps" EntityType="Model.UserMap" />
+          <EntitySet Name="UserProfiles" EntityType="Model.UserProfile" />
+          <AssociationSet Name="Travel_fk2" Association="Model.Travel_fk2">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Travel" EntitySet="Travels" />
+          </AssociationSet>
+          <AssociationSet Name="UserMap_fk2" Association="Model.UserMap_fk2">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="UserMap" EntitySet="UserMaps" />
+          </AssociationSet>
+          <AssociationSet Name="File_fk1" Association="Model.File_fk1">
+            <End Role="FileType" EntitySet="FileTypes" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk2" Association="Model.PostFile_fk2">
+            <End Role="File" EntitySet="Files" />
+            <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk1" Association="Model.Follower_fk1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Follower" EntitySet="Followers" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk2" Association="Model.Follower_fk2">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Follower" EntitySet="Followers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Post_Post" Association="Model.FK_Post_Post">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Post1" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk1" Association="Model.Post_fk1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk2" Association="Model.Post_fk2">
+            <End Role="PostType" EntitySet="PostTypes" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk1" Association="Model.PostFile_fk1">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <AssociationSet Name="Travel_fk1" Association="Model.Travel_fk1">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Travel" EntitySet="Travels" />
+          </AssociationSet>
+          <AssociationSet Name="UserMap_fk1" Association="Model.UserMap_fk1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserMap" EntitySet="UserMaps" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Travels" Relationship="Model.Travel_fk2" FromRole="Country" ToRole="Travel" />
+          <NavigationProperty Name="UserMaps" Relationship="Model.UserMap_fk2" FromRole="Country" ToRole="UserMap" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="FileId" />
+          </Key>
+          <Property Name="FileId" Type="Guid" Nullable="false" />
+          <Property Name="FileTypeId" Type="Guid" />
+          <Property Name="URL" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="FileType" Relationship="Model.File_fk1" FromRole="File" ToRole="FileType" />
+          <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk2" FromRole="File" ToRole="PostFile" />
+        </EntityType>
+        <EntityType Name="FileType">
+          <Key>
+            <PropertyRef Name="FileTypeId" />
+          </Key>
+          <Property Name="FileTypeId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Files" Relationship="Model.File_fk1" FromRole="FileType" ToRole="File" />
+        </EntityType>
+        <EntityType Name="Follower">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="FollowerId" Type="Guid" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.Follower_fk1" FromRole="Follower" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="Model.Follower_fk2" FromRole="Follower" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Post">
+          <Key>
+            <PropertyRef Name="PostId" />
+          </Key>
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="TypeId" Type="Guid" Nullable="false" />
+          <Property Name="ParentId" Type="Guid" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Post1" Relationship="Model.FK_Post_Post" FromRole="Post" ToRole="Post1" />
+          <NavigationProperty Name="Post2" Relationship="Model.FK_Post_Post" FromRole="Post1" ToRole="Post" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.Post_fk1" FromRole="Post" ToRole="UserProfile" />
+          <NavigationProperty Name="PostType" Relationship="Model.Post_fk2" FromRole="Post" ToRole="PostType" />
+          <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk1" FromRole="Post" ToRole="PostFile" />
+          <NavigationProperty Name="Travel" Relationship="Model.Travel_fk1" FromRole="Post" ToRole="Travel" />
+        </EntityType>
+        <EntityType Name="PostFile">
+          <Key>
+            <PropertyRef Name="PostFileId" />
+          </Key>
+          <Property Name="PostFileId" Type="Guid" Nullable="false" />
+          <Property Name="PostId" Type="Guid" />
+          <Property Name="FileId" Type="Guid" />
+          <NavigationProperty Name="File" Relationship="Model.PostFile_fk2" FromRole="PostFile" ToRole="File" />
+          <NavigationProperty Name="Post" Relationship="Model.PostFile_fk1" FromRole="PostFile" ToRole="Post" />
+        </EntityType>
+        <EntityType Name="PostType">
+          <Key>
+            <PropertyRef Name="PostTypeId" />
+          </Key>
+          <Property Name="PostTypeId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Posts" Relationship="Model.Post_fk2" FromRole="PostType" ToRole="Post" />
+        </EntityType>
+        <EntityType Name="Travel">
+          <Key>
+            <PropertyRef Name="PostId" />
+          </Key>
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <Property Name="CountryId" Type="Guid" />
+          <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
+          <NavigationProperty Name="Post" Relationship="Model.Travel_fk1" FromRole="Travel" ToRole="Post" />
+        </EntityType>
+        <EntityType Name="UserMap">
+          <Key>
+            <PropertyRef Name="UserMapId" />
+          </Key>
+          <Property Name="UserMapId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" />
+          <Property Name="CountryId" Type="Guid" />
+          <NavigationProperty Name="Country" Relationship="Model.UserMap_fk2" FromRole="UserMap" ToRole="Country" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.UserMap_fk1" FromRole="UserMap" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Surname" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Phone" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Follower" Relationship="Model.Follower_fk1" FromRole="UserProfile" ToRole="Follower" />
+          <NavigationProperty Name="Followers" Relationship="Model.Follower_fk2" FromRole="UserProfile" ToRole="Follower" />
+          <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
+          <NavigationProperty Name="UserMaps" Relationship="Model.UserMap_fk1" FromRole="UserProfile" ToRole="UserMap" />
+        </EntityType>
+        <Association Name="Travel_fk2">
+          <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
+          <End Role="Travel" Type="Model.Travel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserMap_fk2">
+          <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
+          <End Role="UserMap" Type="Model.UserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="UserMap">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="File_fk1">
+          <End Role="FileType" Type="Model.FileType" Multiplicity="0..1" />
+          <End Role="File" Type="Model.File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileType">
+              <PropertyRef Name="FileTypeId" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="FileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PostFile_fk2">
+          <End Role="File" Type="Model.File" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Model.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="FileId" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Follower_fk1">
+          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
+          <End Role="Follower" Type="Model.Follower" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Follower">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Follower_fk2">
+          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="0..1" />
+          <End Role="Follower" Type="Model.Follower" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Follower">
+              <PropertyRef Name="FollowerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Post_Post">
+          <End Role="Post" Type="Model.Post" Multiplicity="1" />
+          <End Role="Post1" Type="Model.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Post1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Post_fk1">
+          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
+          <End Role="Post" Type="Model.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Post_fk2">
+          <End Role="PostType" Type="Model.PostType" Multiplicity="1" />
+          <End Role="Post" Type="Model.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostType">
+              <PropertyRef Name="PostTypeId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PostFile_fk1">
+          <End Role="Post" Type="Model.Post" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Model.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Travel_fk1">
+          <End Role="Post" Type="Model.Post" Multiplicity="1" />
+          <End Role="Travel" Type="Model.Travel" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserMap_fk1">
+          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="0..1" />
+          <End Role="UserMap" Type="Model.UserMap" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMap">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="Model.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Files">
+            <EntityTypeMapping TypeName="Model.File">
+              <MappingFragment StoreEntitySet="File">
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileTypes">
+            <EntityTypeMapping TypeName="Model.FileType">
+              <MappingFragment StoreEntitySet="FileType">
+                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Followers">
+            <EntityTypeMapping TypeName="Model.Follower">
+              <MappingFragment StoreEntitySet="Follower">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Posts">
+            <EntityTypeMapping TypeName="Model.Post">
+              <MappingFragment StoreEntitySet="Post">
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostFiles">
+            <EntityTypeMapping TypeName="Model.PostFile">
+              <MappingFragment StoreEntitySet="PostFile">
+                <ScalarProperty Name="PostFileId" ColumnName="PostFileId" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostTypes">
+            <EntityTypeMapping TypeName="Model.PostType">
+              <MappingFragment StoreEntitySet="PostType">
+                <ScalarProperty Name="PostTypeId" ColumnName="PostTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Travels">
+            <EntityTypeMapping TypeName="Model.Travel">
+              <MappingFragment StoreEntitySet="Travel">
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMaps">
+            <EntityTypeMapping TypeName="Model.UserMap">
+              <MappingFragment StoreEntitySet="UserMap">
+                <ScalarProperty Name="UserMapId" ColumnName="UserMapId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="Model.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
