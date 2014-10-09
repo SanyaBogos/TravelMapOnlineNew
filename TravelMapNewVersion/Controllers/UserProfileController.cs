@@ -129,6 +129,11 @@ namespace TravelMap.Controllers
             return RedirectToAction("Index");
         }
 
+	    public void TestMethod()
+	    {
+	        
+	    }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
