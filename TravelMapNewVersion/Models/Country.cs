@@ -11,6 +11,8 @@
 
 namespace TravelMap.Models
 {
+
+using System;
     using System.Collections.Generic;
     
 public partial class Country
@@ -27,8 +29,11 @@ public partial class Country
 
 
     public System.Guid CountryId { get; set; }
+
     public string Name { get; set; }
+
     public string Title { get; set; }
+
 
 
     public virtual ICollection<Travel> Travels { get; set; }

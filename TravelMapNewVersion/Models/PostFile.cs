@@ -13,8 +13,9 @@ namespace TravelMap.Models
 {
 
 using System;
-
-    public partial class PostFile
+    using System.Collections.Generic;
+    
+public partial class PostFile
 {
 
     public System.Guid PostFileId { get; set; }

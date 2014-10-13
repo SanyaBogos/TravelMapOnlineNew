@@ -13,8 +13,9 @@ namespace TravelMap.Models
 {
 
 using System;
-
-    public partial class UserMap
+    using System.Collections.Generic;
+    
+public partial class UserMap
 {
 
     public System.Guid UserMapId { get; set; }

@@ -13,13 +13,18 @@ namespace TravelMap.Models
 {
 
 using System;
-
-    public partial class Travel
+    using System.Collections.Generic;
+    
+public partial class Travel
 {
 
     public System.Guid PostId { get; set; }
 
     public Nullable<System.Guid> CountryId { get; set; }
+
+    public Nullable<System.DateTime> StartDate { get; set; }
+
+    public Nullable<System.DateTime> EndDate { get; set; }
 
 
 
