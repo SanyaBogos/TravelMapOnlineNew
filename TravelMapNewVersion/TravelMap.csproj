@@ -212,18 +212,6 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Annotations\UserProfile.cs" />
-    <Compile Include="Models\Country.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\File.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FileType.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Follower.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\MapModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -238,21 +226,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MapModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Post.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PostFile.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PostType.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Travel.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\UserProfile.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

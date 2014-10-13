@@ -63,13 +63,14 @@
         </EntityType>
         <EntityType Name="Travel">
           <Key>
-            <PropertyRef Name="PostId" />
+            <PropertyRef Name="TravelId" />
           </Key>
-          <Property Name="PostId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PostId" Type="uniqueidentifier" />
           <Property Name="CountryId" Type="uniqueidentifier" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TravelId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -192,8 +193,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Travel_fk1">
-          <End Role="Post" Type="Self.Post" Multiplicity="1" />
-          <End Role="Travel" Type="Self.Travel" Multiplicity="0..1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
+          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
               <PropertyRef Name="PostId" />
@@ -403,8 +404,9 @@
         <EntityType Name="Travel">
           <Key>
             <PropertyRef Name="PostId" />
+            <PropertyRef Name="TravelId" />
           </Key>
-          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <Property Name="PostId" Type="Guid" />
           <Property Name="CountryId" Type="Guid" />
           <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
           <NavigationProperty Name="Post" Relationship="Model.Travel_fk1" FromRole="Travel" ToRole="Post" />
@@ -412,6 +414,7 @@
           <Property Name="EndDate" Type="DateTime" Precision="3" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
           <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
+          <Property Name="TravelId" Type="Guid" Nullable="false" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -633,6 +636,7 @@
           <EntitySetMapping Name="Travels">
             <EntityTypeMapping TypeName="Model.Travel">
               <MappingFragment StoreEntitySet="Travel">
+                <ScalarProperty Name="TravelId" ColumnName="TravelId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
