@@ -26,11 +26,15 @@ public partial class Travel
 
     public Nullable<System.DateTime> EndDate { get; set; }
 
+    public System.Guid UserId { get; set; }
+
 
 
     public virtual Country Country { get; set; }
 
     public virtual Post Post { get; set; }
+
+    public virtual UserProfile UserProfile { get; set; }
 
 }
 

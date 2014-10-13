@@ -25,7 +25,7 @@ public partial class UserProfile
 
         this.Posts = new HashSet<Post>();
 
-        this.UserMaps = new HashSet<UserMap>();
+        this.Travels = new HashSet<Travel>();
 
     }
 
@@ -52,7 +52,7 @@ public partial class UserProfile
 
     public virtual ICollection<Post> Posts { get; set; }
 
-    public virtual ICollection<UserMap> UserMaps { get; set; }
+    public virtual ICollection<Travel> Travels { get; set; }
 
 }
 

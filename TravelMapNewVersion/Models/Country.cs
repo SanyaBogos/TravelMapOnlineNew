@@ -23,8 +23,6 @@ public partial class Country
 
         this.Travels = new HashSet<Travel>();
 
-        this.UserMaps = new HashSet<UserMap>();
-
     }
 
 
@@ -37,8 +35,6 @@ public partial class Country
 
 
     public virtual ICollection<Travel> Travels { get; set; }
-
-    public virtual ICollection<UserMap> UserMaps { get; set; }
 
 }
 

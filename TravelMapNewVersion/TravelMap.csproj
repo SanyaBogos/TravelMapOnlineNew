@@ -251,9 +251,6 @@
     <Compile Include="Models\Travel.cs">
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\UserMap.cs">
-      <DependentUpon>MapModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\UserProfile.cs">
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>

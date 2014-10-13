@@ -48,8 +48,6 @@ public partial class Entities : DbContext
 
     public DbSet<Travel> Travels { get; set; }
 
-    public DbSet<UserMap> UserMaps { get; set; }
-
     public DbSet<UserProfile> UserProfiles { get; set; }
 
 }

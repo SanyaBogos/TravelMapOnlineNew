@@ -69,14 +69,7 @@
           <Property Name="CountryId" Type="uniqueidentifier" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
-        </EntityType>
-        <EntityType Name="UserMap">
-          <Key>
-            <PropertyRef Name="UserMapId" />
-          </Key>
-          <Property Name="UserMapId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="UserId" Type="uniqueidentifier" />
-          <Property Name="CountryId" Type="uniqueidentifier" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -111,6 +104,18 @@
             </Principal>
             <Dependent Role="Post1">
               <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Travel_ToTable">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -210,30 +215,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="UserMap_fk1">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
-          <End Role="UserMap" Type="Self.UserMap" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserProfile">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="UserMap">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="UserMap_fk2">
-          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
-          <End Role="UserMap" Type="Self.UserMap" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="CountryId" />
-            </Principal>
-            <Dependent Role="UserMap">
-              <PropertyRef Name="CountryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
@@ -243,7 +224,6 @@
           <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostType" EntityType="Self.PostType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Travel" EntityType="Self.Travel" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserMap" EntityType="Self.UserMap" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="File_fk1" Association="Self.File_fk1">
             <End Role="FileType" EntitySet="FileType" />
@@ -252,6 +232,10 @@
           <AssociationSet Name="FK_Post_Post" Association="Self.FK_Post_Post">
             <End Role="Post" EntitySet="Post" />
             <End Role="Post1" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Travel_ToTable" Association="Self.FK_Travel_ToTable">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Travel" EntitySet="Travel" />
           </AssociationSet>
           <AssociationSet Name="Follower_fk1" Association="Self.Follower_fk1">
             <End Role="UserProfile" EntitySet="UserProfile" />
@@ -285,14 +269,6 @@
             <End Role="Country" EntitySet="Country" />
             <End Role="Travel" EntitySet="Travel" />
           </AssociationSet>
-          <AssociationSet Name="UserMap_fk1" Association="Self.UserMap_fk1">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="UserMap" EntitySet="UserMap" />
-          </AssociationSet>
-          <AssociationSet Name="UserMap_fk2" Association="Self.UserMap_fk2">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="UserMap" EntitySet="UserMap" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -307,15 +283,10 @@
           <EntitySet Name="PostFiles" EntityType="Model.PostFile" />
           <EntitySet Name="PostTypes" EntityType="Model.PostType" />
           <EntitySet Name="Travels" EntityType="Model.Travel" />
-          <EntitySet Name="UserMaps" EntityType="Model.UserMap" />
           <EntitySet Name="UserProfiles" EntityType="Model.UserProfile" />
           <AssociationSet Name="Travel_fk2" Association="Model.Travel_fk2">
             <End Role="Country" EntitySet="Countries" />
             <End Role="Travel" EntitySet="Travels" />
-          </AssociationSet>
-          <AssociationSet Name="UserMap_fk2" Association="Model.UserMap_fk2">
-            <End Role="Country" EntitySet="Countries" />
-            <End Role="UserMap" EntitySet="UserMaps" />
           </AssociationSet>
           <AssociationSet Name="File_fk1" Association="Model.File_fk1">
             <End Role="FileType" EntitySet="FileTypes" />
@@ -353,9 +324,9 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="Travel" EntitySet="Travels" />
           </AssociationSet>
-          <AssociationSet Name="UserMap_fk1" Association="Model.UserMap_fk1">
+          <AssociationSet Name="FK_Travel_ToTable" Association="Model.FK_Travel_ToTable">
             <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="UserMap" EntitySet="UserMaps" />
+            <End Role="Travel" EntitySet="Travels" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Country">
@@ -365,7 +336,6 @@
           <Property Name="CountryId" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Travels" Relationship="Model.Travel_fk2" FromRole="Country" ToRole="Travel" />
-          <NavigationProperty Name="UserMaps" Relationship="Model.UserMap_fk2" FromRole="Country" ToRole="UserMap" />
           <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="File">
@@ -440,16 +410,8 @@
           <NavigationProperty Name="Post" Relationship="Model.Travel_fk1" FromRole="Travel" ToRole="Post" />
           <Property Name="StartDate" Type="DateTime" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Precision="3" />
-        </EntityType>
-        <EntityType Name="UserMap">
-          <Key>
-            <PropertyRef Name="UserMapId" />
-          </Key>
-          <Property Name="UserMapId" Type="Guid" Nullable="false" />
-          <Property Name="UserId" Type="Guid" />
-          <Property Name="CountryId" Type="Guid" />
-          <NavigationProperty Name="Country" Relationship="Model.UserMap_fk2" FromRole="UserMap" ToRole="Country" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.UserMap_fk1" FromRole="UserMap" ToRole="UserProfile" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -465,7 +427,7 @@
           <NavigationProperty Name="Follower" Relationship="Model.Follower_fk1" FromRole="UserProfile" ToRole="Follower" />
           <NavigationProperty Name="Followers" Relationship="Model.Follower_fk2" FromRole="UserProfile" ToRole="Follower" />
           <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
-          <NavigationProperty Name="UserMaps" Relationship="Model.UserMap_fk1" FromRole="UserProfile" ToRole="UserMap" />
+          <NavigationProperty Name="Travels" Relationship="Model.FK_Travel_ToTable" FromRole="UserProfile" ToRole="Travel" />
         </EntityType>
         <Association Name="Travel_fk2">
           <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
@@ -475,18 +437,6 @@
               <PropertyRef Name="CountryId" />
             </Principal>
             <Dependent Role="Travel">
-              <PropertyRef Name="CountryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="UserMap_fk2">
-          <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
-          <End Role="UserMap" Type="Model.UserMap" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="CountryId" />
-            </Principal>
-            <Dependent Role="UserMap">
               <PropertyRef Name="CountryId" />
             </Dependent>
           </ReferentialConstraint>
@@ -599,14 +549,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="UserMap_fk1">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="0..1" />
-          <End Role="UserMap" Type="Model.UserMap" Multiplicity="*" />
+        <Association Name="FK_Travel_ToTable">
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.Travel" Role="Travel" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="UserMap">
+            <Dependent Role="Travel">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -683,18 +633,10 @@
           <EntitySetMapping Name="Travels">
             <EntityTypeMapping TypeName="Model.Travel">
               <MappingFragment StoreEntitySet="Travel">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserMaps">
-            <EntityTypeMapping TypeName="Model.UserMap">
-              <MappingFragment StoreEntitySet="UserMap">
-                <ScalarProperty Name="UserMapId" ColumnName="UserMapId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CountryId" ColumnName="CountryId" />
               </MappingFragment>
             </EntityTypeMapping>
