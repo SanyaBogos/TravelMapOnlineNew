@@ -18,4 +18,4 @@ namespace TravelMap
             //config.EnableQuerySupport();
         }
     }
-}
+}   

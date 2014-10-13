@@ -45,6 +45,7 @@
           <Property Name="TypeId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ParentId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="TravelId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="PostFile">
           <Key>
@@ -61,11 +62,50 @@
           <Property Name="PostTypeId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="security_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="LastPasswordFailureDate" Type="datetime" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordChangedDate" Type="datetime" />
+          <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="security_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="ProviderUserId" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="security_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="security_UsersInRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Travel">
           <Key>
             <PropertyRef Name="TravelId" />
           </Key>
-          <Property Name="PostId" Type="uniqueidentifier" />
           <Property Name="CountryId" Type="uniqueidentifier" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
@@ -108,6 +148,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Post_ToTable">
+          <End Role="Travel" Type="Self.Travel" Multiplicity="0..1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Travel">
+              <PropertyRef Name="TravelId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="TravelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleId">
+          <End Role="security_Roles" Type="Self.security_Roles" Multiplicity="1" />
+          <End Role="security_UsersInRoles" Type="Self.security_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="security_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="security_UsersInRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Travel_ToTable">
           <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
           <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
@@ -116,6 +180,18 @@
               <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="Travel">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_UserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="security_UsersInRoles" Type="Self.security_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="security_UsersInRoles">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -192,18 +268,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Travel_fk1">
-          <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
-          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="PostId" />
-            </Principal>
-            <Dependent Role="Travel">
-              <PropertyRef Name="PostId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="Travel_fk2">
           <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
           <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
@@ -224,6 +288,10 @@
           <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostType" EntityType="Self.PostType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="security_Membership" EntityType="Self.security_Membership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="security_OAuthMembership" EntityType="Self.security_OAuthMembership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="security_Roles" EntityType="Self.security_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="security_UsersInRoles" EntityType="Self.security_UsersInRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Travel" EntityType="Self.Travel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="File_fk1" Association="Self.File_fk1">
@@ -234,9 +302,21 @@
             <End Role="Post" EntitySet="Post" />
             <End Role="Post1" EntitySet="Post" />
           </AssociationSet>
+          <AssociationSet Name="FK_Post_ToTable" Association="Self.FK_Post_ToTable">
+            <End Role="Travel" EntitySet="Travel" />
+            <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleId" Association="Self.fk_RoleId">
+            <End Role="security_Roles" EntitySet="security_Roles" />
+            <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
+          </AssociationSet>
           <AssociationSet Name="FK_Travel_ToTable" Association="Self.FK_Travel_ToTable">
             <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="Travel" EntitySet="Travel" />
+          </AssociationSet>
+          <AssociationSet Name="fk_UserId" Association="Self.fk_UserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
           </AssociationSet>
           <AssociationSet Name="Follower_fk1" Association="Self.Follower_fk1">
             <End Role="UserProfile" EntitySet="UserProfile" />
@@ -262,10 +342,6 @@
             <End Role="File" EntitySet="File" />
             <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
-          <AssociationSet Name="Travel_fk1" Association="Self.Travel_fk1">
-            <End Role="Post" EntitySet="Post" />
-            <End Role="Travel" EntitySet="Travel" />
-          </AssociationSet>
           <AssociationSet Name="Travel_fk2" Association="Self.Travel_fk2">
             <End Role="Country" EntitySet="Country" />
             <End Role="Travel" EntitySet="Travel" />
@@ -283,6 +359,9 @@
           <EntitySet Name="Posts" EntityType="Model.Post" />
           <EntitySet Name="PostFiles" EntityType="Model.PostFile" />
           <EntitySet Name="PostTypes" EntityType="Model.PostType" />
+          <EntitySet Name="security_Membership" EntityType="Model.security_Membership" />
+          <EntitySet Name="security_OAuthMembership" EntityType="Model.security_OAuthMembership" />
+          <EntitySet Name="security_Roles" EntityType="Model.security_Roles" />
           <EntitySet Name="Travels" EntityType="Model.Travel" />
           <EntitySet Name="UserProfiles" EntityType="Model.UserProfile" />
           <AssociationSet Name="Travel_fk2" Association="Model.Travel_fk2">
@@ -309,6 +388,10 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="Post1" EntitySet="Posts" />
           </AssociationSet>
+          <AssociationSet Name="FK_Post_ToTable" Association="Model.FK_Post_ToTable">
+            <End Role="Travel" EntitySet="Travels" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
           <AssociationSet Name="Post_fk1" Association="Model.Post_fk1">
             <End Role="UserProfile" EntitySet="UserProfiles" />
             <End Role="Post" EntitySet="Posts" />
@@ -321,13 +404,13 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="PostFile" EntitySet="PostFiles" />
           </AssociationSet>
-          <AssociationSet Name="Travel_fk1" Association="Model.Travel_fk1">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Travel" EntitySet="Travels" />
-          </AssociationSet>
           <AssociationSet Name="FK_Travel_ToTable" Association="Model.FK_Travel_ToTable">
             <End Role="UserProfile" EntitySet="UserProfiles" />
             <End Role="Travel" EntitySet="Travels" />
+          </AssociationSet>
+          <AssociationSet Name="security_UsersInRoles" Association="Model.security_UsersInRoles">
+            <End Role="security_Roles" EntitySet="security_Roles" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Country">
@@ -335,9 +418,9 @@
             <PropertyRef Name="CountryId" />
           </Key>
           <Property Name="CountryId" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="Travels" Relationship="Model.Travel_fk2" FromRole="Country" ToRole="Travel" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Travels" Relationship="Model.Travel_fk2" FromRole="Country" ToRole="Travel" />
         </EntityType>
         <EntityType Name="File">
           <Key>
@@ -345,7 +428,7 @@
           </Key>
           <Property Name="FileId" Type="Guid" Nullable="false" />
           <Property Name="FileTypeId" Type="Guid" />
-          <Property Name="URL" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
+          <Property Name="URL" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="FileType" Relationship="Model.File_fk1" FromRole="File" ToRole="FileType" />
           <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk2" FromRole="File" ToRole="PostFile" />
         </EntityType>
@@ -354,7 +437,7 @@
             <PropertyRef Name="FileTypeId" />
           </Key>
           <Property Name="FileTypeId" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Files" Relationship="Model.File_fk1" FromRole="FileType" ToRole="File" />
         </EntityType>
         <EntityType Name="Follower">
@@ -372,16 +455,17 @@
           </Key>
           <Property Name="PostId" Type="Guid" Nullable="false" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="TypeId" Type="Guid" Nullable="false" />
           <Property Name="ParentId" Type="Guid" Nullable="false" />
           <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TravelId" Type="Guid" />
           <NavigationProperty Name="Post1" Relationship="Model.FK_Post_Post" FromRole="Post" ToRole="Post1" />
           <NavigationProperty Name="Post2" Relationship="Model.FK_Post_Post" FromRole="Post1" ToRole="Post" />
+          <NavigationProperty Name="Travel" Relationship="Model.FK_Post_ToTable" FromRole="Post" ToRole="Travel" />
           <NavigationProperty Name="UserProfile" Relationship="Model.Post_fk1" FromRole="Post" ToRole="UserProfile" />
           <NavigationProperty Name="PostType" Relationship="Model.Post_fk2" FromRole="Post" ToRole="PostType" />
           <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk1" FromRole="Post" ToRole="PostFile" />
-          <NavigationProperty Name="Travel" Relationship="Model.Travel_fk1" FromRole="Post" ToRole="Travel" />
         </EntityType>
         <EntityType Name="PostFile">
           <Key>
@@ -398,43 +482,75 @@
             <PropertyRef Name="PostTypeId" />
           </Key>
           <Property Name="PostTypeId" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Posts" Relationship="Model.Post_fk2" FromRole="PostType" ToRole="Post" />
+        </EntityType>
+        <EntityType Name="security_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ConfirmationToken" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="LastPasswordFailureDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordChangedDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordVerificationToken" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="security_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderUserId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="security_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Guid" Nullable="false" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfiles" Relationship="Model.security_UsersInRoles" FromRole="security_Roles" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="Travel">
           <Key>
-            <PropertyRef Name="PostId" />
             <PropertyRef Name="TravelId" />
           </Key>
-          <Property Name="PostId" Type="Guid" />
           <Property Name="CountryId" Type="Guid" />
-          <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
-          <NavigationProperty Name="Post" Relationship="Model.Travel_fk1" FromRole="Travel" ToRole="Post" />
           <Property Name="StartDate" Type="DateTime" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Precision="3" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
           <Property Name="TravelId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
+          <NavigationProperty Name="Posts" Relationship="Model.FK_Post_ToTable" FromRole="Travel" ToRole="Post" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="UserName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Surname" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Phone" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="Email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Follower" Relationship="Model.Follower_fk1" FromRole="UserProfile" ToRole="Follower" />
           <NavigationProperty Name="Followers" Relationship="Model.Follower_fk2" FromRole="UserProfile" ToRole="Follower" />
           <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
           <NavigationProperty Name="Travels" Relationship="Model.FK_Travel_ToTable" FromRole="UserProfile" ToRole="Travel" />
+          <NavigationProperty Name="security_Roles" Relationship="Model.security_UsersInRoles" FromRole="UserProfile" ToRole="security_Roles" />
         </EntityType>
         <Association Name="Travel_fk2">
-          <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
-          <End Role="Travel" Type="Model.Travel" Multiplicity="*" />
+          <End Type="Model.Country" Role="Country" Multiplicity="0..1" />
+          <End Type="Model.Travel" Role="Travel" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Country">
               <PropertyRef Name="CountryId" />
@@ -445,8 +561,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="File_fk1">
-          <End Role="FileType" Type="Model.FileType" Multiplicity="0..1" />
-          <End Role="File" Type="Model.File" Multiplicity="*" />
+          <End Type="Model.FileType" Role="FileType" Multiplicity="0..1" />
+          <End Type="Model.File" Role="File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileType">
               <PropertyRef Name="FileTypeId" />
@@ -457,8 +573,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="PostFile_fk2">
-          <End Role="File" Type="Model.File" Multiplicity="0..1" />
-          <End Role="PostFile" Type="Model.PostFile" Multiplicity="*" />
+          <End Type="Model.File" Role="File" Multiplicity="0..1" />
+          <End Type="Model.PostFile" Role="PostFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="File">
               <PropertyRef Name="FileId" />
@@ -469,8 +585,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Follower_fk1">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
-          <End Role="Follower" Type="Model.Follower" Multiplicity="0..1" />
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.Follower" Role="Follower" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -481,8 +597,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Follower_fk2">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="0..1" />
-          <End Role="Follower" Type="Model.Follower" Multiplicity="*" />
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="Model.Follower" Role="Follower" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -493,8 +609,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Post_Post">
-          <End Role="Post" Type="Model.Post" Multiplicity="1" />
-          <End Role="Post1" Type="Model.Post" Multiplicity="*" />
+          <End Type="Model.Post" Role="Post" Multiplicity="1" />
+          <End Type="Model.Post" Role="Post1" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
               <PropertyRef Name="PostId" />
@@ -504,9 +620,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Post_ToTable">
+          <End Type="Model.Travel" Role="Travel" Multiplicity="0..1" />
+          <End Type="Model.Post" Role="Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Travel">
+              <PropertyRef Name="TravelId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="TravelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Post_fk1">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
-          <End Role="Post" Type="Model.Post" Multiplicity="*" />
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.Post" Role="Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -517,8 +645,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Post_fk2">
-          <End Role="PostType" Type="Model.PostType" Multiplicity="1" />
-          <End Role="Post" Type="Model.Post" Multiplicity="*" />
+          <End Type="Model.PostType" Role="PostType" Multiplicity="1" />
+          <End Type="Model.Post" Role="Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PostType">
               <PropertyRef Name="PostTypeId" />
@@ -529,25 +657,13 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="PostFile_fk1">
-          <End Role="Post" Type="Model.Post" Multiplicity="0..1" />
-          <End Role="PostFile" Type="Model.PostFile" Multiplicity="*" />
+          <End Type="Model.Post" Role="Post" Multiplicity="0..1" />
+          <End Type="Model.PostFile" Role="PostFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
               <PropertyRef Name="PostId" />
             </Principal>
             <Dependent Role="PostFile">
-              <PropertyRef Name="PostId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Travel_fk1">
-          <End Role="Post" Type="Model.Post" Multiplicity="1" />
-          <End Role="Travel" Type="Model.Travel" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="PostId" />
-            </Principal>
-            <Dependent Role="Travel">
               <PropertyRef Name="PostId" />
             </Dependent>
           </ReferentialConstraint>
@@ -564,7 +680,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="security_UsersInRoles">
+          <End Type="Model.security_Roles" Role="security_Roles" Multiplicity="*" />
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -574,62 +694,97 @@
             <EntityTypeMapping TypeName="Model.Country">
               <MappingFragment StoreEntitySet="Country">
                 <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Files">
             <EntityTypeMapping TypeName="Model.File">
               <MappingFragment StoreEntitySet="File">
-                <ScalarProperty Name="FileId" ColumnName="FileId" />
-                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FileTypes">
             <EntityTypeMapping TypeName="Model.FileType">
               <MappingFragment StoreEntitySet="FileType">
-                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FileTypeId" ColumnName="FileTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Followers">
             <EntityTypeMapping TypeName="Model.Follower">
               <MappingFragment StoreEntitySet="Follower">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Posts">
             <EntityTypeMapping TypeName="Model.Post">
               <MappingFragment StoreEntitySet="Post">
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="TravelId" ColumnName="TravelId" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PostFiles">
             <EntityTypeMapping TypeName="Model.PostFile">
               <MappingFragment StoreEntitySet="PostFile">
-                <ScalarProperty Name="PostFileId" ColumnName="PostFileId" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
                 <ScalarProperty Name="FileId" ColumnName="FileId" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="PostFileId" ColumnName="PostFileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PostTypes">
             <EntityTypeMapping TypeName="Model.PostType">
               <MappingFragment StoreEntitySet="PostType">
-                <ScalarProperty Name="PostTypeId" ColumnName="PostTypeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PostTypeId" ColumnName="PostTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="security_Membership">
+            <EntityTypeMapping TypeName="Model.security_Membership">
+              <MappingFragment StoreEntitySet="security_Membership">
+                <ScalarProperty Name="PasswordVerificationTokenExpirationDate" ColumnName="PasswordVerificationTokenExpirationDate" />
+                <ScalarProperty Name="PasswordVerificationToken" ColumnName="PasswordVerificationToken" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordChangedDate" ColumnName="PasswordChangedDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordFailuresSinceLastSuccess" ColumnName="PasswordFailuresSinceLastSuccess" />
+                <ScalarProperty Name="LastPasswordFailureDate" ColumnName="LastPasswordFailureDate" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="ConfirmationToken" ColumnName="ConfirmationToken" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="security_OAuthMembership">
+            <EntityTypeMapping TypeName="Model.security_OAuthMembership">
+              <MappingFragment StoreEntitySet="security_OAuthMembership">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderUserId" ColumnName="ProviderUserId" />
+                <ScalarProperty Name="Provider" ColumnName="Provider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="security_Roles">
+            <EntityTypeMapping TypeName="Model.security_Roles">
+              <MappingFragment StoreEntitySet="security_Roles">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -640,7 +795,6 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
                 <ScalarProperty Name="CountryId" ColumnName="CountryId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -648,16 +802,24 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="Model.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Photo" ColumnName="Photo" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="security_UsersInRoles" TypeName="Model.security_UsersInRoles" StoreEntitySet="security_UsersInRoles">
+            <EndProperty Name="UserProfile">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="security_Roles">
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

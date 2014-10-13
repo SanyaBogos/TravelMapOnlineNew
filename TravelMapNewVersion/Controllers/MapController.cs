@@ -20,7 +20,7 @@ namespace TravelMap.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var userMap = db.UserMaps.Where(n => n.UserId == userId);
+            var userMap = db.Travels.Where(n => n.UserId == userId);
             if (userMap == null)
             {
                 return HttpNotFound();
