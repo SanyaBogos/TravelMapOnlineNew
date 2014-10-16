@@ -206,7 +206,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MapController.cs" />
-    <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -224,6 +225,7 @@
     <Compile Include="Models\Follower.cs">
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\JsonErrorResponse.cs" />
     <Compile Include="Models\MapModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -741,11 +743,11 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Map\Index.cshtml" />
-    <Content Include="Views\UserProfile\Create.cshtml" />
-    <Content Include="Views\UserProfile\Delete.cshtml" />
-    <Content Include="Views\UserProfile\Details.cshtml" />
-    <Content Include="Views\UserProfile\Edit.cshtml" />
-    <Content Include="Views\UserProfile\Index.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
     <Content Include="Scripts\version.json" />
   </ItemGroup>
   <ItemGroup>

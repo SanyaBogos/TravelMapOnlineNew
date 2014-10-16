@@ -9,7 +9,7 @@ using nonintanon.Security;
 namespace TravelMap.Controllers
 {
     [Authorize]
-    public class UserProfileController : Controller
+    public class UserController : Controller
     {
         private Entities db = new Entities();
 
@@ -224,14 +224,6 @@ namespace TravelMap.Controllers
             base.Dispose(disposing);
         }
 
-        private class JsonErrorResponse
-        {
-            public string error { get; set; }
-
-            public JsonErrorResponse(string msg)
-            {
-                error = msg;
-            }
-        }
+        
     }
 }
