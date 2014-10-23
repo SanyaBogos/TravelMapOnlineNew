@@ -10,7 +10,7 @@
 		$scope.editPhone = false;
 
 		$scope.$evalAsync(function() {
-			$http.get("/UserProfile/JIndex/" + $scope.userId)
+			$http.get("/User/JIndex/" + $scope.userId)
 				.success(function(data, status) {
 					$scope.model = data;
 					// ...
@@ -24,7 +24,7 @@
 
 			// todo: check if Email is not empty
 
-			$http.post("/UserProfile/SaveEmail", { id: $scope.userId, newEmail: $scope.model.Email })
+			$http.post("/User/SaveEmail", { id: $scope.userId, newEmail: $scope.model.Email })
 				.success(function(data1, status, headers, config1) {
 					// todo: display somehow that it's realy saved
 					$scope.editEmail = false;

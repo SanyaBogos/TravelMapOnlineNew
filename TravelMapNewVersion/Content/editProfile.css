@@ -1,0 +1,29 @@
+﻿
+.editedInput
+{
+    border-color: rgba(229, 103, 23, 0.8) !important;
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.07) inset, 0 0 8px rgba(229, 103, 23, 0.6) !important;
+}
+
+.editIcon {
+	width: 13px;
+	padding-right: 5px;
+}
+
+.profileProp {
+	display: inline-block;
+	min-width: 80px;
+	text-align: right;
+
+	margin-bottom: 5px;
+	margin-top: 2px;
+}
+
+.profileValue {
+	display: inline-block;
+	min-width: 200px;
+}
+
+.saveButton {
+	margin-top: 6px;
+}

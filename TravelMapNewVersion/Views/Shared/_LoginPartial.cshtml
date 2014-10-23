@@ -2,7 +2,7 @@
 {
     <text>
         @*Hello, @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })*@
-        Hello, @Html.ActionLink(User.Identity.Name, "Index", "UserProfile")
+        Hello, @Html.ActionLink(User.Identity.Name, "Index", "User")
         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
         {
             @Html.AntiForgeryToken()
