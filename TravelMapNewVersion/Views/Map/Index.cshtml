@@ -35,9 +35,9 @@
                 Country: {{currentCountry}}
                 <br />
                 Message:
-                <input type="textarea" value="{{message}}" />
+                <input type="textarea" ng-model="message" />
 
-                <input type="button" value="Ok" />
+                <input type="button" value="Ok" ng-click="clickOK()" />
                 <input type="button"  value="Cancel" ng-click="clickCancel()" />
             </div>
         </div>
