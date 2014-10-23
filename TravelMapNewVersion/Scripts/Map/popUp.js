@@ -17,6 +17,8 @@
         };
 
         $scope.clickOK = function () {
+            
+            console.log($scope.message);
 
         }
     });
