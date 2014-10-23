@@ -5,9 +5,10 @@
     overflow:hidden;
     position:fixed;
     top:0px;
+    right:0px;
 }
 .b-popup .b-popup-content{
-    margin:50px auto 50px 350px;
+    margin:50px auto;
     width:300px;
     height: 300px;
     padding: 50px;
