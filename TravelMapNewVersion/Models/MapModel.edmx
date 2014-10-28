@@ -4,7 +4,74 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Country" EntityType="Model.Store.Country" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="File" EntityType="Model.Store.File" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="FileType" EntityType="Model.Store.FileType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Follower" EntityType="Model.Store.Follower" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Post" EntityType="Model.Store.Post" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PostFile" EntityType="Model.Store.PostFile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PostType" EntityType="Model.Store.PostType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="security_Membership" EntityType="Model.Store.security_Membership" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="security_OAuthMembership" EntityType="Model.Store.security_OAuthMembership" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="security_Roles" EntityType="Model.Store.security_Roles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="security_UsersInRoles" EntityType="Model.Store.security_UsersInRoles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Travel" EntityType="Model.Store.Travel" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserProfile" EntityType="Model.Store.UserProfile" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="File_fk1" Association="Model.Store.File_fk1">
+            <End Role="FileType" EntitySet="FileType" />
+            <End Role="File" EntitySet="File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Post_Post" Association="Model.Store.FK_Post_Post">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="Post1" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Post_ToTable" Association="Model.Store.FK_Post_ToTable">
+            <End Role="Travel" EntitySet="Travel" />
+            <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleId" Association="Model.Store.fk_RoleId">
+            <End Role="security_Roles" EntitySet="security_Roles" />
+            <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Travel_ToTable" Association="Model.Store.FK_Travel_ToTable">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Travel" EntitySet="Travel" />
+          </AssociationSet>
+          <AssociationSet Name="fk_UserId" Association="Model.Store.fk_UserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk1" Association="Model.Store.Follower_fk1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Follower" EntitySet="Follower" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk2" Association="Model.Store.Follower_fk2">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Follower" EntitySet="Follower" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk1" Association="Model.Store.Post_fk1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk2" Association="Model.Store.Post_fk2">
+            <End Role="PostType" EntitySet="PostType" />
+            <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk1" Association="Model.Store.PostFile_fk1">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="PostFile" EntitySet="PostFile" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk2" Association="Model.Store.PostFile_fk2">
+            <End Role="File" EntitySet="File" />
+            <End Role="PostFile" EntitySet="PostFile" />
+          </AssociationSet>
+          <AssociationSet Name="Travel_fk2" Association="Model.Store.Travel_fk2">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Travel" EntitySet="Travel" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Country">
           <Key>
             <PropertyRef Name="CountryId" />
@@ -72,9 +139,9 @@
           <Property Name="IsConfirmed" Type="bit" />
           <Property Name="LastPasswordFailureDate" Type="datetime" />
           <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="PasswordChangedDate" Type="datetime" />
-          <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordSalt" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
           <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
         </EntityType>
@@ -83,8 +150,8 @@
             <PropertyRef Name="Provider" />
             <PropertyRef Name="ProviderUserId" />
           </Key>
-          <Property Name="Provider" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="ProviderUserId" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Provider" Type="nvarchar" Nullable="false" MaxLength="30" />
+          <Property Name="ProviderUserId" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="security_Roles">
@@ -92,7 +159,7 @@
             <PropertyRef Name="RoleId" />
           </Key>
           <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="256" />
         </EntityType>
         <EntityType Name="security_UsersInRoles">
           <Key>
@@ -125,8 +192,8 @@
           <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <Association Name="File_fk1">
-          <End Role="FileType" Type="Self.FileType" Multiplicity="0..1" />
-          <End Role="File" Type="Self.File" Multiplicity="*" />
+          <End Role="FileType" Type="Model.Store.FileType" Multiplicity="0..1" />
+          <End Role="File" Type="Model.Store.File" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="FileType">
               <PropertyRef Name="FileTypeId" />
@@ -137,8 +204,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Post_Post">
-          <End Role="Post" Type="Self.Post" Multiplicity="1" />
-          <End Role="Post1" Type="Self.Post" Multiplicity="*" />
+          <End Role="Post" Type="Model.Store.Post" Multiplicity="1" />
+          <End Role="Post1" Type="Model.Store.Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
               <PropertyRef Name="PostId" />
@@ -149,8 +216,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Post_ToTable">
-          <End Role="Travel" Type="Self.Travel" Multiplicity="0..1" />
-          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <End Role="Travel" Type="Model.Store.Travel" Multiplicity="0..1" />
+          <End Role="Post" Type="Model.Store.Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Travel">
               <PropertyRef Name="TravelId" />
@@ -161,8 +228,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_RoleId">
-          <End Role="security_Roles" Type="Self.security_Roles" Multiplicity="1" />
-          <End Role="security_UsersInRoles" Type="Self.security_UsersInRoles" Multiplicity="*" />
+          <End Role="security_Roles" Type="Model.Store.security_Roles" Multiplicity="1" />
+          <End Role="security_UsersInRoles" Type="Model.Store.security_UsersInRoles" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="security_Roles">
               <PropertyRef Name="RoleId" />
@@ -173,8 +240,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Travel_ToTable">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
+          <End Role="UserProfile" Type="Model.Store.UserProfile" Multiplicity="1" />
+          <End Role="Travel" Type="Model.Store.Travel" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -185,8 +252,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_UserId">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="security_UsersInRoles" Type="Self.security_UsersInRoles" Multiplicity="*" />
+          <End Role="UserProfile" Type="Model.Store.UserProfile" Multiplicity="1" />
+          <End Role="security_UsersInRoles" Type="Model.Store.security_UsersInRoles" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -197,8 +264,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Follower_fk1">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="Follower" Type="Self.Follower" Multiplicity="0..1" />
+          <End Role="UserProfile" Type="Model.Store.UserProfile" Multiplicity="1" />
+          <End Role="Follower" Type="Model.Store.Follower" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -209,8 +276,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Follower_fk2">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
-          <End Role="Follower" Type="Self.Follower" Multiplicity="*" />
+          <End Role="UserProfile" Type="Model.Store.UserProfile" Multiplicity="0..1" />
+          <End Role="Follower" Type="Model.Store.Follower" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -221,8 +288,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Post_fk1">
-          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <End Role="UserProfile" Type="Model.Store.UserProfile" Multiplicity="1" />
+          <End Role="Post" Type="Model.Store.Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -233,8 +300,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Post_fk2">
-          <End Role="PostType" Type="Self.PostType" Multiplicity="1" />
-          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <End Role="PostType" Type="Model.Store.PostType" Multiplicity="1" />
+          <End Role="Post" Type="Model.Store.Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PostType">
               <PropertyRef Name="PostTypeId" />
@@ -245,8 +312,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="PostFile_fk1">
-          <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
-          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <End Role="Post" Type="Model.Store.Post" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Model.Store.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
               <PropertyRef Name="PostId" />
@@ -257,8 +324,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="PostFile_fk2">
-          <End Role="File" Type="Self.File" Multiplicity="0..1" />
-          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <End Role="File" Type="Model.Store.File" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Model.Store.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="File">
               <PropertyRef Name="FileId" />
@@ -269,8 +336,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Travel_fk2">
-          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
-          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
+          <End Role="Country" Type="Model.Store.Country" Multiplicity="0..1" />
+          <End Role="Travel" Type="Model.Store.Travel" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Country">
               <PropertyRef Name="CountryId" />
@@ -280,73 +347,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ModelStoreContainer">
-          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Follower" EntityType="Self.Follower" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PostType" EntityType="Self.PostType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="security_Membership" EntityType="Self.security_Membership" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="security_OAuthMembership" EntityType="Self.security_OAuthMembership" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="security_Roles" EntityType="Self.security_Roles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="security_UsersInRoles" EntityType="Self.security_UsersInRoles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Travel" EntityType="Self.Travel" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="File_fk1" Association="Self.File_fk1">
-            <End Role="FileType" EntitySet="FileType" />
-            <End Role="File" EntitySet="File" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Post_Post" Association="Self.FK_Post_Post">
-            <End Role="Post" EntitySet="Post" />
-            <End Role="Post1" EntitySet="Post" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Post_ToTable" Association="Self.FK_Post_ToTable">
-            <End Role="Travel" EntitySet="Travel" />
-            <End Role="Post" EntitySet="Post" />
-          </AssociationSet>
-          <AssociationSet Name="fk_RoleId" Association="Self.fk_RoleId">
-            <End Role="security_Roles" EntitySet="security_Roles" />
-            <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Travel_ToTable" Association="Self.FK_Travel_ToTable">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="Travel" EntitySet="Travel" />
-          </AssociationSet>
-          <AssociationSet Name="fk_UserId" Association="Self.fk_UserId">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
-          </AssociationSet>
-          <AssociationSet Name="Follower_fk1" Association="Self.Follower_fk1">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="Follower" EntitySet="Follower" />
-          </AssociationSet>
-          <AssociationSet Name="Follower_fk2" Association="Self.Follower_fk2">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="Follower" EntitySet="Follower" />
-          </AssociationSet>
-          <AssociationSet Name="Post_fk1" Association="Self.Post_fk1">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="Post" EntitySet="Post" />
-          </AssociationSet>
-          <AssociationSet Name="Post_fk2" Association="Self.Post_fk2">
-            <End Role="PostType" EntitySet="PostType" />
-            <End Role="Post" EntitySet="Post" />
-          </AssociationSet>
-          <AssociationSet Name="PostFile_fk1" Association="Self.PostFile_fk1">
-            <End Role="Post" EntitySet="Post" />
-            <End Role="PostFile" EntitySet="PostFile" />
-          </AssociationSet>
-          <AssociationSet Name="PostFile_fk2" Association="Self.PostFile_fk2">
-            <End Role="File" EntitySet="File" />
-            <End Role="PostFile" EntitySet="PostFile" />
-          </AssociationSet>
-          <AssociationSet Name="Travel_fk2" Association="Self.Travel_fk2">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="Travel" EntitySet="Travel" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
