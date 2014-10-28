@@ -1,115 +1,115 @@
 ﻿@model Guid
 @{
-	ViewBag.Title = "Index";
+    ViewBag.Title = "Index";
 }
 @section scripts{
-	<script src="~/Scripts/angular.js"></script>
-	<script src="~/Scripts/Views/app.js"></script>
-	<script src="~/Scripts/Views/UserProfile/editProfile.js"></script>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/Views/app.js"></script>
+    <script src="~/Scripts/Views/UserProfile/editProfile.js"></script>
 }
 @section styles
 {
-	@Styles.Render("~/Content/bootstrap.css")
-	@Styles.Render("~/Content/editProfile.css")
+    @Styles.Render("~/Content/bootstrap.css")
+    @Styles.Render("~/Content/editProfile.css")
 }
 <h2>Your Profile</h2>
-This is your ID. Learn it by heart!! @Html.DisplayFor(m => Model)
+This is your ID. @Html.DisplayFor(m => Model)
 <br />
 <div ng-app="app" ng-controller="EditProfileCtrl" ng-init="init('@Model')">
-	<br />
-	<span class="profileProp">Surname :</span>
-	<div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">
-		{{model.Surname}}
-		<a ng-show="overSurname" ng-click="editSurname = !editSurname" class="btn btn-mini btn-info">
-			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
-		</a>
-	</div>
-	<div ng-show="editSurname" class="profileValue">
-		<input ng-model="model.Surname" ng-change="surnameChanged = true" ng-blur="checkSurnameEdit()"
-			   type="text" ng-class="{ 'editedInput' : surnameChanged }" />
-		<a ng-click="cancelSurnameEdit()" class="btn btn-mini btn-info">Cancel</a>
-	</div>
+    <br />
+    <span class="profileProp">Surname :</span>
+    <div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">
+        {{model.Surname}}
+        <a ng-show="overSurname" ng-click="editSurname = !editSurname" class="btn btn-mini btn-info">
+            <img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
+        </a>
+    </div>
+    <div ng-show="editSurname" class="profileValue">
+        <input ng-model="model.Surname" ng-change="surnameChanged = true" ng-blur="checkSurnameEdit()"
+               type="text" ng-class="{ 'editedInput' : surnameChanged }" />
+        <a ng-click="cancelSurnameEdit()" class="btn btn-mini btn-info">Cancel</a>
+    </div>
 
 
-	<br />
-	<span class="profileProp">Phone :</span>
-	<div ng-hide="editPhone" ng-model="model.Phone" ng-mouseover="overPhone = true" ng-mouseleave="overPhone = false" class="profileValue">
-		{{model.Phone}}
-		<a ng-show="overPhone" ng-click="editPhone = !editPhone" class="btn btn-mini btn-info">
-			<img src="~/Images/edit.svg" class="editIcon" />Edit
-		</a>
-	</div>
-	<div ng-show="editPhone" class="profileValue">
-		<input ng-model="model.Phone" ng-change="phoneChanged = true" ng-blur="checkPhoneEdit()"
-			   type="text" ng-class="{ 'editedInput' : phoneChanged }" />
-		<a ng-click="cancelPhoneEdit()" class="btn btn-mini btn-info">Cancel</a>
-	</div>
+    <br />
+    <span class="profileProp">Phone :</span>
+    <div ng-hide="editPhone" ng-model="model.Phone" ng-mouseover="overPhone = true" ng-mouseleave="overPhone = false" class="profileValue">
+        {{model.Phone}}
+        <a ng-show="overPhone" ng-click="editPhone = !editPhone" class="btn btn-mini btn-info">
+            <img src="~/Images/edit.svg" class="editIcon" />Edit
+        </a>
+    </div>
+    <div ng-show="editPhone" class="profileValue">
+        <input ng-model="model.Phone" ng-change="phoneChanged = true" ng-blur="checkPhoneEdit()"
+               type="text" ng-class="{ 'editedInput' : phoneChanged }" />
+        <a ng-click="cancelPhoneEdit()" class="btn btn-mini btn-info">Cancel</a>
+    </div>
 
 
-	<br />
-	<span class="profileProp">Email :</span>
-	<div ng-hide="editEmail" ng-model="model.Email" ng-mouseover="overEmail = true" ng-mouseleave="overEmail = false" class="profileValue">
-		{{model.Email}}
-		<button ng-show="overEmail" ng-click="editEmail = !editEmail" class="btn btn-mini btn-info">
-			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
-		</button>
-	</div>
-	<div ng-show="editEmail" class="profileValue">
-		<input ng-model="model.Email" ng-change="emailChanged = true" ng-blur="checkEmailEdit()"
-			   type="text" ng-class="{ 'editedInput' : emailChanged }" />
-		<a ng-click="cancelEmailEdit()" class="btn btn-mini btn-info">Cancel</a>
-	</div>
+    <br />
+    <span class="profileProp">Email :</span>
+    <div ng-hide="editEmail" ng-model="model.Email" ng-mouseover="overEmail = true" ng-mouseleave="overEmail = false" class="profileValue">
+        {{model.Email}}
+        <button ng-show="overEmail" ng-click="editEmail = !editEmail" class="btn btn-mini btn-info">
+            <img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
+        </button>
+    </div>
+    <div ng-show="editEmail" class="profileValue">
+        <input ng-model="model.Email" ng-change="emailChanged = true" ng-blur="checkEmailEdit()"
+               type="text" ng-class="{ 'editedInput' : emailChanged }" />
+        <a ng-click="cancelEmailEdit()" class="btn btn-mini btn-info">Cancel</a>
+    </div>
 
 
-	<div ng-show="emailChanged || phoneChanged || surnameChanged || true" class="saveButton">
-		<button ng-click="saveAll()" class="btn btn-small btn-success">Save</button>
-	</div>
+    <div ng-show="emailChanged || phoneChanged || surnameChanged || true" class="saveButton">
+        <button ng-click="saveAll()" class="btn btn-small btn-success">Save</button>
+    </div>
 
-	@* ***** Use for testing ***** *@
-	<p>
-		@*<b>Values of the $scope:</b>*@
-		@*unmodifiedModel.Phone:{{unmodifiedModel.Phone}};*@
-		@*testVal:{{testVal}};*@
-		@*emailChanged:{{emailChanged}};*@
-		@*editPhone:{{editPhone}};*@
-		@*{{overEmail}}*@
-		@*<span>{{editPhone}} : {{profile.name}} : {{model}} : {{model.Phone}}</span>*@
-		@*<span>{{userId}}</span>*@
-	</p>
+    @* ***** Use for testing ***** *@
+    <p>
+        @*<b>Values of the $scope:</b>*@
+        @*unmodifiedModel.Phone:{{unmodifiedModel.Phone}};*@
+        @*testVal:{{testVal}};*@
+        @*emailChanged:{{emailChanged}};*@
+        @*editPhone:{{editPhone}};*@
+        @*{{overEmail}}*@
+        @*<span>{{editPhone}} : {{profile.name}} : {{model}} : {{model.Phone}}</span>*@
+        @*<span>{{userId}}</span>*@
+    </p>
 
-	@*Surname:
-		<div ng-hide="editSurname" ng-model="model.Surname">
-			{{model.Surname}}
-			<a ng-click="editSurname = !editSurname">Edit</a>
-		</div>
-		<div ng-show="editSurname">
-			<input ng-model="model.Surname" type="text" />
-			<a ng-click="editSurname = !editSurname">Save</a>
-		</div>
+    @*Surname:
+        <div ng-hide="editSurname" ng-model="model.Surname">
+            {{model.Surname}}
+            <a ng-click="editSurname = !editSurname">Edit</a>
+        </div>
+        <div ng-show="editSurname">
+            <input ng-model="model.Surname" type="text" />
+            <a ng-click="editSurname = !editSurname">Save</a>
+        </div>
 
-		Phone:
-		<div ng-hide="editPhone" ng-model="model.Phone">
-			{{model.Phone}}
-			<a ng-click="editPhone = !editPhone">Edit</a>
-		</div>
-		<div ng-show="editPhone">
-			<input ng-model="model.Phone" type="text"/>
-			<a ng-click="editPhone = !editPhone">Save</a>
-		</div>
+        Phone:
+        <div ng-hide="editPhone" ng-model="model.Phone">
+            {{model.Phone}}
+            <a ng-click="editPhone = !editPhone">Edit</a>
+        </div>
+        <div ng-show="editPhone">
+            <input ng-model="model.Phone" type="text"/>
+            <a ng-click="editPhone = !editPhone">Save</a>
+        </div>
 
-		Email:
-		<div ng-hide="editEmail" ng-model="model.Email">
-			{{model.Email}}
-			<a ng-click="editEmail = !editEmail">Edit</a>
-		</div>
-		<div ng-show="editEmail">
-			<input ng-model="model.Email" type="text" />
-			<a ng-click="saveEmail()">Save</a>
-		</div>*@
+        Email:
+        <div ng-hide="editEmail" ng-model="model.Email">
+            {{model.Email}}
+            <a ng-click="editEmail = !editEmail">Edit</a>
+        </div>
+        <div ng-show="editEmail">
+            <input ng-model="model.Email" type="text" />
+            <a ng-click="saveEmail()">Save</a>
+        </div>*@
 
-	@* ***** Use for testing ***** *@
-	@*<p class="content">
-			<b>The Value of "myData" is:</b><span>{{editPhone}} : {{profile.name}} : {{model}} : {{model.Phone}}</span>
-			<span>{{userId}}</span>
-		</p>*@
+    @* ***** Use for testing ***** *@
+    @*<p class="content">
+            <b>The Value of "myData" is:</b><span>{{editPhone}} : {{profile.name}} : {{model}} : {{model.Phone}}</span>
+            <span>{{userId}}</span>
+        </p>*@
 </div>

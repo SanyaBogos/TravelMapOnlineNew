@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -178,6 +179,22 @@ namespace TravelMap.Controllers
             try
             {
                 var result = db.UserProfiles.First(profile => profile.UserId == id).Posts.ToArray();
+                var serPosts = new List<dynamic>();
+                foreach (var post in result)
+                {
+                    serPosts.Add(new Post
+                    {
+                        ParentId = post.ParentId,
+                        Text = post.Text,
+                        PostType = post.PostType,
+                        UserId = post.UserId,
+                        Time = post.Time,
+                        PostFiles = post.PostFiles,
+                        PostId = post.PostId,
+                        TravelId = post.TravelId,
+                        TypeId = post.TypeId
+                    });
+                }
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
@@ -214,6 +231,7 @@ namespace TravelMap.Controllers
                 return Json(new JsonErrorResponse("can't find user's travels"), JsonRequestBehavior.AllowGet);
             }
         }
+
 
         protected override void Dispose(bool disposing)
         {

@@ -8,6 +8,7 @@ namespace TravelMap.Controllers
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
+            var a = User.Identity.Name;
             return View();
         }
     }
