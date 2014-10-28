@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using nonintanon.Security;
 using TravelMap.Models;
 
 namespace TravelMap.Controllers
@@ -63,6 +64,29 @@ namespace TravelMap.Controllers
             {
                 return Json(new JsonErrorResponse("can't find comments"), JsonRequestBehavior.AllowGet);
             }
+        }
+
+
+        [HttpPost]
+        public void PostReport(string text, Guid travelId)
+        {
+            var travel = db.Travels.First(travel1 => travel1.TravelId == travelId);
+            var post = new Post
+            {
+                PostType = db.PostTypes.First(type => type.Name == "report"),
+                Travel = travel,
+                Text = text,
+                UserProfile = db.UserProfiles.First(profile => profile.UserId == WebSecurity.CurrentUserId),
+                Time = DateTime.Now,
+                ParentId = Guid.Empty,
+                PostId = Guid.NewGuid(),
+                UserId = WebSecurity.CurrentUserId,
+                TravelId = travelId,
+                TypeId = db.PostTypes.First(type => type.Name == "report").PostTypeId
+            };
+            travel.Posts.Add(post);
+            db.UserProfiles.First(profile => profile.UserId == WebSecurity.CurrentUserId).Posts.Add(post);
+            db.SaveChanges();
         }
     }
 }
