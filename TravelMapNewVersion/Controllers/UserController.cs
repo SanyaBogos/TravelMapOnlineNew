@@ -6,6 +6,7 @@ using System.Net;
 using System.Web.Mvc;
 using TravelMap.Models;
 using nonintanon.Security;
+using System.Web.Script.Serialization;
 
 namespace TravelMap.Controllers
 {
@@ -58,7 +59,7 @@ namespace TravelMap.Controllers
 
 		    var photos = Request.Files;
 		    var photo = photos[0];
-		    var length = (int) photo.InputStream.Length;
+            var length = (int)photo.InputStream.Length;
 			var photoB = new byte[length];
 			photo.InputStream.Read(photoB, 0, length);
 
@@ -258,6 +259,36 @@ namespace TravelMap.Controllers
             {
                 return Json(new JsonErrorResponse("can't find user's travels"), JsonRequestBehavior.AllowGet);
             }
+        }
+
+        [HttpPost]
+        public void SetFollower(Guid id)
+        {
+            var userId = WebSecurity.CurrentUserId;
+            db.Followers.Add(new Follower { UserId = userId, FollowerId = id });
+            db.SaveChanges();
+        }
+
+        [HttpGet]
+        public JsonResult GetFollowersForUser(Guid id)
+        {
+            try
+            {
+                var followers = db.Followers.Where(u => u.UserId == id).ToList();
+                var jsonResult = new List<dynamic>();
+                foreach (var follower in followers)
+                {
+                    jsonResult.Add(new Follower
+                    {
+                        UserId = id,
+                        FollowerId = follower.FollowerId
+                    });
+                }
+                return Json(jsonResult.ToArray(), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new JsonErrorResponse("can't find user's followers"), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Travels()
