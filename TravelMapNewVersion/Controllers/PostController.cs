@@ -82,7 +82,7 @@ namespace TravelMap.Controllers
                 PostId = Guid.NewGuid(),
                 UserId = WebSecurity.CurrentUserId,
                 TravelId = travelId,
-                TypeId = db.PostTypes.First(type => type.Name == "report").PostTypeId
+                TypeId = db.PostTypes.First(type => type.Name == "report").PostTypeId,
             };
             travel.Posts.Add(post);
             db.UserProfiles.First(profile => profile.UserId == WebSecurity.CurrentUserId).Posts.Add(post);
