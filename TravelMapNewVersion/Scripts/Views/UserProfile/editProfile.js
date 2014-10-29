@@ -1,6 +1,6 @@
 ﻿var app = angular.module('app');
 
-app.controller('EditProfileCtrl', function($scope, $http) {
+app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 
 	$scope.init = function(userId) {
 		$scope.userId = userId;
@@ -10,7 +10,7 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 	$scope.editPhone = false;
 	$scope.emailChanged = false;
 	$scope.phoneChanged = false;
-
+	
 	$scope.$evalAsync(function() {
 		$http.get("/User/JIndex/" + $scope.userId)
 			.success(function(data, status) {
@@ -23,6 +23,25 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 				//alert("error in get--" + status + "--" + data.substring(0,100));
 			});
 	});
+
+	$scope.uploadFile = function(files) {
+		var fd = new FormData();
+		//Take the first selected file
+		fd.append("file", files[0]);
+
+		$http.post("/User/SaveUserpic", fd, {
+				withCredentials: true,
+				headers: { 'Content-Type': undefined },
+				transformRequest: angular.identity
+			})
+			.success(function(data, status) {
+				console.log('ok');
+			})
+			.error(function(data, status) {
+				console.log('err');
+			});
+
+	};
 
 	$scope.saveEmail = function() {
 
