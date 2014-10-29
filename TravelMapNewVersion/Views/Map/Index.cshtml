@@ -32,13 +32,20 @@
     <!--<div ng-show="currentCountry != null">-->
         <div class="b-popup" ng-show="currentCountry">
             <div class="b-popup-content">
-                Country: {{currentCountry}}
-                <br />
-                Message:
-                <input type="textarea" ng-model="message" />
+                <form name ="travelForm" ng-controller="travelController as travelCtrl" novalidate>
+                    <h5>Country: {{currentCountry}}</h5>
+                    <br />
+                    (*)From
+                    <input type="date" ng-model="travelCtrl.travel.start" / required>
+                    (*)To
+                    <input type="date" ng-model="travelCtrl.travel.end"/ required>
+                    Message:
+                    <input type="textarea" ng-model="travelCtrl.travel.message" />
 
-                <input type="button" value="Ok" ng-click="clickOK()" />
-                <input type="button"  value="Cancel" ng-click="clickCancel()" />
+                    <input type="button" value="Ok" ng-click="travelForm.$valid && travelCtrl.clickOK()" />
+                    <input type="button"  value="Cancel" ng-click="travelCtrl.clickCancel()" />
+                </form>
+
             </div>
         </div>
     @*</div>*@
