@@ -240,7 +240,19 @@ namespace TravelMap.Controllers
             try
             {
                 var result = db.Travels.Where(travel => travel.UserId == id).ToArray();
-                return Json(result, JsonRequestBehavior.AllowGet);
+                var jsonResult = new List<dynamic>();
+                foreach (var travel in result)
+                {
+                    jsonResult.Add(new
+                    {
+                        travelId = travel.TravelId, 
+                        startDate = travel.StartDate, 
+                        endDate = travel.EndDate, 
+                        userId = travel.UserId,
+                        country = travel.Country.Name
+                    });
+                }
+                return Json(jsonResult.ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
