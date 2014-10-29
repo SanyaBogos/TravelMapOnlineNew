@@ -260,6 +260,10 @@ namespace TravelMap.Controllers
             }
         }
 
+        public ActionResult Travels()
+        {
+            return View(WebSecurity.CurrentUserId);
+        }
 
         protected override void Dispose(bool disposing)
         {
