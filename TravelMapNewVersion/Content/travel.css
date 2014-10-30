@@ -1,0 +1,16 @@
+﻿.travels {
+    float:left;
+}
+.messages {
+    margin-top:5%;
+    float:right;
+}
+.time {
+    float:right;
+    
+}
+
+.text {
+    font-size:1.5em;
+    font-style:italic;
+}
