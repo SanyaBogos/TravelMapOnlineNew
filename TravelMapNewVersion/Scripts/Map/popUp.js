@@ -20,6 +20,7 @@
         this.clickCancel = function () {
             console.log(this.travel);
             $scope.$parent.currentCountry = null;
+            this.travel = {};
         };
 
 
@@ -34,6 +35,8 @@
                 end: new Date(this.travel.end).getTime() / 1000,
             }).success(function (data, status, headers, config) {
                 console.log(data);
+                console.log(trvl.message);
+
                 $http.post('/Post/PostReport', {
                     text: trvl.message,
                     travelId: data
@@ -42,6 +45,7 @@
                 }).error(function (data, status, headers, config) {
                     console.log('error');
                 });
+            this.travel = {};
             $scope.$parent.currentCountry = null;
         }
     });
