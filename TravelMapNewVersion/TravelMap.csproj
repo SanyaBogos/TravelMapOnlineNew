@@ -764,6 +764,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />
+    <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
