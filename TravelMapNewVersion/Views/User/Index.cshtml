@@ -17,9 +17,13 @@ This is your ID. @Html.DisplayFor(m => Model)
 <br />
 
 <div ng-app="app" ng-controller="EditProfileCtrl" ng-init="init('@Model')">
-	
-	<img ng-src="{{toPicture()}}" alt="na">
-	<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" />
+	<div ng-mouseover="overPhoto = true" ng-mouseleave="overPhoto = false">
+		<img ng-src="{{photoData}}" alt="na" class="userPhoto">
+		<div ng-show="overPhoto" class="photoSelector btn btn-primary">
+			<span>Change</span>
+			<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" class="selector" />
+		</div>
+	</div>
 	<br />
 	<span class="profileProp">Surname :</span>
 	<div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('app');
 
-app.controller('EditProfileCtrl', function($scope, $http, $upload) {
+app.controller('EditProfileCtrl', function($scope, $http) {
 
 	$scope.init = function(userId) {
 		$scope.userId = userId;
@@ -10,11 +10,17 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 	$scope.editPhone = false;
 	$scope.emailChanged = false;
 	$scope.phoneChanged = false;
-	
+
+	$scope.formPictureData = function () {
+		var base64Picture = arrayBufferToBase64($scope.model.Photo);
+		return "data:image/jpg;base64," + base64Picture;
+	};
+
 	$scope.$evalAsync(function() {
 		$http.get("/User/JIndex/" + $scope.userId)
 			.success(function(data, status) {
 				$scope.model = data;
+				$scope.photoData = $scope.formPictureData();
 				// save model to allow canceling changes
 				$scope.unmodifiedModel = angular.copy($scope.model);
 				// ...
@@ -36,17 +42,15 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 			})
 			.success(function(data, status) {
 				console.log('ok');
+				$scope.model.Photo = data;
+				$scope.photoData = $scope.formPictureData();
 			})
 			.error(function(data, status) {
 				console.log('err');
 			});
-
 	};
 
-	$scope.toPicture = function() {
-		var base64Picture = arrayBufferToBase64($scope.model.Photo);
-		return "data:image/jpg;base64," + base64Picture;
-	}
+
 
 	$scope.saveEmail = function() {
 

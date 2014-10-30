@@ -59,13 +59,15 @@ namespace TravelMap.Controllers
 
             var photos = Request.Files;
             var photo = photos[0];
-            var length = (int)photo.InputStream.Length;
-            var photoB = new byte[length];
-            photo.InputStream.Read(photoB, 0, length);
-
-            userProfile.Photo = photoB;
+	        var length = (int) photo.InputStream.Length;
+            var bytePhoto = new byte[length];
+			photo.InputStream.Read(bytePhoto, 0, length);
+			
+			userProfile.Photo = bytePhoto;
             var res = db.SaveChanges();
-            return Json("OK");
+			return res == 1
+				? Json(bytePhoto) 
+				: Json("err");
         }
 
         // **********************************************************
