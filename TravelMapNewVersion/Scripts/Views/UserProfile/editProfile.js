@@ -43,6 +43,11 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 
 	};
 
+	$scope.toPicture = function() {
+		var base64Picture = arrayBufferToBase64($scope.model.Photo);
+		return "data:image/jpg;base64," + base64Picture;
+	}
+
 	$scope.saveEmail = function() {
 
 		// todo: check if Email is not empty
@@ -120,4 +125,14 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 	}
 
 	//#endregion
+
+	function arrayBufferToBase64(buffer) {
+		var binary = '';
+		var bytes = new Uint8Array(buffer);
+		var len = bytes.byteLength;
+		for (var i = 0; i < len; i++) {
+			binary += String.fromCharCode(bytes[i]);
+		}
+		return window.btoa(binary);
+	}
 });
