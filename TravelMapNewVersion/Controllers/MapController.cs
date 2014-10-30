@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using TravelMap.Models;
-using Microsoft.AspNet.Identity;
 
 namespace TravelMap.Controllers
 {
@@ -16,17 +14,9 @@ namespace TravelMap.Controllers
 
         public ActionResult Index()
         {
-            List<string> userCountries = new List<string>();
+            var userCountries = new List<string>();
             var userId = WebSecurity.CurrentUserId;
-            if (userId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var userMap = db.Travels.Where(n => n.UserId == userId);
-            if (userMap == null)
-            {
-                return HttpNotFound();
-            }
             foreach (var item in userMap)
             {
                 userCountries.Add(db.Countries.Find(item.CountryId).Title);
@@ -35,21 +25,22 @@ namespace TravelMap.Controllers
         }
 
         [HttpPost]
-        public void SetTravel(string country, string start, string end)
+        public Guid SetTravel(string country, string start, string end)
         {
             var countryId = db.Countries.First(c => c.Name == country).CountryId;
             var userId = WebSecurity.CurrentUserId;
 
-            Travel travel = new Travel
+            var travel = new Travel
             {
                 CountryId = countryId,
                 UserId = userId,
-                StartDate = Convert.ToDateTime(start),
-                EndDate = Convert.ToDateTime(end),
-                TravelId = Guid.NewGuid()                
+                StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(int.Parse(start)),
+                EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(int.Parse(end)),
+                TravelId = Guid.NewGuid()
             };
             db.Travels.Add(travel);
             db.SaveChanges();
+            return travel.TravelId;
         }
     }
 

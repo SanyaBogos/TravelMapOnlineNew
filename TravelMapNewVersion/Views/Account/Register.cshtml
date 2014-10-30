@@ -2,12 +2,10 @@
 @{
     ViewBag.Title = "Register";
 }
-
 <hgroup class="title">
     <h1>@ViewBag.Title.</h1>
     <h2>Create a new account.</h2>
 </hgroup>
-
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -38,7 +36,9 @@
             </li>
             <li>
                 @Html.LabelFor(m => m.BirthDate)
-                @Html.TextBoxFor(m => m.BirthDate, new { @class = "datepicker" })
+                @Html.TextBoxFor(m => m.BirthDate, new
+           { @*@class = "datepicker"*@type = "date"
+           })
             </li>
             <li>
                 @Html.LabelFor(m => m.Phone)
@@ -49,12 +49,10 @@
                 @Html.TextBox("image", "", new { type = "file", name = "image" })
                 @Html.ValidationMessageFor(m => m.Photo)
             </li>
-
         </ol>
         <input type="submit" value="Register" />
     </fieldset>
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/bootstrap-datepicker.js")
@@ -64,7 +62,6 @@
         });
     </script>
 }
-
 @section styles{
     @Styles.Render("~/Content/bootstrap-datepicker.css")
 }

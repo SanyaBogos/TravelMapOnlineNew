@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using nonintanon.Security;
@@ -39,12 +40,25 @@ namespace TravelMap.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetTravelReport(Guid id)
+        public JsonResult GetTravelReports(Guid id)
         {
             try
             {
-                var result = db.Posts.First(post => post.TravelId == id);
-                return Json(result, JsonRequestBehavior.AllowGet);
+                var result = db.Posts.Where(post => post.TravelId == id && post.PostType.PostTypeId == db.PostTypes.FirstOrDefault(type => type.Name == "report").PostTypeId);
+                var jsonResult = new List<dynamic>();
+                foreach (var post in result)
+                {
+
+                    jsonResult.Add(new
+                    {
+                        postId = post.PostId,
+                        text = post.Text,
+                        time = post.Time,
+                        travelId = post.TravelId,
+                        userId = post.UserId
+                    });
+                }
+                return Json(jsonResult, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
@@ -82,7 +96,7 @@ namespace TravelMap.Controllers
                 PostId = Guid.NewGuid(),
                 UserId = WebSecurity.CurrentUserId,
                 TravelId = travelId,
-                TypeId = db.PostTypes.First(type => type.Name == "report").PostTypeId
+                TypeId = db.PostTypes.First(type => type.Name == "report").PostTypeId,
             };
             travel.Posts.Add(post);
             db.UserProfiles.First(profile => profile.UserId == WebSecurity.CurrentUserId).Posts.Add(post);
