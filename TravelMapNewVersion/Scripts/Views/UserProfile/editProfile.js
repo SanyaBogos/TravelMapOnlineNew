@@ -1,6 +1,6 @@
 ﻿var app = angular.module('app');
 
-app.controller('EditProfileCtrl', function($scope, $http, $upload) {
+app.controller('EditProfileCtrl', function($scope, $http) {
 
 	$scope.init = function(userId) {
 		$scope.userId = userId;
