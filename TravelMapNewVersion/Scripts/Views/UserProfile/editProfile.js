@@ -44,6 +44,8 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 				console.log('ok');
 				$scope.model.Photo = data;
 				$scope.photoData = $scope.formPictureData();
+				// Show confirm that photo was changed
+				//$scope.showConfirm = true;
 			})
 			.error(function(data, status) {
 				console.log('err');

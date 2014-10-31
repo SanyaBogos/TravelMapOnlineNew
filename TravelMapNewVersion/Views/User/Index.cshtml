@@ -23,12 +23,14 @@ This is your ID. @Html.DisplayFor(m => Model)
 			<span>Change</span>
 			<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" class="selector" />
 		</div>
+		@* Show confirm that photo was changed *@
+		@*<div ng-show="showConfirm" class="confirmPhotoChange">Changed</div>*@
 	</div>
 	<br />
 	<span class="profileProp">Surname :</span>
 	<div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">
 		{{model.Surname}}
-		<a ng-show="overSurname" ng-click="editSurname = !editSurname" class="btn btn-mini btn-info">
+		<a ng-class="{ 'btnNotActive' : !overSurname }" ng-click="editSurname = !editSurname" class="btn btn-mini btn-info">
 			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
 		</a>
 	</div>
@@ -43,7 +45,7 @@ This is your ID. @Html.DisplayFor(m => Model)
 	<span class="profileProp">Phone :</span>
 	<div ng-hide="editPhone" ng-model="model.Phone" ng-mouseover="overPhone = true" ng-mouseleave="overPhone = false" class="profileValue">
 		{{model.Phone}}
-		<a ng-show="overPhone" ng-click="editPhone = !editPhone" class="btn btn-mini btn-info">
+		<a ng-class="{ 'btnNotActive' : !overPhone}" ng-click="editPhone = !editPhone" class="btn btn-mini btn-info">
 			<img src="~/Images/edit.svg" class="editIcon" />Edit
 		</a>
 	</div>
@@ -58,9 +60,9 @@ This is your ID. @Html.DisplayFor(m => Model)
 	<span class="profileProp">Email :</span>
 	<div ng-hide="editEmail" ng-model="model.Email" ng-mouseover="overEmail = true" ng-mouseleave="overEmail = false" class="profileValue">
 		{{model.Email}}
-		<button ng-show="overEmail" ng-click="editEmail = !editEmail" class="btn btn-mini btn-info">
+		<a ng-class="{ 'btnNotActive' : !overEmail}" ng-click="editEmail = !editEmail" class="btn btn-mini btn-info">
 			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
-		</button>
+		</a>
 	</div>
 	<div ng-show="editEmail" class="profileValue">
 		<input ng-model="model.Email" ng-change="emailChanged = true" ng-blur="checkEmailEdit()"
@@ -76,7 +78,8 @@ This is your ID. @Html.DisplayFor(m => Model)
 	@* ***** Use for testing ***** *@
 	<p>
 		@*<b>Values of the $scope:</b>*@
-		@*unmodifiedModel.Phone:{{unmodifiedModel.Phone}};*@
+		@*unmodifiedModel:{{unmodifiedModel}};*@
+		@*model:{{model}}*@
 		@*testVal:{{testVal}};*@
 		@*emailChanged:{{emailChanged}};*@
 		@*editPhone:{{editPhone}};*@
