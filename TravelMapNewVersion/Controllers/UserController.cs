@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Newtonsoft.Json.Linq;
 using TravelMap.Models;
 using nonintanon.Security;
 using System.Web.Script.Serialization;
@@ -52,15 +53,15 @@ namespace TravelMap.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
-		public JsonResult Save(Guid id, string surname, string email, string phone)
-		{
-			var userProfile = db.UserProfiles.Find(id);
-			userProfile.Surname = surname;
-			userProfile.Email = email;
-			userProfile.Phone = phone;
-			var res = db.SaveChanges();
-			return Json(res, JsonRequestBehavior.AllowGet);
-		}
+        public JsonResult Save(Guid id, string surname, string email, string phone)
+        {
+            var userProfile = db.UserProfiles.Find(id);
+            userProfile.Surname = surname;
+            userProfile.Email = email;
+            userProfile.Phone = phone;
+            var res = db.SaveChanges();
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
 
         public JsonResult SaveUserpic(object fd)
         {
@@ -69,15 +70,15 @@ namespace TravelMap.Controllers
 
             var photos = Request.Files;
             var photo = photos[0];
-	        var length = (int) photo.InputStream.Length;
+            var length = (int)photo.InputStream.Length;
             var bytePhoto = new byte[length];
-			photo.InputStream.Read(bytePhoto, 0, length);
+            photo.InputStream.Read(bytePhoto, 0, length);
 
-			userProfile.Photo = bytePhoto;
+            userProfile.Photo = bytePhoto;
             var res = db.SaveChanges();
-			return res == 1
-				? Json(bytePhoto) 
-				: Json("err");
+            return res == 1
+                ? Json(bytePhoto)
+                : Json("err");
         }
 
         // **********************************************************
@@ -248,29 +249,50 @@ namespace TravelMap.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetUserTravels(Guid id)
+        public JsonResult GetUserTravels(Guid id, bool groupByCountry = false)
         {
-            try
+            var result = db.Travels.Where(travel => travel.UserId == id).ToArray();
+            IEnumerable<dynamic> jsonResult;
+            if (!groupByCountry)
             {
-                var result = db.Travels.Where(travel => travel.UserId == id).ToArray();
-                var jsonResult = new List<dynamic>();
-                foreach (var travel in result)
+                jsonResult = FormatTravelsWithoutGrouping(result);
+            }
+            else
+            {
+                jsonResult = FormatTravelsWithGrouping(result);
+            }
+            return Json(jsonResult.ToArray(), JsonRequestBehavior.AllowGet);
+        }
+
+        private IEnumerable<dynamic> FormatTravelsWithoutGrouping(IEnumerable<Travel> travels)
+        {
+            var result = new List<dynamic>();
+            foreach (var travel in travels)
+            {
+                result.Add(new
                 {
-                    jsonResult.Add(new
-                    {
-                        travelId = travel.TravelId,
-                        startDate = travel.StartDate,
-                        endDate = travel.EndDate,
-                        userId = travel.UserId,
-                        country = travel.Country.Name
-                    });
-                }
-                return Json(jsonResult.ToArray(), JsonRequestBehavior.AllowGet);
+                    travelId = travel.TravelId,
+                    startDate = travel.StartDate,
+                    endDate = travel.EndDate,
+                    userId = travel.UserId,
+                    country = travel.Country.Name
+                });
             }
-            catch (Exception)
+            return result;
+        }
+        private IEnumerable<dynamic> FormatTravelsWithGrouping(IEnumerable<Travel> travels)
+        {
+            var grouped = FormatTravelsWithoutGrouping(travels).GroupBy(o => o.country);
+            var result = new List<dynamic>();
+            foreach (var group in grouped)
             {
-                return Json(new JsonErrorResponse("can't find user's travels"), JsonRequestBehavior.AllowGet);
+                result.Add(new
+                {
+                    country = group.Key,
+                    travels = group
+                });
             }
+            return result;
         }
 
         [HttpPost]
@@ -292,7 +314,7 @@ namespace TravelMap.Controllers
                 {
                     jsonResult.Add(new Follower
                     {
-                        UserFollowerId=follower.UserFollowerId,
+                        UserFollowerId = follower.UserFollowerId,
                         UserId = follower.UserId,
                         FollowerId = follower.FollowerId
                     });
