@@ -42,28 +42,20 @@ namespace TravelMap.Controllers
         [HttpGet]
         public JsonResult GetTravelReports(Guid id)
         {
-            try
+            var result = db.Posts.Where(post => post.TravelId == id && post.PostType.PostTypeId == db.PostTypes.FirstOrDefault(type => type.Name == "report").PostTypeId);
+            var jsonResult = new List<dynamic>();
+            foreach (var post in result)
             {
-                var result = db.Posts.Where(post => post.TravelId == id && post.PostType.PostTypeId == db.PostTypes.FirstOrDefault(type => type.Name == "report").PostTypeId);
-                var jsonResult = new List<dynamic>();
-                foreach (var post in result)
+                jsonResult.Add(new
                 {
-
-                    jsonResult.Add(new
-                    {
-                        postId = post.PostId,
-                        text = post.Text,
-                        time = post.Time,
-                        travelId = post.TravelId,
-                        userId = post.UserId
-                    });
-                }
-                return Json(jsonResult, JsonRequestBehavior.AllowGet);
+                    postId = post.PostId,
+                    text = post.Text,
+                    time = post.Time,
+                    travelId = post.TravelId,
+                    userId = post.UserId
+                });
             }
-            catch (Exception)
-            {
-                return Json(new JsonErrorResponse("can't find travel report"), JsonRequestBehavior.AllowGet);
-            }
+            return Json(jsonResult, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

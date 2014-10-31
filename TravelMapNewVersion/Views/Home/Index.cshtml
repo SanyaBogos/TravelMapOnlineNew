@@ -22,9 +22,10 @@
 <script>
     $(document).ready(function () {
         $("#body").css('backgroundRepeat', 'no-repeat');
-        $("#body").css('height', $(document).height());
-        $("#body").css('backgroundImage', 'url(http://lorempixel.com/' + $(document).width() + '/' + $(document).height() + ')');
+        $("#body").css('height', $(document).height()-200);
+        $("#body").css('backgroundImage', 'url(http://lorempixel.com/' + $("#body").width() + '/' + ($("#body").height()+35) + '/city)');
         $("#greeting-panel").slideDown();
-        
+        $("#body").css("background-position", "center");
     });
+    
 </script>
