@@ -16,7 +16,7 @@
 }
 <div ng-app="app" ng-controller="travelController as travelCtrl" ng-init="init('@Model')">
     <div class ="travels">
-        <div class="panel" ng-repeat="travel in travels" >
+        <div class="panel panel-default" ng-repeat="travel in travels" >
             <div class="panel-heading" >
                 <h3 class="panel-title">{{travel.country}}</h3>
             </div>
@@ -24,8 +24,8 @@
                 <b>From:</b> {{travel.startDate |  date:'yyyy-MM-dd'}}
                 <br />
                 <b>To:</b> {{travel.endDate |  date:'yyyy-MM-dd'}}
-            </div>
-            <input type="button"  value="Reports" ng-click="travelCtrl.click(travel.travelId)" />
+            </div>  
+            <input type="button"  value="Reports" class="btn  btn-default" ng-click="travelCtrl.click(travel.travelId)" />
         </div>
     </div>
     <div class="messages">
