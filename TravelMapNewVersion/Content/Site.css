@@ -105,7 +105,7 @@ h5, h6 {
 }
 
 .main-content {
-    background: url("../Images/accent.png") no-repeat;
+    /*background: url("../Images/accent.png") no-repeat;*/
     padding-left: 10px;
     padding-top: 30px;
 }
@@ -122,7 +122,6 @@ footer {
     clear: both;
     background-color: #e2e2e2;
     font-size: .8em;
-    height: 100px;
 }
 
 
@@ -760,8 +759,11 @@ tr.pager td {
     Main page
 */
 #body {
-    -ms-background-size: 100%;
-    background-size: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover;
 }
 
 #greeting-panel {
