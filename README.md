@@ -1,4 +1,4 @@
 TravelMapOnlineNew
 ==================
 
-Internal epam group project
+Super mega group project
