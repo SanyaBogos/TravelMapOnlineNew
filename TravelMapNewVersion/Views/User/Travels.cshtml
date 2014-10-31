@@ -15,23 +15,26 @@
     <script src="~/Scripts/Views/UserProfile/travels.js"></script>
 }
 <div ng-app="app" ng-controller="travelController as travelCtrl" ng-init="init('@Model')">
-    <div class ="travels">
-        <div class="panel panel-default" ng-repeat="travel in travels" >
-            <div class="panel-heading" >
-                <h3 class="panel-title">{{travel.country}}</h3>
+    <div class="travelGroups" ng-repeat="group in travelGroups" style="width: 100%">
+        <h1 ng-click="show(group)">{{group.country}}</h1>
+        <div class="travels" style="width: 100%;" ng-show="group.show">
+            <div class="panel panel-default" ng-repeat="travel in group.travels">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{travel.country}}</h3>
+                </div>
+                <div class="panel-body">
+                    <b>From:</b> {{travel.startDate |  date:'yyyy-MM-dd'}}
+                    <br />
+                    <b>To:</b> {{travel.endDate |  date:'yyyy-MM-dd'}}
+                </div>
+                <input type="button" value="Reports" class="btn  btn-default" ng-click="travelCtrl.click(travel.travelId)" />
             </div>
-            <div class="panel-body">
-                <b>From:</b> {{travel.startDate |  date:'yyyy-MM-dd'}}
-                <br />
-                <b>To:</b> {{travel.endDate |  date:'yyyy-MM-dd'}}
-            </div>  
-            <input type="button"  value="Reports" class="btn  btn-default" ng-click="travelCtrl.click(travel.travelId)" />
         </div>
     </div>
     <div class="messages">
         <div class="message" ng-repeat ="message in messages">
-           <span class = "text">{{message.text}}</span><br>
-           <span class = "time">{{message.time}}</span>
+            <span class = "text">{{message.text}}</span><br>
+            <span class = "time">{{message.time}}</span>
         </div>
     </div>
 </div>

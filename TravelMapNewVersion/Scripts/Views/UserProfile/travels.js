@@ -9,11 +9,11 @@ function fixDate(unfixedDate) {
 }
 
 app = angular.module("app");
-app.controller("travelController", function($scope, $http) {
-    $scope.init = function(userId) {
+app.controller("travelController", function ($scope, $http) {
+    $scope.init = function (userId) {
         $scope.userId = userId;
     };
-    $scope.travels = [];
+    $scope.travelGroups = [];
     $scope.messages = [];
     this.id = 0;
     this.click = function (id) {
@@ -22,25 +22,33 @@ app.controller("travelController", function($scope, $http) {
                 $scope.messages = data;
                 console.log($scope.messages[0].time);
                 var d = +fixDate($scope.messages[0].time);
-                $scope.messages[0].time = (new Date(d )).toDateString();
-                
+                $scope.messages[0].time = (new Date(d)).toDateString();
+
             }).
             error(function (data, status, headers, config) {
             });
-        
 
     };
-    $scope.$evalAsync(function() {
-        $http.get('/User/GetUserTravels/' + $scope.userId).
-            success(function(data, status, headers, config) {
-                $scope.travels = data;
-                for (var i = 0; i < $scope.travels.length; i++) {
-                    $scope.travels[i].startDate = fixDate($scope.travels[i].startDate);
-                    $scope.travels[i].endDate = fixDate($scope.travels[i].endDate);
-                    console.log($scope.travels[i].startDate);
+    $scope.show = function(group) {
+        group.show = !group.show;
+    };
+
+    $scope.$evalAsync(function () {
+        $http.get('/User/GetUserTravels/' + $scope.userId + "?groupByCountry=true").
+            success(function (data, status, headers, config) {
+                $scope.travelGroups = data;
+                for (var i = 0; i < $scope.travelGroups.length; i++) {
+                    for (var j = 0; j < $scope.travelGroups[i].travels.length; j++) {
+                        console.log($scope.travelGroups[i].travels[j]);
+                        $scope.travelGroups[i].travels[j].startDate = fixDate($scope.travelGroups[i].travels[j].startDate);
+                        $scope.travelGroups[i].travels[j].endDate = fixDate($scope.travelGroups[i].travels[j].endDate);
+
+                    }
                 }
+                //$scope.travelGroups.travels[i].startDate = fixDate($scope.travelGroups[i].startDate);
+                //$scope.travelGroups.travels[i].endDate = fixDate($scope.travelGroups[i].endDate);
             }).
-            error(function(data, status, headers, config) {
+            error(function (data, status, headers, config) {
             });
     });
 });
