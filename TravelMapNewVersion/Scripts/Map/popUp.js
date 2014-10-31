@@ -8,8 +8,8 @@
             $scope.currentCountry = newCountry;
             //console.log($scope.currentCountry);
             $scope.$apply();
-        }      
-       
+        }
+
     });
 
 
@@ -17,24 +17,35 @@
     app.controller('travelController', function ($scope, $http) {
         this.travel = {};
 
-        this.clickCancel = function () {            
+        this.clickCancel = function () {
+            console.log(this.travel);
             $scope.$parent.currentCountry = null;
+            this.travel = {};
         };
 
-        
 
-        this.clickOK = function () {            
-            this.travel.start = this.travel.start.split("-");
-            this.travel.end = this.travel.end.split("-");           
-            $http.post('/Map/SetTravel', {                
+
+        this.clickOK = function () {
+            var trvl = this.travel;
+            //this.travel.start = this.travel.start.split("-");
+            //this.travel.end = this.travel.end.split("-");
+            $http.post('/Map/SetTravel', {
                 country: $scope.$parent.currentCountry,
-                start: this.travel.start[1]+'.'+this.travel.start[2]+'.'+this.travel.start[0],
-                end: this.travel.end[1] + '.' + this.travel.end[2] + '.' + this.travel.end[0]
+                start: new Date(this.travel.start).getTime() / 1000,
+                end: new Date(this.travel.end).getTime() / 1000,
             }).success(function (data, status, headers, config) {
-                console.log('success');
-            }).error(function (data, status, headers, config) {
-                console.log('error');
-            });
+                console.log(data);
+                console.log(trvl.message);
+
+                $http.post('/Post/PostReport', {
+                    text: trvl.message,
+                    travelId: data
+                });
+                    console.log('success');
+                }).error(function (data, status, headers, config) {
+                    console.log('error');
+                });
+            this.travel = {};
             $scope.$parent.currentCountry = null;
         }
     });

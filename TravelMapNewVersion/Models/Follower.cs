@@ -15,7 +15,8 @@ namespace TravelMap.Models
     public partial class Follower
     {
         public System.Guid UserId { get; set; }
-        public Nullable<System.Guid> FollowerId { get; set; }
+        public System.Guid FollowerId { get; set; }
+        public System.Guid UserFollowerId { get; set; }
     
         public virtual UserProfile UserProfile { get; set; }
         public virtual UserProfile UserProfile1 { get; set; }

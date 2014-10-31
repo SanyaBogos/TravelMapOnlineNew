@@ -17,6 +17,7 @@ namespace TravelMap.Models
         public UserProfile()
         {
             this.Followers = new HashSet<Follower>();
+            this.Followers1 = new HashSet<Follower>();
             this.Posts = new HashSet<Post>();
             this.Travels = new HashSet<Travel>();
             this.security_Roles = new HashSet<security_Roles>();
@@ -30,8 +31,8 @@ namespace TravelMap.Models
         public byte[] Photo { get; set; }
         public string Email { get; set; }
     
-        public virtual Follower Follower { get; set; }
         public virtual ICollection<Follower> Followers { get; set; }
+        public virtual ICollection<Follower> Followers1 { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<Travel> Travels { get; set; }
         public virtual ICollection<security_Roles> security_Roles { get; set; }

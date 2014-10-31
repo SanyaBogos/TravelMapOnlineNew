@@ -52,6 +52,16 @@ namespace TravelMap.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult Save(Guid id, string surname, string email, string phone)
+        {
+            var userProfile = db.UserProfiles.Find(id);
+            userProfile.Surname = surname;
+            userProfile.Email = email;
+            userProfile.Phone = phone;
+            var res = db.SaveChanges();
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult SaveUserpic(object fd)
         {
             var userId = WebSecurity.CurrentUserId;
@@ -60,12 +70,14 @@ namespace TravelMap.Controllers
             var photos = Request.Files;
             var photo = photos[0];
             var length = (int)photo.InputStream.Length;
-            var photoB = new byte[length];
-            photo.InputStream.Read(photoB, 0, length);
+            var bytePhoto = new byte[length];
+            photo.InputStream.Read(bytePhoto, 0, length);
 
-            userProfile.Photo = photoB;
+            userProfile.Photo = bytePhoto;
             var res = db.SaveChanges();
-            return Json("OK");
+            return res == 1
+                ? Json(bytePhoto)
+                : Json("err");
         }
 
         // **********************************************************
@@ -265,7 +277,7 @@ namespace TravelMap.Controllers
         public void SetFollower(Guid id)
         {
             var userId = WebSecurity.CurrentUserId;
-            db.Followers.Add(new Follower { UserId = userId, FollowerId = id });
+            db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
             db.SaveChanges();
         }
 
@@ -280,7 +292,8 @@ namespace TravelMap.Controllers
                 {
                     jsonResult.Add(new Follower
                     {
-                        UserId = id,
+                        UserFollowerId=follower.UserFollowerId,
+                        UserId = follower.UserId,
                         FollowerId = follower.FollowerId
                     });
                 }
@@ -290,7 +303,11 @@ namespace TravelMap.Controllers
             {
                 return Json(new JsonErrorResponse("can't find user's followers"), JsonRequestBehavior.AllowGet);
             }
+        }
 
+        public ActionResult Travels()
+        {
+            return View(WebSecurity.CurrentUserId);
         }
 
         protected override void Dispose(bool disposing)

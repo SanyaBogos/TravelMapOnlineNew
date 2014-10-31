@@ -107,6 +107,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -301,10 +302,6 @@
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <EntityDeploy Include="Models\MapModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MapModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <Content Include="Images\ammap\arrowDown.gif" />
     <Content Include="Images\ammap\arrowUp.gif" />
     <Content Include="Images\ammap\export.png" />
@@ -323,19 +320,6 @@
     <Content Include="Images\logo.png" />
     <Content Include="img\glyphicons-halflings-white.png" />
     <Content Include="img\glyphicons-halflings.png" />
-    <Content Include="Models\MapModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MapModel.edmx</DependentUpon>
-      <LastGenOutput>MapModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\MapModel.edmx.diagram">
-      <DependentUpon>MapModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\MapModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MapModel.edmx</DependentUpon>
-      <LastGenOutput>MapModel.cs</LastGenOutput>
-    </Content>
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-cookies.js" />
@@ -367,6 +351,23 @@
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <Content Include="Scripts\angular.min.js.map" />
+    <EntityDeploy Include="Models\MapModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MapModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\MapModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MapModel.edmx</DependentUpon>
+      <LastGenOutput>MapModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\MapModel.edmx.diagram">
+      <DependentUpon>MapModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\MapModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MapModel.edmx</DependentUpon>
+      <LastGenOutput>MapModel.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
@@ -715,6 +716,7 @@
     <Content Include="Scripts\Views\app.js" />
     <Content Include="Scripts\Views\UserProfile\editProfile.js" />
     <Content Include="Scripts\Views\UserProfile\index.js" />
+    <Content Include="Scripts\Views\UserProfile\travels.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -759,9 +761,11 @@
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\User\Travels.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />
+    <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -40,7 +40,7 @@
                     (*)To
                     <input type="date" ng-model="travelCtrl.travel.end"/ required>
                     Message:
-                    <input type="textarea" ng-model="travelCtrl.travel.message" />
+                    <textarea ng-model="travelCtrl.travel.message" rows="5" style="width:300px"></textarea>
 
                     <input type="button" value="Ok" ng-click="travelForm.$valid && travelCtrl.clickOK()" />
                     <input type="button"  value="Cancel" ng-click="travelCtrl.clickCancel()" />

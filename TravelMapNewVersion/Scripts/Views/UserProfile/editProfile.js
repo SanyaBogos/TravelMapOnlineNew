@@ -1,6 +1,6 @@
 ﻿var app = angular.module('app');
 
-app.controller('EditProfileCtrl', function($scope, $http, $upload) {
+app.controller('EditProfileCtrl', function($scope, $http) {
 
 	$scope.init = function(userId) {
 		$scope.userId = userId;
@@ -10,11 +10,17 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 	$scope.editPhone = false;
 	$scope.emailChanged = false;
 	$scope.phoneChanged = false;
-	
+
+	$scope.formPictureData = function () {
+		var base64Picture = arrayBufferToBase64($scope.model.Photo);
+		return "data:image/jpg;base64," + base64Picture;
+	};
+
 	$scope.$evalAsync(function() {
 		$http.get("/User/JIndex/" + $scope.userId)
 			.success(function(data, status) {
 				$scope.model = data;
+				$scope.photoData = $scope.formPictureData();
 				// save model to allow canceling changes
 				$scope.unmodifiedModel = angular.copy($scope.model);
 				// ...
@@ -36,12 +42,15 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 			})
 			.success(function(data, status) {
 				console.log('ok');
+				$scope.model.Photo = data;
+				$scope.photoData = $scope.formPictureData();
 			})
 			.error(function(data, status) {
 				console.log('err');
 			});
-
 	};
+
+
 
 	$scope.saveEmail = function() {
 
@@ -60,15 +69,19 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 	}
 
 	$scope.saveAll = function () {
-
-		$http.post("/User/Save", $scope.model)// { id: $scope.userId, email: $scope.model.Email })
-
-			.success(function (data1, status, headers, config1) {
+		// todo: send only fields that was changed
+		$http.post("/User/Save", {
+			id: $scope.userId, surname: $scope.model.Surname,
+			email: $scope.model.Email, phone: $scope.model.Phone
+		})
+			.success(function (data, status, headers, config1) {
+				$scope.emailChanged = $scope.phoneChanged = $scope.surnameChanged = false;
+				$scope.editEmail = $scope.editPhone = $scope.editSurname = false;
+				$scope.unmodifiedModel = angular.copy($scope.model);
 				// todo: display somehow that it's really saved
-				$scope.editEmail = false;
 				//console.log(data1);
 			})
-			.error(function (data1, status, headers, config1) {
+			.error(function (data, status, headers, config1) {
 				// todo: display error
 				console.log(status);
 			});
@@ -120,4 +133,14 @@ app.controller('EditProfileCtrl', function($scope, $http, $upload) {
 	}
 
 	//#endregion
+
+	function arrayBufferToBase64(buffer) {
+		var binary = '';
+		var bytes = new Uint8Array(buffer);
+		var len = bytes.byteLength;
+		for (var i = 0; i < len; i++) {
+			binary += String.fromCharCode(bytes[i]);
+		}
+		return window.btoa(binary);
+	}
 });
