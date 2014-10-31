@@ -69,15 +69,19 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 	}
 
 	$scope.saveAll = function () {
-
-		$http.post("/User/Save", $scope.model)// { id: $scope.userId, email: $scope.model.Email })
-
-			.success(function (data1, status, headers, config1) {
+		// todo: send only fields that was changed
+		$http.post("/User/Save", {
+			id: $scope.userId, surname: $scope.model.Surname,
+			email: $scope.model.Email, phone: $scope.model.Phone
+		})
+			.success(function (data, status, headers, config1) {
+				$scope.emailChanged = $scope.phoneChanged = $scope.surnameChanged = false;
+				$scope.editEmail = $scope.editPhone = $scope.editSurname = false;
+				$scope.unmodifiedModel = angular.copy($scope.model);
 				// todo: display somehow that it's really saved
-				$scope.editEmail = false;
 				//console.log(data1);
 			})
-			.error(function (data1, status, headers, config1) {
+			.error(function (data, status, headers, config1) {
 				// todo: display error
 				console.log(status);
 			});
