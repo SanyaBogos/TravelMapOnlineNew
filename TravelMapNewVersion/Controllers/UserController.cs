@@ -52,15 +52,15 @@ namespace TravelMap.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Save(Guid id, string surname, string email, string phone)
-        {
-            var userProfile = db.UserProfiles.Find(id);
-            userProfile.Surname = surname;
-            userProfile.Email = email;
-            userProfile.Phone = phone;
-            var res = db.SaveChanges();
-            return Json(res, JsonRequestBehavior.AllowGet);
-        }
+		public JsonResult Save(Guid id, string surname, string email, string phone)
+		{
+			var userProfile = db.UserProfiles.Find(id);
+			userProfile.Surname = surname;
+			userProfile.Email = email;
+			userProfile.Phone = phone;
+			var res = db.SaveChanges();
+			return Json(res, JsonRequestBehavior.AllowGet);
+		}
 
         public JsonResult SaveUserpic(object fd)
         {
@@ -69,15 +69,15 @@ namespace TravelMap.Controllers
 
             var photos = Request.Files;
             var photo = photos[0];
-            var length = (int)photo.InputStream.Length;
+	        var length = (int) photo.InputStream.Length;
             var bytePhoto = new byte[length];
-            photo.InputStream.Read(bytePhoto, 0, length);
+			photo.InputStream.Read(bytePhoto, 0, length);
 
-            userProfile.Photo = bytePhoto;
+			userProfile.Photo = bytePhoto;
             var res = db.SaveChanges();
-            return res == 1
-                ? Json(bytePhoto)
-                : Json("err");
+			return res == 1
+				? Json(bytePhoto) 
+				: Json("err");
         }
 
         // **********************************************************

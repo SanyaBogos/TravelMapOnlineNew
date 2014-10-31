@@ -1,6 +1,30 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<div id="greeting-panel">
+    <h1>Discover the world with TravelMap!</h1>
+    @if (!Request.IsAuthenticated)
+    {
+        <ul>
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "" })</li>
+            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "" })</li>
+        </ul>
+    }
+    else
+    {
+        <br />
+        <br />
+    }
 
-<h1>Hello</h1>
-<img src="http://lorempixel.com/640/480" alt="picrandom" width="100%"/>
+</div>
+
+<script src="~/Scripts/jquery-2.1.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#body").css('backgroundRepeat', 'no-repeat');
+        $("#body").css('height', $(document).height());
+        $("#body").css('backgroundImage', 'url(http://lorempixel.com/' + $(document).width() + '/' + $(document).height() + ')');
+        $("#greeting-panel").slideDown();
+        
+    });
+</script>
