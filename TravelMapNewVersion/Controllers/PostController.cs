@@ -74,7 +74,7 @@ namespace TravelMap.Controllers
 
 
         [HttpPost]
-        public void PostReport(string text, Guid travelId)
+        public void PostReport(string text, Guid travelId, string title="")
         {
             var travel = db.Travels.First(travel1 => travel1.TravelId == travelId);
             var post = new Post
@@ -89,6 +89,7 @@ namespace TravelMap.Controllers
                 UserId = WebSecurity.CurrentUserId,
                 TravelId = travelId,
                 TypeId = db.PostTypes.First(type => type.Name == "report").PostTypeId,
+                Title = title
             };
             travel.Posts.Add(post);
             db.UserProfiles.First(profile => profile.UserId == WebSecurity.CurrentUserId).Posts.Add(post);
