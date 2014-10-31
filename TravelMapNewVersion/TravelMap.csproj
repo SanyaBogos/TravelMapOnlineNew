@@ -211,6 +211,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FeedController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\PostController.cs" />
@@ -762,10 +763,12 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\User\Travels.cshtml" />
+    <Content Include="Views\Feed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />
     <Folder Include="Scripts\Views\Home\" />
+    <Folder Include="Views\Feed\" />
     <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>
