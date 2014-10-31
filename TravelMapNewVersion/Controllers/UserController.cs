@@ -72,7 +72,7 @@ namespace TravelMap.Controllers
 	        var length = (int) photo.InputStream.Length;
             var bytePhoto = new byte[length];
 			photo.InputStream.Read(bytePhoto, 0, length);
-			
+
 			userProfile.Photo = bytePhoto;
             var res = db.SaveChanges();
 			return res == 1
@@ -277,7 +277,7 @@ namespace TravelMap.Controllers
         public void SetFollower(Guid id)
         {
             var userId = WebSecurity.CurrentUserId;
-            db.Followers.Add(new Follower { UserId = userId, FollowerId = id });
+            db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
             db.SaveChanges();
         }
 
@@ -292,7 +292,8 @@ namespace TravelMap.Controllers
                 {
                     jsonResult.Add(new Follower
                     {
-                        UserId = id,
+                        UserFollowerId=follower.UserFollowerId,
+                        UserId = follower.UserId,
                         FollowerId = follower.FollowerId
                     });
                 }
