@@ -319,8 +319,8 @@
     <Content Include="Images\ammap\xIcon.gif" />
     <Content Include="Images\ammap\xIconH.gif" />
     <Content Include="Images\background\board.jpg" />
-    <Content Include="Images\edit.svg" />
     <Content Include="Images\logo.png" />
+    <Content Include="Images\edit.svg" />
     <Content Include="img\glyphicons-halflings-white.png" />
     <Content Include="img\glyphicons-halflings.png" />
     <Content Include="Models\MapModel.Context.tt">
