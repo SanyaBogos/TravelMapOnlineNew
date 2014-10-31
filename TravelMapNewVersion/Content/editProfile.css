@@ -27,7 +27,11 @@
 .saveButton {
 	margin-top: 6px;
 }
-	
+
+.btnNotActive {
+	opacity: 0.3;
+}
+
 .userPhoto {
 	display: block;
 	max-width: 250px;
@@ -49,3 +53,40 @@
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
+
+/*
+	*** Show confirm that photo was changed***
+.confirmPhotoChange {
+	-webkit-animation-delay: 1.5s;
+	-webkit-animation-name: one;
+	-webkit-animation-duration: 6s;
+	-webkit-animation-fill-mode: forwards;
+}
+@-webkit-keyframes one {
+	0% {
+		-webkit-transform: scale(1);
+		opacity: 0;
+		display: none;
+	}
+
+	25% {
+		-webkit-transform: scale(1);
+		opacity: 1;
+		display: block;
+		color: #31a531;
+	}
+
+	50% {
+		-webkit-transform: scale(1);
+		opacity: 1;
+		display: block;
+		color: #31a531;
+	}
+
+	100% {
+		-webkit-transform: scale(1);
+		opacity: 0;
+		display: none;
+		-webkit-animation-play-state: paused;
+	}
+}*/
