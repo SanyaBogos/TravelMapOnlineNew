@@ -797,3 +797,12 @@ tr.pager td {
                 #greeting-panel ul li a:hover {
                     background-color: transparent;
                 }
+
+/* Travels page*/
+.travel-date {
+    width: auto;
+    float: left;
+}
+.travel-groups:hover {
+    cursor: pointer;
+}

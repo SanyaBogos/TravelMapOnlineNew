@@ -38,6 +38,7 @@ app.controller("travelController", function ($scope, $http) {
             success(function (data, status, headers, config) {
                 $scope.travelGroups = data;
                 for (var i = 0; i < $scope.travelGroups.length; i++) {
+                    //$scope.travelGroups[i].show = true;
                     for (var j = 0; j < $scope.travelGroups[i].travels.length; j++) {
                         console.log($scope.travelGroups[i].travels[j]);
                         $scope.travelGroups[i].travels[j].startDate = fixDate($scope.travelGroups[i].travels[j].startDate);
