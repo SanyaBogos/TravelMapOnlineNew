@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using TravelMap.Models;
 using nonintanon.Security;
 using System.Web.Script.Serialization;
+using System.Threading.Tasks;
 
 namespace TravelMap.Controllers
 {
@@ -341,6 +342,35 @@ namespace TravelMap.Controllers
             base.Dispose(disposing);
         }
 
+        [HttpGet]
+        public ActionResult PeopleSearch()
+        {
+            return View();
+        }
 
+        //public ActionResult PeopleSearch(string search)
+        //{
+
+        //    //List<UserProfile> searchedUsers;
+        //    //if (!search.Contains(" "))
+        //    var searchedUsers = db.UserProfiles.Where(u => u.Surname == search || u.UserName == search).ToList();
+        //    return searchedUsers;
+        //}
+
+        [HttpPost]
+        public async Task<PartialViewResult> PeopleSearched(string searchUser)
+        {
+            if (searchUser.Contains(' '))
+            {
+                string[] parts = searchUser.Split(' ');
+                var people = await Task.Run(() => (db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
+                    u.Surname.Contains(parts[1]))));
+                return PartialView(people.ToList());
+            }
+            var barada = await Task.Run(() => (db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
+                u.UserName.Contains(searchUser))));
+            var xxx = barada.ToList();
+            return PartialView(xxx);
+        }
     }
 }
