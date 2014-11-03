@@ -40,8 +40,6 @@ public partial class Entities : DbContext
 
     public DbSet<Follower> Followers { get; set; }
 
-    public DbSet<Post> Posts { get; set; }
-
     public DbSet<PostFile> PostFiles { get; set; }
 
     public DbSet<PostType> PostTypes { get; set; }
@@ -55,6 +53,8 @@ public partial class Entities : DbContext
     public DbSet<Travel> Travels { get; set; }
 
     public DbSet<UserProfile> UserProfiles { get; set; }
+
+    public DbSet<Post> Posts { get; set; }
 
 }
 

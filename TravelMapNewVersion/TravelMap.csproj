@@ -288,6 +288,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\editProfile.css" />
     <Content Include="Content\popUp.css" />
+    <Content Include="Content\reports.css" />
     <Content Include="Content\style.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -716,6 +717,7 @@
     <Content Include="Scripts\Map\mapDecorator.js" />
     <Content Include="Scripts\Map\popUp.js" />
     <Content Include="Scripts\Views\app.js" />
+    <Content Include="Scripts\Views\Post\reports.js" />
     <Content Include="Scripts\Views\UserProfile\editProfile.js" />
     <Content Include="Scripts\Views\UserProfile\index.js" />
     <Content Include="Scripts\Views\UserProfile\travels.js" />
@@ -767,12 +769,12 @@
     <Content Include="Views\Feed.cshtml" />
     <Content Include="Views\User\PeopleSearch.cshtml" />
     <Content Include="Views\User\PeopleSearched.cshtml" />
+    <Content Include="Views\Post\TravelReports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />
     <Folder Include="Scripts\Views\Home\" />
     <Folder Include="Views\Feed\" />
-    <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

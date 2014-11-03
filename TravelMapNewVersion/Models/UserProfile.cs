@@ -25,11 +25,11 @@ public partial class UserProfile
 
         this.Followers1 = new HashSet<Follower>();
 
-        this.Posts = new HashSet<Post>();
-
         this.Travels = new HashSet<Travel>();
 
         this.security_Roles = new HashSet<security_Roles>();
+
+        this.Posts = new HashSet<Post>();
 
     }
 
@@ -54,11 +54,11 @@ public partial class UserProfile
 
     public virtual ICollection<Follower> Followers1 { get; set; }
 
-    public virtual ICollection<Post> Posts { get; set; }
-
     public virtual ICollection<Travel> Travels { get; set; }
 
     public virtual ICollection<security_Roles> security_Roles { get; set; }
+
+    public virtual ICollection<Post> Posts { get; set; }
 
 }
 

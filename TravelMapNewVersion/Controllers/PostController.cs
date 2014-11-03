@@ -58,6 +58,12 @@ namespace TravelMap.Controllers
             return Json(jsonResult, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult TravelReports(Guid travelId, string countryName="")
+        {
+            ViewBag.CountryName = countryName;
+            return View(travelId);
+        }
+
         [HttpGet]
         public JsonResult GetPostComments(Guid id)
         {

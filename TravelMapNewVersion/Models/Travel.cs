@@ -40,9 +40,9 @@ public partial class Travel
 
     public virtual Country Country { get; set; }
 
-    public virtual ICollection<Post> Posts { get; set; }
-
     public virtual UserProfile UserProfile { get; set; }
+
+    public virtual ICollection<Post> Posts { get; set; }
 
 }
 

@@ -13,20 +13,21 @@
     <script src="~/Scripts/Views/app.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/Views/UserProfile/travels.js"></script>
+ 
 }
 <div ng-app="app" ng-controller="travelController as travelCtrl" ng-init="init('@Model')">
-    <div class="travel-groups panel panel-warning" ng-repeat="group in travelGroups" >
+    <div class="travel-groups panel panel-warning" ng-repeat="group in travelGroups">
         <div class="panel-heading">
             <h3 ng-click="show(group)">{{group.country}} <span class="badge">{{group.travels.length}}</span></h3>
         </div>
         <div class="travels panel " style="width: 100%;" ng-show="group.show">
-            <div ng-repeat="travel in group.travels" >
+            <div ng-repeat="travel in group.travels">
                 <div class="travel-date">
                     <b>From:</b> {{travel.startDate |  date:'yyyy-MM-dd'}}
                     <br />
                     <b>To:</b> {{travel.endDate |  date:'yyyy-MM-dd'}}
                 </div>
-                <input type="button" value="{{loadReport()}}" class="btn  btn-large" ng-click="travelCtrl.click(travel.travelId)" style="width: 78%; float: left"/>
+                <input type="button" value="{{loadReport()}}" class="btn  btn-large" ng-click="travelCtrl.click(travel.travelId)" style="width: 78%; float: left" />
             </div>
         </div>
     </div>
