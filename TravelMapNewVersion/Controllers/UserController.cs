@@ -301,9 +301,10 @@ namespace TravelMap.Controllers
             return result;
         }
 
-        public JsonResult GetTravelsForCountry(Guid countryId)
+        [HttpGet]
+        public JsonResult GetTravelsForCountry(Guid countryId, Guid userId)
         {
-            var travels = db.Travels.Where(travel => travel.CountryId == countryId);
+            var travels = db.Travels.Where(travel => travel.CountryId == countryId && travel.UserId == userId);
             var serializableTravels = new List<dynamic>();
             foreach (var travel in travels)
             {
