@@ -12,8 +12,7 @@
 {   
     <link rel="stylesheet" href="~/Content/reports.css"/>
 }
-<div ng-app="app" ng-controller="ReportsController" ng-init="init(@Model)">
-    <div class="prev-report report report-button" ng-click="prevReport()" ng-disabled="{{isFirst()}}"><</div>
+<div ng-app="app" ng-controller="ReportsController" ng-init="init('@Model')">
     <div class="current-report report">
         <div class="report-heading">
             <h3 class="report-title">{{report.title}}</h3>
@@ -22,5 +21,7 @@
             {{report.text}}
         </div>
     </div>
-    <div class="next-report report-button report" ng-click="nextReport()" ng-disabled="{{isLast()}}">></div>
+    <div class="prev-report report report-button" ng-click="prevReport()" ng-show="!isFirst()"><</div>
+
+    <div class="next-report report-button report" ng-click="nextReport()" ng-class="{'pending-delete': item.checked}" ng-show="!isLast()">></div>
 </div>

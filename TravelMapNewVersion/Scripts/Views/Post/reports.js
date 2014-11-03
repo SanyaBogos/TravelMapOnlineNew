@@ -7,7 +7,7 @@
     return unfixedDate;
 }
 
-var app = angular.app("app");
+app = angular.module("app");
 
 app.controller("ReportsController", function ($scope, $http) {
     var reports = [];
