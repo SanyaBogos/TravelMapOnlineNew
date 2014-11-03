@@ -276,7 +276,8 @@ namespace TravelMap.Controllers
                     startDate = travel.StartDate,
                     endDate = travel.EndDate,
                     userId = travel.UserId,
-                    country = travel.Country.Name
+                    country = travel.Country.Name,
+                    countryId = travel.CountryId
                 });
             }
             return result;
@@ -294,6 +295,24 @@ namespace TravelMap.Controllers
                 });
             }
             return result;
+        }
+
+        public JsonResult GetTravelsForCountry(Guid countryId)
+        {
+            var travels = db.Travels.Where(travel => travel.CountryId == countryId);
+            var serializableTravels = new List<dynamic>();
+            foreach (var travel in travels)
+            {
+                serializableTravels.Add(new
+                {
+                    travelId = travel.TravelId,
+                    startDate = travel.StartDate,
+                    endDate = travel.EndDate,
+                    userId = travel.UserId,
+                    country = travel.Country.Name
+                });
+            }
+            return Json(serializableTravels, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -333,14 +352,7 @@ namespace TravelMap.Controllers
             return View(WebSecurity.CurrentUserId);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+
 
         [HttpGet]
         public ActionResult PeopleSearch()
@@ -371,6 +383,19 @@ namespace TravelMap.Controllers
                 u.UserName.Contains(searchUser))));
             var xxx = barada.ToList();
             return PartialView(xxx);
+        }
+
+
+
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
