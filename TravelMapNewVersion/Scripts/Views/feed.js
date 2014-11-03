@@ -1,14 +1,19 @@
 ﻿var app = angular.module('app');
 
-app.controller('EditProfileCtrl', function($http) {
+app.controller('FeedController', function ($scope, $http) {
 
-	this.init = function (userId) {
-		this.userId = userId;
+	$scope.init = function (userId) {
+		$scope.userId = userId;
 	};
-	this.getPosts = function() {
 
-
-	};
+	$scope.$evalAsync(function () {
+		$http.get("/Feed/GetPosts/" + $scope.userId)
+			.success(function (data, status) {
+				$scope.posts = data;
+			}).error(function (data, status) {
+				$scope.error = status;
+			});
+	});
 
 
 });
