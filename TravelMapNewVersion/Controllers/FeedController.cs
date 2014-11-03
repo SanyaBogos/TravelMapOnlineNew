@@ -18,8 +18,10 @@ namespace TravelMap.Controllers
 			var userId = WebSecurity.CurrentUserId;
 			return View("~/Views/Feed.cshtml", userId);
         }
+		 
+		// todo: create class to send all kinds of news: reports, new followers etc.
 
-		public JsonResult JIndex(Guid id)
+		public JsonResult GetPosts(Guid id)
 		{
 			var userProfile = db.UserProfiles.Find(id);
 			if (userProfile == null)
@@ -27,14 +29,14 @@ namespace TravelMap.Controllers
 				return new JsonResult();
 			}
 			var posts = userProfile.Posts;
-			var fposts = userProfile.Followers.Select(f => f.UserProfile.Posts);
-			foreach (var fpost in fposts)
-			{
-				posts.AddRange(fpost);
-			}
 
-			// todo: create class to send all kinds of news: reports, new followers etc.
+
+			IQueryable<Post> otherPosts = db.Posts.Where(p => p.UserId != id);// userProfile.Followers.Select(f => f.UserProfile.Posts);
+			posts.AddRange(otherPosts);
+
 			posts = posts.OrderByDescending(p => p.Time).ToList();
+
+			
 			
 			var result = Json(posts, JsonRequestBehavior.AllowGet);
 			// todo: add friends reports to result

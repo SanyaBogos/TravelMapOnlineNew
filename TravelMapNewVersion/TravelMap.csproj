@@ -715,6 +715,7 @@
     <Content Include="Scripts\Map\mapDecorator.js" />
     <Content Include="Scripts\Map\popUp.js" />
     <Content Include="Scripts\Views\app.js" />
+    <Content Include="Scripts\Views\feed.js" />
     <Content Include="Scripts\Views\UserProfile\editProfile.js" />
     <Content Include="Scripts\Views\UserProfile\index.js" />
     <Content Include="Scripts\Views\UserProfile\travels.js" />
