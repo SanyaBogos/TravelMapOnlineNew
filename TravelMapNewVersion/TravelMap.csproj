@@ -219,6 +219,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MyHtmlExtensionMethods.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Annotations\UserProfile.cs" />
     <Compile Include="Models\Country.cs">
@@ -765,6 +766,8 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\User\Travels.cshtml" />
     <Content Include="Views\Feed.cshtml" />
+    <Content Include="Views\User\PeopleSearch.cshtml" />
+    <Content Include="Views\User\PeopleSearched.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />

@@ -31,6 +31,7 @@
                         <li>@Html.ActionLink("Map", "Index", "Map")</li>
 	                    <li>@Html.ActionLink("Travels","Travels","User")</li>
 						<li>@Html.ActionLink("Feed", "Index", "Feed")</li>
+                        <li>@Html.ActionLink("People Search", "PeopleSearch", "User")</li>
                     </ul>
                 </nav>
             </div>
@@ -50,6 +51,9 @@
         </div>
     </footer>
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
