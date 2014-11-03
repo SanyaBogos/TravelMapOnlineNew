@@ -237,16 +237,20 @@ namespace TravelMap.Controllers
         [HttpGet]
         public JsonResult GetUserVisitedCountries(Guid id)
         {
-            try
+            var userTravels = db.Travels.Where(travel => travel.UserId == id);
+            var result = userTravels.Select(userTravel => userTravel.Country).ToArray();
+            var serializableResult = new List<dynamic>();
+            foreach (var country in result)
             {
-                var userTravels = db.Travels.Where(travel => travel.UserId == id);
-                var result = userTravels.Select(userTravel => userTravel.Country).ToArray();
-                return Json(result, JsonRequestBehavior.AllowGet);
+                serializableResult.Add(new
+                {
+                    id = country.CountryId,
+                    name = country.Name,
+                    title = country.Title
+                });
             }
-            catch (Exception)
-            {
-                return Json(new JsonErrorResponse("can't find user's countries"), JsonRequestBehavior.AllowGet);
-            }
+            return Json(serializableResult, JsonRequestBehavior.AllowGet);
+
         }
 
         [HttpGet]
