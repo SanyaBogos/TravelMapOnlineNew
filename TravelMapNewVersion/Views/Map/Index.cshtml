@@ -21,20 +21,37 @@
     </script>
 }
 
-@section styles{
+@section styles{   
     <link href="~/Content/ammap.css" rel="stylesheet" />
     <link href="~/Content/style.css" rel="stylesheet" />
     <link href="~/Content/popUp.css" rel="stylesheet" />
+
 }
 
 <div ng-app="app" ng-controller="PopUpController">
     <div id="mapdiv"></div>
     <!--<div ng-show="currentCountry != null">-->
-        <div class="b-popup" ng-show="currentCountry">
+        <div class="b-popup" ng-show="currentCountry"><br />
             <div class="b-popup-content">
-                <form name ="travelForm" ng-controller="travelController as travelCtrl" novalidate>
-                    <h5>Country: {{currentCountry}}</h5>
-                    <br />
+                <h2>Country: {{currentCountry}}</h2>
+
+                <div class="travel-panel" ng-repeat="travel in travels">
+                    <div class="travel-header">
+                        <span class="travel-travel">Travel 1</span>
+                        <div class="travel-time">
+                            <div class="time-start">start: {{travel.start}}</div>
+                            <div class="time-end">end: {{travel.end}}</div>
+                        </div>
+                    </div>
+                    <div class="travel-body">
+                        {{travel.message}}
+                    </div>
+
+                </div>
+
+
+                <form name ="travelForm" ng-controller="travelController as travelCtrl" novalidate>                    
+                    
                     (*)From
                     <input type="date" ng-model="travelCtrl.travel.start" / required>
                     (*)To
@@ -42,7 +59,7 @@
                     Message:
                     <textarea ng-model="travelCtrl.travel.message" rows="5" style="width:300px"></textarea>
 
-                    <input type="button" value="Ok" ng-click="travelForm.$valid && travelCtrl.clickOK()" />
+                    <input type="button" value="Ok" ng-click="travelCtrl.clickOK()" />
                     <input type="button"  value="Cancel" ng-click="travelCtrl.clickCancel()" />
                 </form>
 

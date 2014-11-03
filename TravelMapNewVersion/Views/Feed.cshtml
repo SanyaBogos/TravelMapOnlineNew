@@ -1,7 +1,23 @@
-﻿
-@{
-    ViewBag.Title = "Feed";
+﻿@{
+	ViewBag.Title = "Feed";
+}
+@section scripts
+{
+	<script src="~/Scripts/angular.js"></script>
+	<script src="~/Scripts/bootstrap.min.js"></script>
+	<script src="~/Scripts/Views/app.js"></script>
+	<script src="~/Scripts/Views/feed.js"></script>
 }
 
 <h2>Feed</h2>
+
+<div ng-app="app" ng-controller="FeedController" ng-init="init('@Model')">
+	<div ng-repeat="post in posts">
+		{{post.User}} have been to {{post.Country}} from {{post.StartDate | date:'yyyy-MMM-dd'}} to {{post.EndDate | date:'yyyy-MMM-dd'}}
+		{{post.Title}}
+		{{post.PostText}}
+	<br>
+		
+	</div>
+</div>
 
