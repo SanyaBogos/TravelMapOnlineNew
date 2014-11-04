@@ -33,7 +33,7 @@
 .report-button {
     font-size: 5em;
     color: black;
-    width: 100%;
+    width: 50%;
     margin: 0;
     padding: 0;
     -webkit-touch-callout: none;
@@ -54,6 +54,7 @@
 
 .next-report {
     text-align: right;
+    float: right;
 }
 
 .control-panel {

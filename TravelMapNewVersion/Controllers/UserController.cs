@@ -4,10 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using Newtonsoft.Json.Linq;
 using TravelMap.Models;
 using nonintanon.Security;
-using System.Web.Script.Serialization;
 using System.Threading.Tasks;
 
 namespace TravelMap.Controllers
@@ -43,6 +41,11 @@ namespace TravelMap.Controllers
             var result = Json(userProfile, JsonRequestBehavior.AllowGet);
             return result;
             //(new { UserName = userProfile.UserName, Email = userProfile.Email }, JsonRequestBehavior.AllowGet);
+        }
+
+        public Guid GetCurrentUser()
+        {
+            return WebSecurity.CurrentUserId;
         }
 
         //
