@@ -724,7 +724,6 @@
     <Content Include="Scripts\Views\feed.js" />
     <Content Include="Scripts\Views\Post\reports.js" />
     <Content Include="Scripts\Views\UserProfile\editProfile.js" />
-    <Content Include="Scripts\Views\UserProfile\index.js" />
     <Content Include="Scripts\Views\UserProfile\travels.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

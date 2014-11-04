@@ -77,16 +77,12 @@ namespace TravelMap.Controllers
                 // Attempt to register the user
                 try
                 {
-                    model.Photo = new byte[image.ContentLength];
-                    image.InputStream.Read(model.Photo, 0, image.ContentLength);
+                    //model.Photo = new byte[image.ContentLength];
+                    //image.InputStream.Read(model.Photo, 0, image.ContentLength);
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password,
                         new
                         {
                             Email = model.Email,
-                            Surname = model.Surname,
-                            BirthDate = model.BirthDate,
-                            Phone = model.Phone,
-                            Photo = model.Photo,
                         });
                     WebSecurity.Login(model.UserName, model.Password);
                     return RedirectToAction("Index", "Home");

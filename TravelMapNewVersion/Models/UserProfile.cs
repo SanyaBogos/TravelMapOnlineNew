@@ -40,13 +40,15 @@ public partial class UserProfile
 
     public string Surname { get; set; }
 
-    public System.DateTime BirthDate { get; set; }
+    public Nullable<System.DateTime> BirthDate { get; set; }
 
     public string Phone { get; set; }
 
     public byte[] Photo { get; set; }
 
     public string Email { get; set; }
+
+    public string FirstName { get; set; }
 
 
 

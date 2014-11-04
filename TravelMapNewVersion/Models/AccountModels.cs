@@ -88,18 +88,6 @@ namespace TravelMap.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        public string Surname { get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; }
-
-        public byte[] Photo { get; set; }
-
-        [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
-
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
     }

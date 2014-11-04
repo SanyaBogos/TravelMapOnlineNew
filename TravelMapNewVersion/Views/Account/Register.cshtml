@@ -30,14 +30,14 @@
                 @Html.LabelFor(m => m.Email)
                 @Html.TextBoxFor(m => m.Email)
             </li>
-            <li>
+            @*<li>
                 @Html.LabelFor(m => m.Surname)
                 @Html.TextBoxFor(m => m.Surname)
             </li>
             <li>
                 @Html.LabelFor(m => m.BirthDate)
                 @Html.TextBoxFor(m => m.BirthDate, new
-           { @*@class = "datepicker"*@type = "date"
+           { type = "date"
            })
             </li>
             <li>
@@ -48,7 +48,7 @@
                 @Html.LabelFor(m => m.Photo)
                 @Html.TextBox("image", "", new { type = "file", name = "image" })
                 @Html.ValidationMessageFor(m => m.Photo)
-            </li>
+            </li>*@
         </ol>
         <input type="submit" value="Register" />
     </fieldset>
