@@ -13,15 +13,15 @@
         //var newUserCountry='';
         var userCountries = @Html.Raw(Json.Encode(Model));
         for(var i = 0;i<userCountries.length;i++)
-        {       
-            userMap.push({id: userCountries[i], showAsSelected: true});            
+        {
+            userMap.push({id: userCountries[i], showAsSelected: true});
         }
         AmMyMaps(userMap);
         //$(".b-popup").show();
     </script>
 }
 
-@section styles{   
+@section styles{
     <link href="~/Content/ammap.css" rel="stylesheet" />
     <link href="~/Content/style.css" rel="stylesheet" />
     <link href="~/Content/popUp.css" rel="stylesheet" />
@@ -31,10 +31,11 @@
 <div ng-app="app" ng-controller="PopUpController">
     <div id="mapdiv"></div>
     <!--<div ng-show="currentCountry != null">-->
-        <div class="b-popup" ng-show="currentCountry"><br />
-            <div class="b-popup-content">
-                <h2>Country: {{currentCountry}}</h2>
+    <div class="b-popup" ng-show="currentCountry">
+        <div class="b-popup-content">
+            <h2>Country: {{currentCountry}}</h2>
 
+            <div>
                 <div class="travel-panel" ng-repeat="travel in travels">
                     <div class="travel-header">
                         <span class="travel-travel">Travel 1</span>
@@ -48,23 +49,24 @@
                     </div>
 
                 </div>
-
-
-                <form name ="travelForm" ng-controller="travelController as travelCtrl" novalidate>                    
-                    
-                    (*)From
-                    <input type="date" ng-model="travelCtrl.travel.start" / required>
-                    (*)To
-                    <input type="date" ng-model="travelCtrl.travel.end"/ required>
-                    Message:
-                    <textarea ng-model="travelCtrl.travel.message" rows="5" style="width:300px"></textarea>
-
-                    <input type="button" value="Ok" ng-click="travelCtrl.clickOK()" />
-                    <input type="button"  value="Cancel" ng-click="travelCtrl.clickCancel()" />
-                </form>
-
             </div>
+
+
+            <form class="input-form" name="travelForm" ng-controller="travelController as travelCtrl" novalidate>
+
+                (*)From
+                <input type="date" ng-model="travelCtrl.travel.start" class="date-input" / required>
+                (*)To
+                <input type="date" ng-model="travelCtrl.travel.end" class="date-input" / required>
+                Message:
+                <textarea ng-model="travelCtrl.travel.message" rows="5"></textarea>
+
+                <input type="button" value="Ok" ng-click="travelCtrl.clickOK()" />
+                <input type="button" value="Cancel" ng-click="travelCtrl.clickCancel()" />
+            </form>
+
         </div>
+    </div>
     @*</div>*@
 
 </div>

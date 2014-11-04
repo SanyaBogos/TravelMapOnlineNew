@@ -9,10 +9,16 @@
     <script src="~/Scripts/Views/Post/reports.js"></script>
 }
 @section styles
-{   
-    <link rel="stylesheet" href="~/Content/reports.css"/>
+{
+    <link rel="stylesheet" href="~/Content/reports.css" />
 }
 <div ng-app="app" ng-controller="ReportsController" ng-init="init('@Model')">
+    <div class="control-panel">
+        <div class="report-button control-button">-</div>
+        <div class="report-button control-button" style="font-size: 3em; ">&#9998;</div>
+        <div class="report-button control-button">+</div>
+
+    </div>
     <div class="current-report report">
         <div class="report-heading">
             <h3 class="report-title">{{report.title}}</h3>

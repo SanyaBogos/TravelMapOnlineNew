@@ -21,9 +21,9 @@
             <h3>{{group.country}} <sup class="travels-count">{{group.travels.length}}</sup></h3>
         </div>
         <div class="travels" style="width: 100%;" ng-show="group.show">
-            <div class="travel" ng-repeat="travel in group.travels">
+            <div class="travel" ng-repeat="travel in group.travels | orderBy:'startDate'">
                 <div class="travel-body">
-                    <div class="travel-date">
+                     <div class="travel-date">
                         <table>
                             <tr>
                                 <td>
@@ -44,7 +44,7 @@
                         </table>
                     </div>
                     <a href="/Post/TravelReports?travelId={{travel.travelId}}&countryName={{group.country}}" class="show-reports-btn">Reports</a>
-                   @* @Html.ActionLink("Show reports", "TravelReports", "Post",new {travelId = ViewBag.TravelId}, new{@class="show-reports-btn"})*@
+                    @* @Html.ActionLink("Show reports", "TravelReports", "Post",new {travelId = ViewBag.TravelId}, new{@class="show-reports-btn"})*@
                 </div>
             </div>
         </div>
