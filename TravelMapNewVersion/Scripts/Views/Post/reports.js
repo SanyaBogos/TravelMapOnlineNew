@@ -57,7 +57,7 @@ app.controller("ReportsController", function ($scope, $http) {
         if (isNew) {
             addReport();
         } else {
-
+	        editReport();
         }
     };
 

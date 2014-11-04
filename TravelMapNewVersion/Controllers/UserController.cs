@@ -397,7 +397,7 @@ namespace TravelMap.Controllers
                         Photo = man.Photo,
                         UserName = man.UserName,
                         Surname = man.UserName,
-                        BirthDate = man.BirthDate.Millisecond,
+                        BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
                         Email = man.Email
                     });
                 }
@@ -413,7 +413,7 @@ namespace TravelMap.Controllers
                     Photo = Convert.ToBase64String(man.Photo),
                     UserName = man.UserName,
                     Surname = man.Surname,
-                    BirthDate = man.BirthDate.Millisecond,
+					BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
                     Email = man.Email
                 });
             }
