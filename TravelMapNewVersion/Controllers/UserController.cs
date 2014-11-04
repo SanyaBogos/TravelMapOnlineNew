@@ -91,7 +91,7 @@ namespace TravelMap.Controllers
         // (except Dispose)
 
         // GET: UserProfiles/Details/5
-        public ActionResult Details(Guid? id)
+		private ActionResult Details(Guid? id)
         {
             if (id == null)
             {
@@ -106,7 +106,7 @@ namespace TravelMap.Controllers
         }
 
         // GET: UserProfiles/Edit/5
-        public ActionResult Edit(Guid? id)
+		private ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
@@ -126,7 +126,7 @@ namespace TravelMap.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,UserName,Surname,BirthDate,Phone,Photo,Email")] UserProfile userProfile)
+        private ActionResult Edit([Bind(Include = "UserId,UserName,Surname,BirthDate,Phone,Photo,Email")] UserProfile userProfile)
         {
             if (ModelState.IsValid)
             {
@@ -139,7 +139,7 @@ namespace TravelMap.Controllers
         }
 
         // GET: UserProfiles/Delete/5
-        public ActionResult Delete(Guid? id)
+		private ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
@@ -156,7 +156,7 @@ namespace TravelMap.Controllers
         // POST: UserProfiles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
+		private ActionResult DeleteConfirmed(Guid id)
         {
             UserProfile userProfile = db.UserProfiles.Find(id);
             db.UserProfiles.Remove(userProfile);
