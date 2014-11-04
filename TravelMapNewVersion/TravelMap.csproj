@@ -287,6 +287,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\editProfile.css" />
+    <Content Include="Content\feed.css" />
     <Content Include="Content\popUp.css" />
     <Content Include="Content\reports.css" />
     <Content Include="Content\style.css" />
@@ -320,6 +321,8 @@
     <Content Include="Images\ammap\xIcon.gif" />
     <Content Include="Images\ammap\xIconH.gif" />
     <Content Include="Images\background\board.jpg" />
+    <Content Include="Images\heart.png" />
+    <Content Include="Images\heart2.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\edit.svg" />
     <Content Include="img\glyphicons-halflings-white.png" />

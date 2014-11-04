@@ -31,9 +31,8 @@ namespace TravelMap.Controllers
 				return new JsonResult();
 			}
 			var posts = userProfile.Posts;
-
 			
-			IQueryable<Post> otherPosts = db.Posts.Where(p => p.UserId != id);// userProfile.Followers.Select(f => f.UserProfile.Posts);
+			var otherPosts = db.Posts.Where(p => p.UserId != id);
 			posts.AddRange(otherPosts);
 
 			posts = posts.OrderByDescending(p => p.Time).ToList();
@@ -47,7 +46,7 @@ namespace TravelMap.Controllers
 					Country = post.Travel.Country.Name,
 					StartDate = dateToJs(post.Travel.StartDate.Value),
 					EndDate = dateToJs(post.Travel.EndDate.Value),
-					User = post.UserProfile.UserName,
+					User = post.UserProfile.UserName == userProfile.UserName ? "You" : post.UserProfile.UserName,
 					PostText = post.Text
 				});
 			}
