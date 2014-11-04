@@ -9,9 +9,9 @@
             //console.log($scope.currentCountry);
             $scope.$apply();
         }
-        //var travel1 = { 'start': '2014-10-13', 'end': '2014-11-13', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." },
-        //    travel2 = { 'start': '2014-2-13', 'end': '2014-2-155', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." };
-        //$scope.travels = [travel1, travel2];
+        var travel1 = { 'start': '2014-10-13', 'end': '2014-11-13', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." },
+            travel2 = { 'start': '2014-2-13', 'end': '2014-2-155', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." };
+        $scope.travels = [travel1, travel2];
         $scope.travels = [];
 
 

@@ -7,17 +7,42 @@
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
     <script src="~/Scripts/Map/popUp.js"></script>
+    <script src="~/Scripts/Map/map.js"></script>
 
     <script type="text/javascript">
+
         var userMap=[];
         //var newUserCountry='';
-        var userCountries = @Html.Raw(Json.Encode(Model));
+        var userCountries = @Html.Raw(Json.Encode(Model));        
         for(var i = 0;i<userCountries.length;i++)
         {
             userMap.push({id: userCountries[i], showAsSelected: true});
         }
         AmMyMaps(userMap);
-        //$(".b-popup").show();
+        /*DOESNOTWORKIT'SCRAZY
+        function updateMap() {
+            var userMap = [],
+                userCountries = [],
+                user;
+            $.get("User/GetCurrentUser", function (data) {
+                user = data;
+                console.log(user);
+            }).done(function () {
+                $.get("User/GetUserVisitedCountries?id=" + user, function (data) {
+                    userCountries = data;
+                    for (var i = 0; i < userCountries.length; i++) {
+                        userMap.push({ id: userCountries[i].title+"", showAsSelected: true });
+                    }
+                    AmMyMaps(userMap);
+                });
+            });
+    
+    
+        }
+
+        updateMap();
+        */
+    //$(".b-popup").show();
     </script>
 }
 
@@ -25,7 +50,6 @@
     <link href="~/Content/ammap.css" rel="stylesheet" />
     <link href="~/Content/style.css" rel="stylesheet" />
     <link href="~/Content/popUp.css" rel="stylesheet" />
-
 }
 
 <div ng-app="app" ng-controller="PopUpController">
@@ -50,14 +74,12 @@
 
                 </div>
             </div>
-
-
             <form class="input-form" name="travelForm" ng-controller="travelController as travelCtrl" novalidate>
 
                 (*)From
-                <input type="date" ng-model="travelCtrl.travel.start" class="date-input" / required>
+                <input type="date" ng-model="travelCtrl.travel.start" class="date-input" /> required>
                 (*)To
-                <input type="date" ng-model="travelCtrl.travel.end" class="date-input" / required>
+                <input type="date" ng-model="travelCtrl.travel.end" class="date-input" /> required>
                 Message:
                 <textarea ng-model="travelCtrl.travel.message" rows="5"></textarea>
 

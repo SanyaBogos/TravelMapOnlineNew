@@ -60,7 +60,7 @@ namespace TravelMap.Controllers
             return Json(jsonResult, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult TravelReports(Guid travelId, string countryName="")
+        public ActionResult TravelReports(Guid travelId, string countryName = "")
         {
             ViewBag.CountryName = countryName;
             return View(travelId);
@@ -82,7 +82,7 @@ namespace TravelMap.Controllers
 
 
         [HttpPost]
-        public void PostReport(string text, Guid travelId, string title="")
+        public Guid PostReport(string text, Guid travelId, string title = "")
         {
             var travel = db.Travels.First(travel1 => travel1.TravelId == travelId);
             var post = new Post
@@ -101,6 +101,27 @@ namespace TravelMap.Controllers
             };
             travel.Posts.Add(post);
             db.UserProfiles.First(profile => profile.UserId == WebSecurity.CurrentUserId).Posts.Add(post);
+            db.SaveChanges();
+            return post.PostId;
+        }
+
+        [HttpGet]
+        public void DeleteReport(Guid reportId)
+        {
+            if (db.Posts.Count(post => post.PostId==reportId)==0)
+            {
+                return;
+            }
+            db.Posts.Remove(db.Posts.First(post => post.PostId == reportId));
+            db.SaveChanges();
+        }
+
+        [HttpPost]
+        private void EditReport(Guid postId, string text, string title)
+        {
+            var post = db.Posts.First(pst => pst.PostId == postId);
+            post.Text = text;
+            post.Title = title;
             db.SaveChanges();
         }
     }

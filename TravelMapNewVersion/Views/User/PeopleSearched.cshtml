@@ -7,9 +7,10 @@
     {
         <div class="table-responsive">
             <table>
-                <tr>
-                    @foreach (var item in Model)
-                    {
+
+                @foreach (var item in Model)
+                {
+                    <tr>
                         <td>@Html.Image(@System.Convert.ToBase64String(item.Photo))</td>
                         <td>
                             <p>@item.UserName</p>
@@ -19,21 +20,22 @@
                             <p><input type="button" value="Speaking" /> </p>
                             <p><button class="followBtn" id="@item.UserId">Follow</button></p>
                         </td>
-                    }
-                </tr>
+
+                    </tr>
+                }
             </table>
         </div>
     }
 </div>
 
 @*<script src="~/Scripts/jquery-2.1.1.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".followBtn").each(function () {
-            $(this).click = function () {
-                alert($(this).attr('id'));
-            };
+    <script>
+        $(document).ready(function () {
+            $(".followBtn").each(function () {
+                $(this).click = function () {
+                    alert($(this).attr('id'));
+                };
+            });
         });
-    });
-</script>*@
+    </script>*@
 

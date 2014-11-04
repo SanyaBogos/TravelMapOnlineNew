@@ -24,6 +24,8 @@ namespace TravelMap.Controllers
             return View(userCountries);
         }
 
+        
+
         [HttpPost]
         public Guid SetTravel(string country, string start, string end)
         {
