@@ -1,49 +1,88 @@
-﻿@using (Ajax.BeginForm("PeopleSearched", "User", new AjaxOptions
-    {
-        UpdateTargetId = "result",
-        HttpMethod = "POST",
-        InsertionMode = InsertionMode.Replace,
-        LoadingElementId = "loading"
-    }))
-{
-    <input type="text" placeholder="search" name="searchUser" />
-    <button id="someButton" type="submit">send</button>
-}
-<div id="loading" style="display: none">
-    <img src="~/Image/ajax-loader.gif" style="margin-left:auto; margin-right:auto" />
-</div>
-@Html.Partial("PeopleSearched")
-
-
-@*<h1>People search</h1>    
+﻿<h1>People search</h1>
     <div ng-app="people" ng-controller="SearchController as search">
+    <div style="display: block; width: 100%">
         <input type="text" placeholder="Search people" ng-model="search.searchMask" />
         <button ng-click="search.searchPeople()">Search</button>
-
+    </div>
         {{search.searchMask}}
-        <div ng-repeat="man in search.people">
-            Surname:
-            <p>{{man.Surname}}</p>
+    <div ng-repeat="man in search.people" style="float:left; background-color: greenyellow; width: 380px">
+        <img ng-src="data:image/jpg;base64,{{man.Photo}}" style="float:left" width="160" height="200" />
+        <div style="float:left">
+            <p ng-show="man.UserName">Name: {{man.UserName}}</p>
+            <p ng-show="man.Surname">Surname: {{man.Surname}}</p>
+            <p ng-show="true">Birthdate: {{man.BirthDate | date:'medium'}}</p>
+            <p ng-show="man.Email">Email: {{man.Email}}</p>
         </div>
 
+        @*<button>Messages</button>*@
+        @*<button ng-show="">Follow</button>*@
+
     </div>
+</div>
 
     @section scripts{
         <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/Views/UserProfile/additionFunction.js"></script>
         <script>
             (function () {
                 var app = angular.module('people', []);
 
                 app.controller('SearchController', function ($http) {
                     this.searchMask = '';
-                    this.people = null;
+                this.people = [];
+                this.followers = null;
 
+                ppl = this.people;
+                var ppl = this.people;
                     this.searchPeople = function () {
                         $http.post('/User/PeopleSearched', { searchUser: this.searchMask }).
                         success(function (data, status, headers, config) {
-                            this.people = data;
-                            console.log(this.people);
-                            //this.$apply();
+                        ppl.length = 0;
+                        for (var i = 0; i < data.length; i++) {
+                            ppl.push(data[i]);
+                        }
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log(data);
+                    });
+
+                    //$http.get('/User/GetFollowersForUser').
+                    //    success(function (data, status, headers, config) {
+                    //        this.followers = data;
+                    //    }).
+                    //error(function (data, status, headers, config) {
+                    //    console.log(data);
+                    //});
+                };
+
+                //this.followClick() = function () {
+
+                //};
+
+                //function myfunction() {
+
+                //}
+
+            });
+        })();
+    </script>
+}
+
+@*@section scripts{
+        <script src="~/Scripts/angular.js"></script>
+        <script>
+            (function () {
+                var app = angular.module('people', []);
+
+                app.controller('SearchController', function ($scope, $http) {
+                    $scope.searchMask = '';
+                    $scope.people = null;
+
+                    $scope.searchPeople = function () {
+                        $http.post('/User/PeopleSearched', { searchUser: $scope.searchMask }).
+                        success(function (data, status, headers, config) {
+                            $scope.people = data;
+                            console.log($scope.people);
                         }).
                         error(function (data, status, headers, config) {
                             console.log('soem error may be)' + data + status);
