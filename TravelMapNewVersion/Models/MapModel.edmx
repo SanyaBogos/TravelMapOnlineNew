@@ -42,12 +42,12 @@
           </Key>
           <Property Name="PostId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Text" Type="varchar(max)" />
+          <Property Name="Text" Type="nvarchar(max)" />
           <Property Name="TypeId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ParentId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Time" Type="datetime" Nullable="false" />
           <Property Name="TravelId" Type="uniqueidentifier" />
-          <Property Name="Title" Type="nchar" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="PostFile">
           <Key>
@@ -617,12 +617,12 @@
           </Key>
           <Property Name="PostId" Type="Guid" Nullable="false" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TypeId" Type="Guid" Nullable="false" />
           <Property Name="ParentId" Type="Guid" Nullable="false" />
           <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="TravelId" Type="Guid" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Post1" Relationship="Model.FK_Post_Post" FromRole="Post" ToRole="Post1" />
           <NavigationProperty Name="Post2" Relationship="Model.FK_Post_Post" FromRole="Post1" ToRole="Post" />
           <NavigationProperty Name="Travel" Relationship="Model.FK_Post_ToTable" FromRole="Post" ToRole="Travel" />

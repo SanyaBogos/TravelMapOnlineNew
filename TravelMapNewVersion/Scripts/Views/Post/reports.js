@@ -11,6 +11,7 @@ app = angular.module("app");
 
 app.controller("ReportsController", function ($scope, $http) {
     var reports = [];
+    var unmodifiedCopy = {};
     $scope.report = {};
     $scope.editMode = false;
     var isNew = false;
@@ -25,6 +26,7 @@ app.controller("ReportsController", function ($scope, $http) {
     };
 
     $scope.isLast = function () {
+        console.log(reports);
         return reports.indexOf($scope.report) == reports.length - 1;
     };
 
@@ -49,15 +51,34 @@ app.controller("ReportsController", function ($scope, $http) {
         $scope.report = {};
     };
     $scope.editReport = function () {
+        angular.copy($scope.report, unmodifiedCopy);
         $scope.editMode = true;
         isNew = false;
     };
 
     $scope.saveReport = function () {
+        if (!$scope.report.text) {
+            alert("Enter some text");
+        }
         if (isNew) {
             addReport();
         } else {
-	        editReport();
+            editReport();
+        }
+    };
+    $scope.cancel = function () {
+        if (confirm("Discard changes?")) {
+            angular.copy(unmodifiedCopy, $scope.report);
+
+            $scope.editMode = false;
+        }
+    };
+    $scope.getControlButtonsClass = function (actionName) {
+        if (actionName != 'add' && reports.length == 0) {
+            return "disabled-button";
+        }
+        if ($scope.editMode) {
+            return "disabled-button";
         }
     };
 
@@ -67,31 +88,28 @@ app.controller("ReportsController", function ($scope, $http) {
                 $scope.report.postId = data;
                 $scope.editMode = false;
                 reports.push($scope.report);
-                $scope.report = reports[0];
             });
     }
 
 
     $scope.deleteReport = function () {
-        console.log($scope.report);
+        if (!confirm("Are you sure?")) {
+            return;
+        }
         $http.get('/Post/DeleteReport?reportId=' + $scope.report.postId).
             success(function (data, status, headers, config) {
-                reports.splice(reports.indexOf($scope.report, 1));
-                console.log(reports);
-                $scope.report = {};
+                reports.splice(reports.indexOf($scope.report), 1);
                 $scope.report = reports[0];
             });
+
     };
 
     function editReport() {
         $http.post('/Post/EditReport', { text: $scope.report.text, title: $scope.report.title, postId: $scope.report.postId }).
             success(function (data, status, headers, config) {
                 $scope.editMode = false;
-                reports.push($scope.report);
-                $scope.report = reports[0];
+                //reports.push($scope.report);
             });
     };
-
-
 
 });

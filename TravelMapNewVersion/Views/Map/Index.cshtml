@@ -7,43 +7,7 @@
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
     <script src="~/Scripts/Map/popUp.js"></script>
-    <script src="~/Scripts/Map/map.js"></script>
 
-    <script type="text/javascript">
-
-        var userMap=[];
-        //var newUserCountry='';
-        var userCountries = @Html.Raw(Json.Encode(Model));        
-        for(var i = 0;i<userCountries.length;i++)
-        {
-            userMap.push({id: userCountries[i], showAsSelected: true});
-        }
-        AmMyMaps(userMap);
-        /*DOESNOTWORKIT'SCRAZY
-        function updateMap() {
-            var userMap = [],
-                userCountries = [],
-                user;
-            $.get("User/GetCurrentUser", function (data) {
-                user = data;
-                console.log(user);
-            }).done(function () {
-                $.get("User/GetUserVisitedCountries?id=" + user, function (data) {
-                    userCountries = data;
-                    for (var i = 0; i < userCountries.length; i++) {
-                        userMap.push({ id: userCountries[i].title+"", showAsSelected: true });
-                    }
-                    AmMyMaps(userMap);
-                });
-            });
-    
-    
-        }
-
-        updateMap();
-        */
-    //$(".b-popup").show();
-    </script>
 }
 
 @section styles{
@@ -77,10 +41,12 @@
             <form class="input-form" name="travelForm" ng-controller="travelController as travelCtrl" novalidate>
 
                 (*)From
-                <input type="date" ng-model="travelCtrl.travel.start" class="date-input" /> required>
+                <input type="date" ng-model="travelCtrl.travel.start" class="date-input" required />
                 (*)To
-                <input type="date" ng-model="travelCtrl.travel.end" class="date-input" /> required>
-                Message:
+                <input type="date" ng-model="travelCtrl.travel.end" class="date-input" required />
+                Title:
+                <input type="text" ng-model="travelCtrl.travel.title" style="width: 100%" />
+                Text:
                 <textarea ng-model="travelCtrl.travel.message" rows="5"></textarea>
 
                 <input type="button" value="Ok" ng-click="travelCtrl.clickOK()" />
