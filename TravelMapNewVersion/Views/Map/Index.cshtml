@@ -7,42 +7,43 @@
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
     <script src="~/Scripts/Map/popUp.js"></script>
-    <script src="~/Scripts/Map/map.js"></script>
 
     <script type="text/javascript">
 
-        var userMap=[];
+        @*var userMap=[];
         //var newUserCountry='';
-        var userCountries = @Html.Raw(Json.Encode(Model));        
+        var userCountries = @Html.Raw(Json.Encode(Model));
         for(var i = 0;i<userCountries.length;i++)
         {
             userMap.push({id: userCountries[i], showAsSelected: true});
         }
-        AmMyMaps(userMap);
-        /*DOESNOTWORKIT'SCRAZY
+        AmMyMaps(userMap);*@
+
         function updateMap() {
-            var userMap = [],
-                userCountries = [],
-                user;
-            $.get("User/GetCurrentUser", function (data) {
-                user = data;
-                console.log(user);
-            }).done(function () {
-                $.get("User/GetUserVisitedCountries?id=" + user, function (data) {
-                    userCountries = data;
-                    for (var i = 0; i < userCountries.length; i++) {
-                        userMap.push({ id: userCountries[i].title+"", showAsSelected: true });
-                    }
-                    AmMyMaps(userMap);
+            AmCharts.ready(function () {
+                var userMap = [],
+                    userCountries = [],
+                    user;
+                $.get("/User/GetCurrentUser", function (data) {
+                    user = data;
+
+                }).done(function () {
+                    $.get("/User/GetUserVisitedCountries?id=" + user, function (data) {
+                        userCountries = data;
+
+                        for (var i = 0; i < userCountries.length; i++) {
+                            userMap.push({ id: userCountries[i].title + "", showAsSelected: true });
+                        }
+
+                        AmMyMaps(userMap);
+                    });
                 });
             });
-    
-    
         }
 
         updateMap();
-        */
-    //$(".b-popup").show();
+
+        //$(".b-popup").show();
     </script>
 }
 

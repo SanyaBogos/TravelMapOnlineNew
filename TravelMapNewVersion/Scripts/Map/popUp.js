@@ -5,7 +5,8 @@
         $scope.currentCountry = null;
         $scope.message = null;
         $scope.clickMap = function (newCountry) {
-            $scope.currentCountry = newCountry;
+            console.log(newCountry);
+            $scope.currentCountry = newCountry.title;
             //console.log($scope.currentCountry);
             $scope.$apply();
         }
@@ -28,7 +29,7 @@
         };
 
 
-        this.clickOK = function() {
+        this.clickOK = function () {
             var trvl = this.travel;
             //this.travel.start = this.travel.start.split("-");
             //this.travel.end = this.travel.end.split("-");
@@ -36,20 +37,26 @@
                 country: $scope.$parent.currentCountry,
                 start: new Date(this.travel.start).getTime() / 1000,
                 end: new Date(this.travel.end).getTime() / 1000,
-            }).success(function(data, status, headers, config) {
+            }).success(function (data, status, headers, config) {
 
                 $http.post('/Post/PostReport', {
                     text: trvl.message,
                     travelId: data
                 });
+
+                for (var i = 0; i < map.dataProvider.areas.length; i++) {
+                    if (map.dataProvider.areas[i].id === $scope.$parent.currentCountry.id) {
+                        map.dataProvider.areas[i].showAsSelected = true;
+                    }
+                }
+                //map.dataProvider.areas.push({ id: $scope.$parent.currentCountry.id + "", showAsSelected: true });
+                //map.validateNow();
                 trvl = {};
                 $scope.$parent.currentCountry = null;
-            }).error(function(data, status, headers, config) {
-                //  console.log('error');
+
+            }).error(function (data, status, headers, config) {
                 alert(status);
             });
-            //this.travel = {};
-            //$scope.$parent.currentCountry = null;
         };
     });
 
