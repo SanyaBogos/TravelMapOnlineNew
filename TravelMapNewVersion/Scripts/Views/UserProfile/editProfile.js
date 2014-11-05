@@ -11,22 +11,30 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 	$scope.emailChanged = false;
 	$scope.phoneChanged = false;
 
-	$scope.formPictureData = function () {
-		var base64Picture = arrayBufferToBase64($scope.model.Photo);
-		return "data:image/jpg;base64," + base64Picture;
+	$scope.formPictureData = function() {
+		if ($scope.model.Photo) {
+			var base64Picture = arrayBufferToBase64($scope.model.Photo);
+			return "data:image/jpg;base64," + base64Picture;
+		} else {
+			return "/Images/icon_user.png"; // User designed by Thomas Le Bas from the Noun Project
+		}
 	};
+
+	$scope.defineEditButton = function(variable) {
+		return (variable == false || variable === null)
+			? "Set"
+			: "Edit";
+	}
 
 	$scope.$evalAsync(function() {
 		$http.get("/User/JIndex/" + $scope.userId)
 			.success(function(data, status) {
 				$scope.model = data;
-				$scope.photoData = $scope.formPictureData();
 				// save model to allow canceling changes
 				$scope.unmodifiedModel = angular.copy($scope.model);
-				// ...
-			}).error(function(data, status) {
+				$scope.photoData = $scope.formPictureData();
+		}).error(function(data, status) {
 				$scope.error = status;
-				//alert("error in get--" + status + "--" + data.substring(0,100));
 			});
 	});
 
@@ -73,12 +81,12 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 	$scope.saveAll = function () {
 		// todo: send only fields that was changed
 		$http.post("/User/Save", {
-			id: $scope.userId, surname: $scope.model.Surname,
+			id: $scope.userId, firstname: $scope.model.FirstName, surname: $scope.model.Surname,
 			email: $scope.model.Email, phone: $scope.model.Phone
 		})
 			.success(function (data, status, headers, config1) {
-				$scope.emailChanged = $scope.phoneChanged = $scope.surnameChanged = false;
-				$scope.editEmail = $scope.editPhone = $scope.editSurname = false;
+				$scope.emailChanged = $scope.phoneChanged = $scope.surnameChanged = $scope.firstnameChanged =  false;
+				$scope.editEmail = $scope.editPhone = $scope.editSurname = $scope.editFirstname = false;
 				$scope.unmodifiedModel = angular.copy($scope.model);
 				// todo: display somehow that it's really saved
 				//console.log(data1);
@@ -113,7 +121,7 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 	}
 
 	$scope.checkFirstnameEdit = function () {
-		if ($scope.model.Firstname == $scope.unmodifiedModel.Firstname) {
+		if ($scope.model.FirstName == $scope.unmodifiedModel.FirstName) {
 			$scope.firstnameChanged = false;
 			$scope.editFirstname = false;
 		}
@@ -143,7 +151,7 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 
 	$scope.cancelFirstnameEdit = function () {
 		$scope.editFirstname = false;
-		$scope.model.Firstname = $scope.unmodifiedModel.Firstname;
+		$scope.model.FirstName = $scope.unmodifiedModel.FirstName;
 		$scope.firstnameChanged = false;
 	}
 
