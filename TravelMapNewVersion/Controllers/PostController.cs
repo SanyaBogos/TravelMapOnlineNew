@@ -117,7 +117,7 @@ namespace TravelMap.Controllers
         }
 
         [HttpPost]
-        private void EditReport(Guid postId, string text, string title)
+        public void EditReport(Guid postId, string text, string title)
         {
             var post = db.Posts.First(pst => pst.PostId == postId);
             post.Text = text;

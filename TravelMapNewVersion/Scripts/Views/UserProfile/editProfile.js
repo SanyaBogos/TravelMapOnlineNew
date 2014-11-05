@@ -112,6 +112,13 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 		}
 	}
 
+	$scope.checkFirstnameEdit = function () {
+		if ($scope.model.Firstname == $scope.unmodifiedModel.Firstname) {
+			$scope.firstnameChanged = false;
+			$scope.editFirstname = false;
+		}
+	}
+
 	//#endregion
 
 	//#region onCancel
@@ -132,6 +139,12 @@ app.controller('EditProfileCtrl', function($scope, $http) {
 		$scope.editSurname = false;
 		$scope.model.Surname = $scope.unmodifiedModel.Surname;
 		$scope.surnameChanged = false;
+	}
+
+	$scope.cancelFirstnameEdit = function () {
+		$scope.editFirstname = false;
+		$scope.model.Firstname = $scope.unmodifiedModel.Firstname;
+		$scope.firstnameChanged = false;
 	}
 
 	//#endregion

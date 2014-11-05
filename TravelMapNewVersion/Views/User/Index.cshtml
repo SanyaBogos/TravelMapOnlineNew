@@ -9,7 +9,7 @@
 }
 @section styles
 {
-    @Styles.Render("~/Content/bootstrap.css")
+    @Styles.Render("~/Content/bootstrap.min.css")
     @Styles.Render("~/Content/editProfile.css")
 }
 <br />
@@ -27,18 +27,33 @@
 		@* Show confirm that photo was changed *@
 		@*<div ng-show="showConfirm" class="confirmPhotoChange">Changed</div>*@
 	</div>
+	
+	<br />
+	<span class="profileProp">First Name :</span>
+	<div ng-hide="editFirstname" ng-model="model.Firstname" ng-mouseover="overFirstname = true" ng-mouseleave="overFirstname = false" class="profileValue">
+		{{model.Firstname}}
+		<a ng-class="{ 'btnNotActive' : !overFirstname }" ng-click="editFirstname = !editFirstname" class="btn btn-xs btn-info">
+			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
+		</a>
+	</div>
+	<div ng-show="editFirstname" class="profileValue">
+		<input ng-model="model.Firstname" ng-change="firstnameChanged = true" ng-blur="checkFirstnameEdit()"
+			   type="text" ng-class="{ 'editedInput' : firstnameChanged }" />
+		<a ng-click="cancelFirstnameEdit()" class="btn btn-xs btn-info">Cancel</a>
+	</div>
+
 	<br />
 	<span class="profileProp">Surname :</span>
 	<div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">
 		{{model.Surname}}
-		<a ng-class="{ 'btnNotActive' : !overSurname }" ng-click="editSurname = !editSurname" class="btn btn-mini btn-info">
+		<a ng-class="{ 'btnNotActive' : !overSurname }" ng-click="editSurname = !editSurname" class="btn btn-xs btn-info">
 			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
 		</a>
 	</div>
 	<div ng-show="editSurname" class="profileValue">
 		<input ng-model="model.Surname" ng-change="surnameChanged = true" ng-blur="checkSurnameEdit()"
 		       type="text" ng-class="{ 'editedInput' : surnameChanged }" />
-		<a ng-click="cancelSurnameEdit()" class="btn-xs btn-info">Cancel</a>
+		<a ng-click="cancelSurnameEdit()" class="btn btn-xs btn-info">Cancel</a>
 	</div>
 
 
@@ -46,7 +61,7 @@
 	<span class="profileProp">Phone :</span>
 	<div ng-hide="editPhone" ng-model="model.Phone" ng-mouseover="overPhone = true" ng-mouseleave="overPhone = false" class="profileValue">
 		{{model.Phone}}
-		<a ng-class="{ 'btnNotActive' : !overPhone}" ng-click="editPhone = !editPhone" class="btn btn-mini btn-info">
+		<a ng-class="{ 'btnNotActive' : !overPhone}" ng-click="editPhone = !editPhone" class="btn btn-xs btn-info">
 			<img src="~/Images/edit.svg" class="editIcon" />Edit
 		</a>
 	</div>
@@ -61,7 +76,7 @@
 	<span class="profileProp">Email :</span>
 	<div ng-hide="editEmail" ng-model="model.Email" ng-mouseover="overEmail = true" ng-mouseleave="overEmail = false" class="profileValue">
 		{{model.Email}}
-		<a ng-class="{ 'btnNotActive' : !overEmail}" ng-click="editEmail = !editEmail" class="btn btn-mini btn-info">
+		<a ng-class="{ 'btnNotActive' : !overEmail}" ng-click="editEmail = !editEmail" class="btn btn-xs btn-info">
 			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
 		</a>
 	</div>
@@ -70,6 +85,9 @@
 		       type="text" ng-class="{ 'editedInput' : emailChanged }" />
 		<a ng-click="cancelEmailEdit()" class="btn btn-xs btn-info">Cancel</a>
 	</div>
+	
+	<br/>
+	<span class="profileProp">Birth date :</span>
 
 
 	<div ng-show="emailChanged || phoneChanged || surnameChanged" class="saveButton">

@@ -119,9 +119,10 @@
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar(max)" />
+          <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar(max)" />
           <Property Name="Surname" Type="nvarchar(max)" />
-          <Property Name="BirthDate" Type="datetime" Nullable="false" />
+          <Property Name="BirthDate" Type="datetime" />
           <Property Name="Phone" Type="nvarchar(max)" />
           <Property Name="Photo" Type="varbinary(max)" />
           <Property Name="Email" Type="nvarchar(max)" />
@@ -521,9 +522,9 @@
             <PropertyRef Name="UserId" />
           </Key>
           <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="UserName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" Nullable="false" />
           <Property Name="Surname" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BirthDate" Type="DateTime" Precision="3" Nullable="true" />
           <Property Name="Phone" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -532,6 +533,7 @@
           <NavigationProperty Name="Travels" Relationship="Model.FK_Travel_ToTable" FromRole="UserProfile" ToRole="Travel" />
           <NavigationProperty Name="security_Roles" Relationship="Model.security_UsersInRoles" FromRole="UserProfile" ToRole="security_Roles" />
           <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="Travel_fk2">
           <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
@@ -794,6 +796,7 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="Model.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
