@@ -12,7 +12,7 @@
 
 .profileProp {
 	display: inline-block;
-	min-width: 80px;
+	min-width: 100px;
 	text-align: right;
 
 	margin-bottom: 5px;
@@ -31,7 +31,12 @@
 .btnNotActive {
 	opacity: 0.3;
 }
-
+.userPhoto-box {
+	float: left;
+	margin-right: 10px;
+	min-width: 150px;
+	min-height: 350px;
+}
 .userPhoto {
 	display: block;
 	max-width: 250px;
@@ -52,6 +57,10 @@
 	cursor: pointer;
 	opacity: 0;
 	filter: alpha(opacity=0);
+}
+.profile-properties {
+	padding-top: 15px;
+	font-size: 16px;
 }
 
 /*

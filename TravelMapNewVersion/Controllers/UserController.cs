@@ -57,9 +57,10 @@ namespace TravelMap.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Save(Guid id, string surname, string email, string phone)
+        public JsonResult Save(Guid id, string firstname, string surname, string email, string phone)
         {
             var userProfile = db.UserProfiles.Find(id);
+	        userProfile.FirstName = firstname;
             userProfile.Surname = surname;
             userProfile.Email = email;
             userProfile.Phone = phone;
