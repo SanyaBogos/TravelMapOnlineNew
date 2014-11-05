@@ -23,9 +23,13 @@
         <div class="report-heading">
             <h3 class="report-title">{{report.title}}</h3>
         </div>
-        <div class="report-body">
+        <div class="report-body" ng-show="!editMode">
             {{report.text}}
         </div>
+        <div class="report-body" ng-show="editMode">
+            {{report.text}}
+        </div>
+
     </div>
     <div class="prev-report report report-button" ng-click="prevReport()" ng-show="!isFirst()"><</div>
 

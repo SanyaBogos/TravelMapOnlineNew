@@ -25,7 +25,7 @@ app.controller("ReportsController", function ($scope, $http) {
     };
 
     $scope.isFirst = function () {
-        return reports.indexOf($scope.report) == 0;
+        return reports.indexOf($scope.report) == 0 || $scope.report === undefined;
     };
 
     $scope.nextReport = function () {

@@ -1,27 +1,10 @@
-﻿@*@using (Ajax.BeginForm("PeopleSearched", "User", new AjaxOptions
-        {
-            UpdateTargetId = "result",
-            HttpMethod = "POST",
-            InsertionMode = InsertionMode.Replace,
-            LoadingElementId = "loading"
-        }))
-    {
-        <input type="text" placeholder="search" name="searchUser" />
-        <button id="someButton" type="submit">send</button>
-    }
-    <div id="loading" style="display: none">
-        <img src="~/Image/ajax-loader.gif" style="margin-left:auto; margin-right:auto" />
-    </div>
-    @Html.Partial("PeopleSearched")*@
-
-
-<h1>People search</h1>
-<div ng-app="people" ng-controller="SearchController as search">
+﻿<h1>People search</h1>
+    <div ng-app="people" ng-controller="SearchController as search">
     <div style="display: block; width: 100%">
         <input type="text" placeholder="Search people" ng-model="search.searchMask" />
         <button ng-click="search.searchPeople()">Search</button>
     </div>
-    {{search.searchMask}}
+        {{search.searchMask}}
     <div ng-repeat="man in search.people" style="float:left; background-color: greenyellow; width: 380px">
         <img ng-src="data:image/jpg;base64,{{man.Photo}}" style="float:left" width="160" height="200" />
         <div style="float:left">
@@ -32,28 +15,28 @@
         </div>
 
         @*<button>Messages</button>*@
-        <button ng-show="">Follow</button>
+        @*<button ng-show="">Follow</button>*@
 
     </div>
 </div>
 
-@section scripts{
-    <script src="~/Scripts/angular.js"></script>
+    @section scripts{
+        <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/Views/UserProfile/additionFunction.js"></script>
-    <script>
-        (function () {
-            var app = angular.module('people', []);
+        <script>
+            (function () {
+                var app = angular.module('people', []);
 
-            app.controller('SearchController', function ($http) {
-                this.searchMask = '';
+                app.controller('SearchController', function ($http) {
+                    this.searchMask = '';
                 this.people = [];
                 this.followers = null;
 
                 ppl = this.people;
                 var ppl = this.people;
-                this.searchPeople = function () {
-                    $http.post('/User/PeopleSearched', { searchUser: this.searchMask }).
-                    success(function (data, status, headers, config) {
+                    this.searchPeople = function () {
+                        $http.post('/User/PeopleSearched', { searchUser: this.searchMask }).
+                        success(function (data, status, headers, config) {
                         ppl.length = 0;
                         for (var i = 0; i < data.length; i++) {
                             ppl.push(data[i]);
@@ -63,18 +46,18 @@
                         console.log(data);
                     });
 
-                    $http.get('/User/GetFollowersForUser').
-                        success(function (data, status, headers, config) {
-                            this.followers = data;
-                        }).
-                    error(function (data, status, headers, config) {
-                        console.log(data);
-                    });
+                    //$http.get('/User/GetFollowersForUser').
+                    //    success(function (data, status, headers, config) {
+                    //        this.followers = data;
+                    //    }).
+                    //error(function (data, status, headers, config) {
+                    //    console.log(data);
+                    //});
                 };
 
-                this.followClick() = function () {
+                //this.followClick() = function () {
 
-                };
+                //};
 
                 //function myfunction() {
 
