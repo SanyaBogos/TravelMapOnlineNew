@@ -14,15 +14,17 @@ namespace TravelMap.Controllers
         [HttpGet]
         public JsonResult GetPost(Guid id)
         {
-            try
+            var post = db.Posts.First(post1 => post1.PostId == id);
+            var jsonPost = new
             {
-                var result = db.Posts.First(post => post.PostId == id);
-                return Json(result, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception)
-            {
-                return Json(new JsonErrorResponse("can't find post"), JsonRequestBehavior.AllowGet);
-            }
+                postId = post.PostId,
+                text = post.Text,
+                time = post.Time.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
+                travelId = post.TravelId,
+                userId = post.UserId,
+                title = post.Title
+            };
+            return Json(jsonPost, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -51,7 +53,7 @@ namespace TravelMap.Controllers
                 {
                     postId = post.PostId,
                     text = post.Text,
-                    time = post.Time,
+                    time = post.Time.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
                     travelId = post.TravelId,
                     userId = post.UserId,
                     title = post.Title
@@ -108,7 +110,7 @@ namespace TravelMap.Controllers
         [HttpGet]
         public void DeleteReport(Guid reportId)
         {
-            if (db.Posts.Count(post => post.PostId==reportId)==0)
+            if (db.Posts.Count(post => post.PostId == reportId) == 0)
             {
                 return;
             }
