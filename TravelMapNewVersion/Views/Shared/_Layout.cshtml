@@ -54,5 +54,9 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     @RenderSection("scripts", required: false)
+    <script>
+
+        $("#body").css('min-height', $(document).height() );
+    </script>
 </body>
 </html>
