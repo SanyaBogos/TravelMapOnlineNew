@@ -1,0 +1,58 @@
+﻿
+
+.travel-groups {
+    width: 100%;
+    display: block;
+}
+
+.travel-date {
+    font-size: 1.5em;
+}
+
+.travel-groups:hover {
+    cursor: pointer;
+}
+
+.travel-body {
+    padding-bottom: 15px;
+}
+
+.travels-count {
+    background-color: black;
+    color: white;
+    font-size: 0.5em;
+    padding: 1px;
+}
+
+.travel-heading h3 {
+    font-size: 3.5em;
+}
+
+.show-reports-btn {
+    font-size: 2em;
+    margin-bottom: 5px;
+    color: black;
+}
+
+    .show-reports-btn:hover {
+        background-color: transparent;
+        margin-bottom: 5px;
+        color: black;
+    }
+
+.travel {
+    margin-bottom: 5px;
+}
+
+    .travel table {
+        margin: 0;
+        padding: 0;
+        margin-bottom: 5px;
+    }
+
+    .travel td {
+        padding-left: 5px;
+        padding-right: 5px;
+        margin: 0;
+        text-align: right;
+    }

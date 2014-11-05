@@ -34,8 +34,8 @@ namespace TravelMap.Controllers
             {
                 CountryId = countryId,
                 UserId = userId,
-                StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(int.Parse(start)),
-                EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(int.Parse(end)),
+                StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(start)),
+                EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(end)),
                 TravelId = Guid.NewGuid()
             };
             db.Travels.Add(travel);

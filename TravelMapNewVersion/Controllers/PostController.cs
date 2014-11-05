@@ -43,6 +43,7 @@ namespace TravelMap.Controllers
         public JsonResult GetTravelReports(Guid id)
         {
             var result = db.Posts.Where(post => post.TravelId == id && post.PostType.PostTypeId == db.PostTypes.FirstOrDefault(type => type.Name == "report").PostTypeId);
+            result = result.OrderBy(post => post.Time);
             var jsonResult = new List<dynamic>();
             foreach (var post in result)
             {
@@ -52,10 +53,17 @@ namespace TravelMap.Controllers
                     text = post.Text,
                     time = post.Time,
                     travelId = post.TravelId,
-                    userId = post.UserId
+                    userId = post.UserId,
+                    title = post.Title
                 });
             }
             return Json(jsonResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult TravelReports(Guid travelId, string countryName="")
+        {
+            ViewBag.CountryName = countryName;
+            return View(travelId);
         }
 
         [HttpGet]

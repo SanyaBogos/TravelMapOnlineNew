@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = ViewBag.CountryName;
+}
+@section scripts
+{
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/Views/app.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Views/Post/reports.js"></script>
+}
+@section styles
+{
+    <link rel="stylesheet" href="~/Content/reports.css" />
+}
+<div ng-app="app" ng-controller="ReportsController" ng-init="init('@Model')">
+    <div class="control-panel">
+        <div class="report-button control-button">-</div>
+        <div class="report-button control-button" style="font-size: 3em; ">&#9998;</div>
+        <div class="report-button control-button">+</div>
+
+    </div>
+    <div class="current-report report">
+        <div class="report-heading">
+            <h3 class="report-title">{{report.title}}</h3>
+        </div>
+        <div class="report-body">
+            {{report.text}}
+        </div>
+    </div>
+    <div class="prev-report report report-button" ng-click="prevReport()" ng-show="!isFirst()"><</div>
+
+    <div class="next-report report-button report" ng-click="nextReport()" ng-class="{'pending-delete': item.checked}" ng-show="!isLast()">></div>
+</div>

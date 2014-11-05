@@ -4,12 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b770f1a45219436fa4b9e1b89f010075" Name="Diagram1">
+      <Diagram DiagramId="b770f1a45219436fa4b9e1b89f010075" Name="Diagram1" ZoomLevel="95">
         <EntityTypeShape EntityType="Model.Country" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.File" Width="1.5" PointX="8.25" PointY="11.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.FileType" Width="1.5" PointX="6" PointY="11.25" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Follower" Width="1.5" PointX="5.25" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Post" Width="1.5" PointX="8.25" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.PostFile" Width="1.5" PointX="10.5" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.PostType" Width="1.5" PointX="6" PointY="8.25" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.security_Membership" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
@@ -22,13 +21,14 @@
         <AssociationConnector Association="Model.PostFile_fk2" ManuallyRouted="false" />
         <AssociationConnector Association="Model.Follower_fk1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.Follower_fk2" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.FK_Post_Post" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.FK_Post_ToTable" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.Post_fk1" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.Post_fk2" ManuallyRouted="false" />
-        <AssociationConnector Association="Model.PostFile_fk1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_Travel_ToTable" ManuallyRouted="false" />
         <AssociationConnector Association="Model.security_UsersInRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Model.Post" Width="1.5" PointX="8.25" PointY="4" />
+        <AssociationConnector Association="Model.FK_Post_Post" />
+        <AssociationConnector Association="Model.FK_Post_ToTable" />
+        <AssociationConnector Association="Model.Post_fk1" />
+        <AssociationConnector Association="Model.Post_fk2" />
+        <AssociationConnector Association="Model.PostFile_fk1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

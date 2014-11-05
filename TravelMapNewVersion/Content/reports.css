@@ -1,0 +1,73 @@
+﻿.report {
+    float: left;
+}
+
+.current-report {
+    -moz-min-width: 100%;
+    -ms-min-width: 100%;
+    -o-min-width: 100%;
+    -webkit-min-width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+    background-color: white;
+}
+
+.report-heading {
+    background-color: black;
+}
+
+.report-title {
+    padding-left: 35px;
+    color: white;
+    font-size: 4em;
+    margin-top: 0;
+}
+
+.report-body {
+    margin: 25px 35px;
+    font-size: 1.75em;
+}
+
+.report-button {
+    font-size: 5em;
+    color: black;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    .report-button:hover {
+        background-color: gainsboro;
+        cursor: pointer;
+    }
+
+.prev-report {
+    text-align: left;
+}
+
+.next-report {
+    text-align: right;
+}
+
+.control-panel {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.control-button {
+    line-height: 100px;
+    font-weight: bold;
+    text-align: center;
+    width: auto;
+    min-width: 100px;
+    display: block;
+    float: right;
+}

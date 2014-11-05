@@ -798,11 +798,4 @@ tr.pager td {
                     background-color: transparent;
                 }
 
-/* Travels page*/
-.travel-date {
-    width: auto;
-    float: left;
-}
-.travel-groups:hover {
-    cursor: pointer;
-}
+

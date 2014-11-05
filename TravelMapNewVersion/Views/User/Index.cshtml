@@ -12,11 +12,12 @@
     @Styles.Render("~/Content/bootstrap.css")
     @Styles.Render("~/Content/editProfile.css")
 }
-<h2>Your Profile</h2>
-This is your ID. @Html.DisplayFor(m => Model)
 <br />
 
 <div ng-app="app" ng-controller="EditProfileCtrl" ng-init="init('@Model')">
+    <h2>{{model.UserName}} {{model.Surname}}</h2>
+    ID: @Html.DisplayFor(m => Model)
+
 	<div ng-mouseover="overPhoto = true" ng-mouseleave="overPhoto = false">
 		<img ng-src="{{photoData}}" alt="na" class="userPhoto">
 		<div ng-show="overPhoto" class="photoSelector btn btn-primary">
@@ -37,7 +38,7 @@ This is your ID. @Html.DisplayFor(m => Model)
 	<div ng-show="editSurname" class="profileValue">
 		<input ng-model="model.Surname" ng-change="surnameChanged = true" ng-blur="checkSurnameEdit()"
 		       type="text" ng-class="{ 'editedInput' : surnameChanged }" />
-		<a ng-click="cancelSurnameEdit()" class="btn btn-mini btn-info">Cancel</a>
+		<a ng-click="cancelSurnameEdit()" class="btn-xs btn-info">Cancel</a>
 	</div>
 
 
@@ -52,7 +53,7 @@ This is your ID. @Html.DisplayFor(m => Model)
 	<div ng-show="editPhone" class="profileValue">
 		<input ng-model="model.Phone" ng-change="phoneChanged = true" ng-blur="checkPhoneEdit()"
 		       type="text" ng-class="{ 'editedInput' : phoneChanged }" />
-		<a ng-click="cancelPhoneEdit()" class="btn btn-mini btn-info">Cancel</a>
+		<a ng-click="cancelPhoneEdit()" class="btn btn-xs btn-info">Cancel</a>
 	</div>
 
 
@@ -67,7 +68,7 @@ This is your ID. @Html.DisplayFor(m => Model)
 	<div ng-show="editEmail" class="profileValue">
 		<input ng-model="model.Email" ng-change="emailChanged = true" ng-blur="checkEmailEdit()"
 		       type="text" ng-class="{ 'editedInput' : emailChanged }" />
-		<a ng-click="cancelEmailEdit()" class="btn btn-mini btn-info">Cancel</a>
+		<a ng-click="cancelEmailEdit()" class="btn btn-xs btn-info">Cancel</a>
 	</div>
 
 

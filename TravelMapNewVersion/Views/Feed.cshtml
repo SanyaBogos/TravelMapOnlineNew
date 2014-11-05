@@ -1,7 +1,41 @@
-﻿
-@{
-    ViewBag.Title = "Feed";
+﻿@{
+	ViewBag.Title = "Feed";
+}
+
+@section styles
+{
+	@Styles.Render("~/Content/feed.css")
+}
+
+@section scripts
+{
+	<script src="~/Scripts/angular.js"></script>
+	<script src="~/Scripts/bootstrap.min.js"></script>
+	<script src="~/Scripts/Views/app.js"></script>
+	<script src="~/Scripts/Views/feed.js"></script>
 }
 
 <h2>Feed</h2>
+
+<div ng-app="app" ng-controller="FeedController" ng-init="init('@Model')">
+	<div ng-repeat="post in posts">
+		<div class="post-panel">
+			<header>
+				<span class="post-user">{{post.User}}</span>
+				<span>have been to</span>
+				<span class="post-country">{{post.Country}}</span>
+				<span class="post-dates">from {{post.StartDate | date:'yyyy-MMM-dd'}} to {{post.EndDate | date:'yyyy-MMM-dd'}}</span>	
+			</header>
+			<span>{{post.Title}}</span>
+			<span>{{post.PostText}}</span>
+			<footer>
+				<span class="heart" ng-click="liked = !liked">
+					<img ng-show="!liked" class="heart-pic" src="~/Images/heart.png" />
+					<img ng-show="liked" class="heart-pic" src="~/Images/heart2.png" />
+				</span>
+			</footer>
+			<br>
+		</div>
+	</div>
+</div>
 
