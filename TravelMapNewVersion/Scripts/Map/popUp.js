@@ -42,17 +42,12 @@
                 $http.post('/Post/PostReport', {
                     text: trvl.message,
                     travelId: data
-                });
-
-                for (var i = 0; i < map.dataProvider.areas.length; i++) {
-                    if (map.dataProvider.areas[i].id === $scope.$parent.currentCountry.id) {
-                        map.dataProvider.areas[i].showAsSelected = true;
-                    }
-                }
-                //map.dataProvider.areas.push({ id: $scope.$parent.currentCountry.id + "", showAsSelected: true });
-                //map.validateNow();
+                });                
                 trvl = {};
-                $scope.$parent.currentCountry = null;
+                updateMap();
+                $scope.$parent.currentCountry = null;                
+
+                
 
             }).error(function (data, status, headers, config) {
                 alert(status);
