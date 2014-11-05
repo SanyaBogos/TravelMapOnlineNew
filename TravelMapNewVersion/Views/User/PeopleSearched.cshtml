@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TravelMap.Models.UserProfile>
+
+@using TravelMap.Helpers
+
+<div id="result">
+    @if (Model != null && Model.Count() > 0)
+    {
+        <div class="table-responsive">
+            <table>
+                <tr>
+                    @foreach (var item in Model)
+                    {
+                        <td>@Html.Image(@System.Convert.ToBase64String(item.Photo))</td>
+                        <td>
+                            <p>@item.UserName</p>
+                            <p>@item.Surname</p>
+                            <p>@item.BirthDate</p>
+                            <p>@item.Email</p>
+                            <p><input type="button" value="Speaking" /> </p>
+                            <p><button class="followBtn" id="@item.UserId">Follow</button></p>
+                        </td>
+                    }
+                </tr>
+            </table>
+        </div>
+    }
+</div>
+
+@*<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".followBtn").each(function () {
+            $(this).click = function () {
+                alert($(this).attr('id'));
+            };
+        });
+    });
+</script>*@
+

@@ -1,0 +1,55 @@
+﻿@using (Ajax.BeginForm("PeopleSearched", "User", new AjaxOptions
+    {
+        UpdateTargetId = "result",
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.Replace,
+        LoadingElementId = "loading"
+    }))
+{
+    <input type="text" placeholder="search" name="searchUser" />
+    <button id="someButton" type="submit">send</button>
+}
+<div id="loading" style="display: none">
+    <img src="~/Image/ajax-loader.gif" style="margin-left:auto; margin-right:auto" />
+</div>
+@Html.Partial("PeopleSearched")
+
+
+@*<h1>People search</h1>
+    <div ng-app="people" ng-controller="SearchController as search">
+        <input type="text" placeholder="Search people" ng-model="search.searchMask" />
+        <button ng-click="search.searchPeople()">Search</button>
+
+        {{search.searchMask}}
+        <div ng-repeat="man in search.people">
+            Surname:
+            <p>{{man.Surname}}</p>
+        </div>
+
+    </div>
+
+    @section scripts{
+        <script src="~/Scripts/angular.js"></script>
+        <script>
+            (function () {
+                var app = angular.module('people', []);
+
+                app.controller('SearchController', function ($http) {
+                    this.searchMask = '';
+                    this.people = null;
+
+                    this.searchPeople = function () {
+                        $http.post('/User/PeopleSearched', { searchUser: this.searchMask }).
+                        success(function (data, status, headers, config) {
+                            this.people = data;
+                            console.log(this.people);
+                            //this.$apply();
+                        }).
+                        error(function (data, status, headers, config) {
+                            console.log('soem error may be)' + data + status);
+                        });
+                    };
+                });
+            })();
+        </script>
+    }*@

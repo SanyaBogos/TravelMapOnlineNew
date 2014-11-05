@@ -357,6 +357,45 @@ namespace TravelMap.Controllers
         //    return searchedUsers;
         //}
 
+        //[HttpPost]
+        //public JsonResult PeopleSearched(string searchUser)
+        //{
+        //    List<dynamic> peopleDynamic = new List<dynamic>();
+        //    if (searchUser.Contains(' '))
+        //    {
+        //        string[] parts = searchUser.Split(' ');
+        //        var people = db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
+        //            u.Surname.Contains(parts[1])).ToList();
+        //        foreach (var man in people)
+        //        {
+        //            peopleDynamic.Add(new 
+        //            {
+        //                Photo = man.Photo,
+        //                UserName = man.UserName,
+        //                Surname = man.UserName,
+        //                BirthDate = man.BirthDate,
+        //                Email = man.Email
+        //            });
+        //        }
+        //        return Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet);
+        //    }
+        //    var barada = db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
+        //        u.UserName.Contains(searchUser)).ToList();
+        //    //var xxx = barada.ToList();
+        //    foreach (var man in barada)
+        //    {
+        //        peopleDynamic.Add(new 
+        //        {
+        //            Photo = man.Photo,
+        //            UserName = man.UserName,
+        //            Surname = man.UserName,
+        //            BirthDate = man.BirthDate,
+        //            Email = man.Email
+        //        });
+        //    }
+        //    return Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet); ;
+        //}
+
         [HttpPost]
         public async Task<PartialViewResult> PeopleSearched(string searchUser)
         {
@@ -372,5 +411,6 @@ namespace TravelMap.Controllers
             var xxx = barada.ToList();
             return PartialView(xxx);
         }
+
     }
 }
