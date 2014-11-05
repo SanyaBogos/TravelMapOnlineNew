@@ -237,8 +237,8 @@ namespace TravelMap.Controllers
         [HttpGet]
         public JsonResult GetUserVisitedCountries(Guid id)
         {
-                var userTravels = db.Travels.Where(travel => travel.UserId == id);
-                var result = userTravels.Select(userTravel => userTravel.Country).ToArray();
+            var userTravels = db.Travels.Where(travel => travel.UserId == id);
+            var result = userTravels.Select(userTravel => userTravel.Country).ToArray();
             var serializableResult = new List<dynamic>();
             foreach (var country in result)
             {
@@ -329,11 +329,15 @@ namespace TravelMap.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetFollowersForUser(Guid id)
+        public JsonResult GetFollowersForUser(Nullable<Guid> id)
         {
             try
             {
-                var followers = db.Followers.Where(u => u.UserId == id).ToList();
+                List<Follower> followers;
+                //var followers
+                if (id == null)
+                    followers = db.Followers.Where(u => u.UserId == WebSecurity.CurrentUserId).ToList();
+                followers = db.Followers.Where(u => u.UserId == id).ToList();
                 var jsonResult = new List<dynamic>();
                 foreach (var follower in followers)
                 {
@@ -374,60 +378,62 @@ namespace TravelMap.Controllers
         //    return searchedUsers;
         //}
 
-        //[HttpPost]
-        //public JsonResult PeopleSearched(string searchUser)
-        //{
-        //    List<dynamic> peopleDynamic = new List<dynamic>();
-        //    if (searchUser.Contains(' '))
-        //    {
-        //        string[] parts = searchUser.Split(' ');
-        //        var people = db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
-        //            u.Surname.Contains(parts[1])).ToList();
-        //        foreach (var man in people)
-        //        {
-        //            peopleDynamic.Add(new 
-        //            {
-        //                Photo = man.Photo,
-        //                UserName = man.UserName,
-        //                Surname = man.UserName,
-        //                BirthDate = man.BirthDate,
-        //                Email = man.Email
-        //            });
-        //        }
-        //        return Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet);
-        //    }
-        //    var barada = db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
-        //        u.UserName.Contains(searchUser)).ToList();
-        //    //var xxx = barada.ToList();
-        //    foreach (var man in barada)
-        //    {
-        //        peopleDynamic.Add(new 
-        //        {
-        //            Photo = man.Photo,
-        //            UserName = man.UserName,
-        //            Surname = man.UserName,
-        //            BirthDate = man.BirthDate,
-        //            Email = man.Email
-        //        });
-        //    }
-        //    return Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet); ;
-        //}
-
         [HttpPost]
-        public async Task<PartialViewResult> PeopleSearched(string searchUser)
+        public JsonResult PeopleSearched(string searchUser)
         {
+            List<dynamic> peopleDynamic = new List<dynamic>();
             if (searchUser.Contains(' '))
             {
                 string[] parts = searchUser.Split(' ');
-                var people = await Task.Run(() => (db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
-                    u.Surname.Contains(parts[1]))));
-                return PartialView(people.ToList());
+                var people = db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
+                    u.Surname.Contains(parts[1])).ToList();
+                foreach (var man in people)
+                {
+                    peopleDynamic.Add(new
+                    {
+                        Photo = man.Photo,
+                        UserName = man.UserName,
+                        Surname = man.UserName,
+                        BirthDate = man.BirthDate.Millisecond,
+                        Email = man.Email
+                    });
+                }
+                return Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet);
             }
-            var barada = await Task.Run(() => (db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
-                u.UserName.Contains(searchUser))));
-            var xxx = barada.ToList();
-            return PartialView(xxx);
+            var barada = db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
+                u.UserName.Contains(searchUser)).ToList();
+            //var xxx = barada.ToList();
+            foreach (var man in barada)
+            {
+                peopleDynamic.Add(new
+                {
+                    Photo = Convert.ToBase64String(man.Photo),
+                    UserName = man.UserName,
+                    Surname = man.Surname,
+                    BirthDate = man.BirthDate.Millisecond,
+                    Email = man.Email
+                });
+            }
+            var jsonResult = Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet); ;
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
+
+        //[HttpPost]
+        //public async Task<PartialViewResult> PeopleSearched(string searchUser)
+        //{
+        //    if (searchUser.Contains(' '))
+        //    {
+        //        string[] parts = searchUser.Split(' ');
+        //        var people = await Task.Run(() => (db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
+        //            u.Surname.Contains(parts[1]))));
+        //        return PartialView(people.ToList());
+        //    }
+        //    var barada = await Task.Run(() => (db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
+        //        u.UserName.Contains(searchUser))));
+        //    var xxx = barada.ToList();
+        //    return PartialView(xxx);
+        //}
 
 
 
