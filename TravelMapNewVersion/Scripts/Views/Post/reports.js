@@ -57,7 +57,7 @@ app.controller("ReportsController", function ($scope, $http) {
         if (isNew) {
             addReport();
         } else {
-	        editReport();
+            editReport();
         }
     };
 
@@ -67,20 +67,17 @@ app.controller("ReportsController", function ($scope, $http) {
                 $scope.report.postId = data;
                 $scope.editMode = false;
                 reports.push($scope.report);
-                $scope.report = reports[0];
             });
     }
 
 
     $scope.deleteReport = function () {
-        console.log($scope.report);
         $http.get('/Post/DeleteReport?reportId=' + $scope.report.postId).
             success(function (data, status, headers, config) {
-                reports.splice(reports.indexOf($scope.report, 1));
-                console.log(reports);
-                $scope.report = {};
+                reports.splice(reports.indexOf($scope.report), 1);
                 $scope.report = reports[0];
             });
+
     };
 
     function editReport() {
@@ -88,10 +85,6 @@ app.controller("ReportsController", function ($scope, $http) {
             success(function (data, status, headers, config) {
                 $scope.editMode = false;
                 reports.push($scope.report);
-                $scope.report = reports[0];
             });
     };
-
-
-
 });
