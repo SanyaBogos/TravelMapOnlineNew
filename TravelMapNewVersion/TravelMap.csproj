@@ -725,6 +725,7 @@
     <Content Include="Scripts\Map\anmap\worldLow.js" />
     <Content Include="Scripts\Map\mapDecorator.js" />
     <Content Include="Scripts\Map\popUp.js" />
+    <Content Include="Scripts\nicEdit.js" />
     <Content Include="Scripts\Views\app.js" />
     <Content Include="Scripts\Views\feed.js" />
     <Content Include="Scripts\Views\Post\reports.js" />

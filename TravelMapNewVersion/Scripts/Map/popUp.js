@@ -1,7 +1,7 @@
 ﻿(function () {
-    var app = angular.module('app', []);
+    var app = angular.module('app', ['ngSanitize']);
 
-    app.controller('PopUpController', function ($scope, $http) {
+    app.controller('PopUpController', ['$scope', '$http', function ($scope, $http) {
         $scope.currentCountry = null;
         $scope.message = null;
         $scope.clickMap = function (newCountry) {
@@ -12,22 +12,28 @@
         }
         var travel1 = { 'start': '2014-10-13', 'end': '2014-11-13', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." },
             travel2 = { 'start': '2014-2-13', 'end': '2014-2-155', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." };
-        $scope.travels = [travel1, travel2];
         $scope.travels = [];
+        //travel.html
+       
 
 
-    });
+    }]);
 
 
 
-    app.controller('travelController', function ($scope, $http) {
+    app.controller('travelController', ['$scope', '$http', function ($scope, $http) {
         this.travel = {};
 
         this.clickCancel = function () {
             $scope.$parent.currentCountry = null;
             this.travel = {};
         };
-
+        this.click = function () {
+            this.travel.html = document.getElementsByClassName('nicEdit-main')[0].innerHTML;
+            console.log(this.travel.html);
+            $scope.$parent.travels.push(this.travel);
+            this.travel = {};
+        }
 
         this.clickOK = function () {
             var trvl = this.travel;
@@ -38,7 +44,7 @@
             }).success(function (data, status, headers, config) {
                 if (trvl.message) {
                     $http.post('/Post/PostReport', {
-                        text: trvl.message,
+                        text: "Null",
                         travelId: data,
                         title: trvl.title
                     });
@@ -54,6 +60,6 @@
                 alert(status);
             });
         };
-    });
+    }]);
 
 })();

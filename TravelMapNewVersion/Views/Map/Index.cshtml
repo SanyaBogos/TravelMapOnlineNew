@@ -7,6 +7,12 @@
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
     <script src="~/Scripts/Map/popUp.js"></script>
+    <script src="~/Scripts/angular-sanitize.js"></script>
+    <script src="~/Scripts/nicEdit.js" type="text/javascript"></script>
+    <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+						
+						
+						
 
 }
 
@@ -32,10 +38,9 @@
                             <div class="time-end">end: {{travel.end}}</div>
                         </div>
                     </div>
-                    <div class="travel-body">
-                        {{travel.message}} <span ng-click="">more..</span>
+                    <div class="travel-body" ng-bind-html="travel.html">                       
                     </div>
-
+                    
                 </div>
             </div>
             <form class="input-form" name="travelForm" ng-controller="travelController as travelCtrl" novalidate>
@@ -47,8 +52,11 @@
                 Title:
                 <input type="text" ng-model="travelCtrl.travel.title" style="width: 100%" />
                 Text:
-                <textarea ng-model="travelCtrl.travel.message" rows="5"></textarea>
-
+                
+                <textarea class="form-input" name="area1" ng-model="travelCtrl.travel.message" style="width: 100%;"></textarea>
+                
+                
+                <input type="button" value="!" ng-click="travelCtrl.click()" />
                 <input type="button" value="Ok" ng-click="travelCtrl.clickOK()" />
                 <input type="button" value="Cancel" ng-click="travelCtrl.clickCancel()" />
             </form>
