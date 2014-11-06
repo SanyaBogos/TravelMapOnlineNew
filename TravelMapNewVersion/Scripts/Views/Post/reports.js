@@ -59,6 +59,7 @@ app.controller("ReportsController", function ($scope, $http) {
     $scope.saveReport = function () {
         if (!$scope.report.text) {
             alert("Enter some text");
+            return;
         }
         if (isNew) {
             addReport();
