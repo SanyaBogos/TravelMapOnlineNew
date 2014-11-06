@@ -14,9 +14,9 @@
 }
 <div ng-app="app" ng-controller="ReportsController" ng-init="init('@Model')">
     <div class="control-panel">
-        <div class="report-button control-button" ng-click="deleteReport()">-</div>
-        <div class="report-button control-button" style="font-size: 3em; " ng-click="editReport()">&#9998;</div>
-        <div class="report-button control-button" ng-click="addReport()">+</div>
+        <a ng-class="getControlButtonsClass('delete')" class="report-button control-button" ng-click="deleteReport()">-</a>
+        <a ng-class="getControlButtonsClass('edit')" class="report-button control-button" style="font-size: 3em; " ng-click="editReport()">&#9998;</a>
+        <a ng-class="getControlButtonsClass('add')" class="report-button control-button" ng-click="addReport()">+</a>
 
     </div>
     <div class="current-report report">
@@ -26,10 +26,12 @@
         <div class="report-body" ng-show="!editMode">
             {{report.text}}
         </div>
+        <div class="report-body" v ng-show="!report">No reports</div>
+
         <div class="report-body" ng-show="editMode">
             <form novalidate>
                 Title: <input type="text" ng-model="report.title" /><br />
-                Text: <input type="text" rows="5" ng-model="report.text" /><br />
+                Text: <input type="text" ng-required="true" ng-model="report.text" required /><br />
 
                 <button ng-click="saveReport()">Save</button>
                 <button ng-click="cancel()">Cancel</button>

@@ -57,9 +57,10 @@ namespace TravelMap.Controllers
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Save(Guid id, string surname, string email, string phone)
+        public JsonResult Save(Guid id, string firstname, string surname, string email, string phone)
         {
             var userProfile = db.UserProfiles.Find(id);
+	        userProfile.FirstName = firstname;
             userProfile.Surname = surname;
             userProfile.Email = email;
             userProfile.Phone = phone;
@@ -389,8 +390,11 @@ namespace TravelMap.Controllers
             if (searchUser.Contains(' '))
             {
                 string[] parts = searchUser.Split(' ');
-                var people = db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
-                    u.Surname.Contains(parts[1])).ToList();
+				// todo: убрать этот быдлокод и написать что-то нармальное :)
+	            var part1 = parts[0];
+	            var part2 = parts[1];
+                var people = db.UserProfiles.Where(u => u.UserName.Contains(part1) &&
+                    u.Surname.Contains(part2)).ToArray();
                 foreach (var man in people)
                 {
                     peopleDynamic.Add(new

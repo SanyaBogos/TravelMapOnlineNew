@@ -64,6 +64,7 @@
 }
 
 .control-button {
+    text-decoration: none;
     line-height: 100px;
     font-weight: bold;
     text-align: center;
@@ -71,4 +72,11 @@
     min-width: 100px;
     display: block;
     float: right;
+}
+.control-button:hover {
+    color: black;
+}
+.disabled-button {
+    pointer-events: none;
+    color: gray;
 }

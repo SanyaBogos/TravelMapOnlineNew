@@ -5,9 +5,7 @@
 
 #mapdiv {
     width: 100%;
-    /*background-color: #EEEEEE;*/
-    height: 600px;
-    /*height: auto;*/
+    height: 450px;
     position: relative;
     background: url("../../../Images/background/board.jpg") no-repeat center center;
 }

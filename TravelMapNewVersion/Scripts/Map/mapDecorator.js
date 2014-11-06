@@ -1,6 +1,27 @@
-﻿var map;
-function AmMyMaps(userMap) {
+﻿function updateMap() {
+    var userMap = [],
+            userCountries = [],
+            user;
+    $.get("/User/GetCurrentUser", function (data) {
+        user = data;
 
+    }).done(function () {
+        $.get("/User/GetUserVisitedCountries?id=" + user, function (data) {
+            userCountries = data;
+
+            for (var i = 0; i < userCountries.length; i++) {
+                userMap.push({ id: userCountries[i].title + "", showAsSelected: true });
+            }
+
+            AmMyMaps(userMap);
+        });
+    });
+}
+
+AmCharts.ready(updateMap());
+
+function AmMyMaps(userMap) {
+    var map;
     //var newCountry;
 
     //AmCharts.ready(function () {
@@ -45,6 +66,7 @@ function AmMyMaps(userMap) {
     };
 
     map.addListener('clickMapObject', function (event) {
+        map.validateData();
         angular.element("#mapdiv").scope().clickMap(event.mapObject/*.title*/);
     });
 

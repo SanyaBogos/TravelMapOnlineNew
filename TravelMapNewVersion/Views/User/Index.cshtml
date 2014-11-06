@@ -15,10 +15,9 @@
 <br />
 
 <div ng-app="app" ng-controller="EditProfileCtrl" ng-init="init('@Model')">
-    <h2>{{model.UserName}} {{model.Surname}}</h2>
-    ID: @Html.DisplayFor(m => Model)
-
-	<div ng-mouseover="overPhoto = true" ng-mouseleave="overPhoto = false">
+    <h2>{{unmodifiedModel.FirstName}} {{unmodifiedModel.Surname}}</h2>
+    
+	<div class="userPhoto-box" ng-mouseover="overPhoto = true" ng-mouseleave="overPhoto = false">
 		<img ng-src="{{photoData}}" alt="na" class="userPhoto">
 		<div ng-show="overPhoto" class="photoSelector btn btn-primary">
 			<span>Change</span>
@@ -28,76 +27,82 @@
 		@*<div ng-show="showConfirm" class="confirmPhotoChange">Changed</div>*@
 	</div>
 	
-	<br />
-	<span class="profileProp">First Name :</span>
-	<div ng-hide="editFirstname" ng-model="model.Firstname" ng-mouseover="overFirstname = true" ng-mouseleave="overFirstname = false" class="profileValue">
-		{{model.Firstname}}
-		<a ng-class="{ 'btnNotActive' : !overFirstname }" ng-click="editFirstname = !editFirstname" class="btn btn-xs btn-info">
-			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
-		</a>
-	</div>
-	<div ng-show="editFirstname" class="profileValue">
-		<input ng-model="model.Firstname" ng-change="firstnameChanged = true" ng-blur="checkFirstnameEdit()"
-			   type="text" ng-class="{ 'editedInput' : firstnameChanged }" />
-		<a ng-click="cancelFirstnameEdit()" class="btn btn-xs btn-info">Cancel</a>
-	</div>
+	<div class="profile-properties">
+		<span class="profileProp">ID: </span>
+		<span class="profileValue">@Html.DisplayFor(m => Model)</span>
 
-	<br />
-	<span class="profileProp">Surname :</span>
-	<div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">
-		{{model.Surname}}
-		<a ng-class="{ 'btnNotActive' : !overSurname }" ng-click="editSurname = !editSurname" class="btn btn-xs btn-info">
-			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
-		</a>
-	</div>
-	<div ng-show="editSurname" class="profileValue">
-		<input ng-model="model.Surname" ng-change="surnameChanged = true" ng-blur="checkSurnameEdit()"
-		       type="text" ng-class="{ 'editedInput' : surnameChanged }" />
-		<a ng-click="cancelSurnameEdit()" class="btn btn-xs btn-info">Cancel</a>
-	</div>
+		<br />
+		<span class="profileProp">First Name :</span>
+		<div ng-hide="editFirstname" ng-model="model.FirstName" ng-mouseover="overFirstname = true" ng-mouseleave="overFirstname = false" class="profileValue">
+			{{model.FirstName}}
+			<a ng-class="{ 'btnNotActive' : !overFirstname }" ng-click="editFirstname = !editFirstname" class="btn btn-xs btn-info">
+				<img src="~/Images/edit.svg" alt="" class="editIcon" />{{defineEditButton(model.FirstName)}}
+			</a>
+		</div>
+		<div ng-show="editFirstname" class="profileValue">
+			<input ng-model="model.FirstName" ng-change="firstnameChanged = true" ng-blur="checkFirstnameEdit()"
+			       type="text" ng-class="{ 'editedInput' : firstnameChanged }" />
+			<a ng-click="cancelFirstnameEdit()" class="btn btn-xs btn-info">Cancel</a>
+		</div>
 
-
-	<br />
-	<span class="profileProp">Phone :</span>
-	<div ng-hide="editPhone" ng-model="model.Phone" ng-mouseover="overPhone = true" ng-mouseleave="overPhone = false" class="profileValue">
-		{{model.Phone}}
-		<a ng-class="{ 'btnNotActive' : !overPhone}" ng-click="editPhone = !editPhone" class="btn btn-xs btn-info">
-			<img src="~/Images/edit.svg" class="editIcon" />Edit
-		</a>
-	</div>
-	<div ng-show="editPhone" class="profileValue">
-		<input ng-model="model.Phone" ng-change="phoneChanged = true" ng-blur="checkPhoneEdit()"
-		       type="text" ng-class="{ 'editedInput' : phoneChanged }" />
-		<a ng-click="cancelPhoneEdit()" class="btn btn-xs btn-info">Cancel</a>
-	</div>
+		<br />
+		<span class="profileProp">Surname :</span>
+		<div ng-hide="editSurname" ng-model="model.Surname" ng-mouseover="overSurname = true" ng-mouseleave="overSurname = false" class="profileValue">
+			{{model.Surname}}
+			<a ng-class="{ 'btnNotActive' : !overSurname }" ng-click="editSurname = !editSurname" class="btn btn-xs btn-info">
+				<img src="~/Images/edit.svg" alt="" class="editIcon" />{{defineEditButton(model.Surname)}}
+			</a>
+		</div>
+		<div ng-show="editSurname" class="profileValue">
+			<input ng-model="model.Surname" ng-change="surnameChanged = true" ng-blur="checkSurnameEdit()"
+			       type="text" ng-class="{ 'editedInput' : surnameChanged }" />
+			<a ng-click="cancelSurnameEdit()" class="btn btn-xs btn-info">Cancel</a>
+		</div>
 
 
-	<br />
-	<span class="profileProp">Email :</span>
-	<div ng-hide="editEmail" ng-model="model.Email" ng-mouseover="overEmail = true" ng-mouseleave="overEmail = false" class="profileValue">
-		{{model.Email}}
-		<a ng-class="{ 'btnNotActive' : !overEmail}" ng-click="editEmail = !editEmail" class="btn btn-xs btn-info">
-			<img src="~/Images/edit.svg" alt="" class="editIcon" />Edit
-		</a>
-	</div>
-	<div ng-show="editEmail" class="profileValue">
-		<input ng-model="model.Email" ng-change="emailChanged = true" ng-blur="checkEmailEdit()"
-		       type="text" ng-class="{ 'editedInput' : emailChanged }" />
-		<a ng-click="cancelEmailEdit()" class="btn btn-xs btn-info">Cancel</a>
-	</div>
+		<br />
+		<span class="profileProp">Phone :</span>
+		<div ng-hide="editPhone" ng-model="model.Phone" ng-mouseover="overPhone = true" ng-mouseleave="overPhone = false" class="profileValue">
+			{{model.Phone}}
+			<a ng-class="{ 'btnNotActive' : !overPhone}" ng-click="editPhone = !editPhone" class="btn btn-xs btn-info">
+				<img src="~/Images/edit.svg" class="editIcon" />{{defineEditButton(model.Phone)}}
+			</a>
+		</div>
+		<div ng-show="editPhone" class="profileValue">
+			<input ng-model="model.Phone" ng-change="phoneChanged = true" ng-blur="checkPhoneEdit()"
+			       type="text" ng-class="{ 'editedInput' : phoneChanged }" />
+			<a ng-click="cancelPhoneEdit()" class="btn btn-xs btn-info">Cancel</a>
+		</div>
+
+
+		<br />
+		<span class="profileProp">Email :</span>
+		<div ng-hide="editEmail" ng-model="model.Email" ng-mouseover="overEmail = true" ng-mouseleave="overEmail = false" class="profileValue">
+			{{model.Email}}
+			<a ng-class="{ 'btnNotActive' : !overEmail}" ng-click="editEmail = !editEmail" class="btn btn-xs btn-info">
+				<img src="~/Images/edit.svg" alt="" class="editIcon" />{{defineEditButton(model.Email)}}
+			</a>
+		</div>
+		<div ng-show="editEmail" class="profileValue">
+			<input ng-model="model.Email" ng-change="emailChanged = true" ng-blur="checkEmailEdit()"
+			       type="text" ng-class="{ 'editedInput' : emailChanged }" />
+			<a ng-click="cancelEmailEdit()" class="btn btn-xs btn-info">Cancel</a>
+		</div>
 	
-	<br/>
-	<span class="profileProp">Birth date :</span>
+		<br/>
+		<span class="profileProp">Birth date :</span>
 
 
-	<div ng-show="emailChanged || phoneChanged || surnameChanged" class="saveButton">
-		<button ng-click="saveAll()" class="btn btn-small btn-success">Save</button>
+		<div ng-show="emailChanged || phoneChanged || surnameChanged || firstnameChanged" class="saveButton">
+			<button ng-click="saveAll()" class="btn btn-small btn-success">Save</button>
+		</div>
 	</div>
 
 	@* ***** Use for testing ***** *@
 	<p>
 		@*<b>Values of the $scope:</b>*@
-		@*unmodifiedModel:{{unmodifiedModel}};*@
+		@*Phone:{{model.Phone}}*@
+		@*unmodifiedModel:{{unmodifiedModel}}<br/>*@
 		@*model:{{model}}*@
 		@*testVal:{{testVal}};*@
 		@*emailChanged:{{emailChanged}};*@

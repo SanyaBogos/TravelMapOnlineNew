@@ -31,28 +31,24 @@
 
         this.clickOK = function () {
             var trvl = this.travel;
-            //this.travel.start = this.travel.start.split("-");
-            //this.travel.end = this.travel.end.split("-");
             $http.post('/Map/SetTravel', {
                 country: $scope.$parent.currentCountry,
                 start: new Date(this.travel.start).getTime() / 1000,
                 end: new Date(this.travel.end).getTime() / 1000,
             }).success(function (data, status, headers, config) {
-
-                $http.post('/Post/PostReport', {
-                    text: trvl.message,
-                    travelId: data
-                });
-
-                for (var i = 0; i < map.dataProvider.areas.length; i++) {
-                    if (map.dataProvider.areas[i].id === $scope.$parent.currentCountry.id) {
-                        map.dataProvider.areas[i].showAsSelected = true;
-                    }
+                if (trvl.message) {
+                    $http.post('/Post/PostReport', {
+                        text: trvl.message,
+                        travelId: data,
+                        title: trvl.title
+                    });
                 }
-                //map.dataProvider.areas.push({ id: $scope.$parent.currentCountry.id + "", showAsSelected: true });
-                //map.validateNow();
-                trvl = {};
+
                 $scope.$parent.currentCountry = null;
+                trvl = {};
+                updateMap();
+
+
 
             }).error(function (data, status, headers, config) {
                 alert(status);
