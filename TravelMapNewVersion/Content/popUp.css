@@ -7,11 +7,14 @@
 
 .b-popup{
     width:100%;
-    min-height:100%;
+    min-height:100%; 
+    max-height:100%; 
+      
     background-color: rgba(0,0,0,0.5);    
-    position:absolute;
+    position:fixed;
     top:0px;
     right:0px;
+   
 }
 .b-popup .b-popup-content {
     width:40%;
@@ -23,10 +26,22 @@
     -ms-box-shadow: 0px 0px 10px #000;
     box-shadow: 0px 0px 10px #000;
     margin-right: 30%;
+    
 }
 
-.input-form {
-    
+
+
+
+.b-popup-content {
+    max-height:700px; 
+    min-height:700px;   
+    overflow:auto;
+}
+
+
+.travel-warper {
+    max-height:350px;
+    overflow:auto;
 }
 
 .travel-panel {
@@ -79,8 +94,13 @@
     margin:0 auto; 
     
 }
+
+.input-form {
+    max-height:300px;
+}
+
 .form-input {
     width:100%;
-    height:300px;
+    height:200px;
 
 }

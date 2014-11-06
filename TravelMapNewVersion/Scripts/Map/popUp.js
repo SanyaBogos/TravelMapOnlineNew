@@ -3,18 +3,35 @@
 
     app.controller('PopUpController', ['$scope', '$http', function ($scope, $http) {
         $scope.currentCountry = null;
-        $scope.message = null;
-        $scope.clickMap = function (newCountry) {
-            console.log(newCountry);
-            $scope.currentCountry = newCountry.title;
-            //console.log($scope.currentCountry);
-            $scope.$apply();
-        }
-        var travel1 = { 'start': '2014-10-13', 'end': '2014-11-13', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." },
-            travel2 = { 'start': '2014-2-13', 'end': '2014-2-155', 'message': "You can terminate your session by clicking the log out button in the top right corner. This prevents unauthorized use of your mail.com mailbox, for example, by clicking on the back button of your browser. Please remember to always click on the log out button for your own safety when exiting your mailbox." };
+        $scope.message = null;        
+        var currentCountryId=null,
+            userId = null;
         $scope.travels = [];
-        //travel.html
-       
+        $scope.clickMap = function (newCountry) {
+            
+            $scope.currentCountry = newCountry.title;            
+            currentCountryId = newCountry.id;
+            console.log(currentCountryId);
+            //travel.html
+            $http.get('/User/GetCurrentUser', {
+            }).success(function (data, status, headers, config) {
+                userId = data;
+                console.log(currentCountryId);
+                $http.get('/User/GetTravelsForCountry', {
+                    params: { countryTitle: currentCountryId, userId: userId }
+                }).success(function (data, status, headers, config) {
+                    for (i in data) {
+                        $scope.travels.push(i);
+                    }
+                    console.log(data);//I have I'll show it
+                });
+            });
+            $scope.$apply();
+        }        
+        
+        
+        
+        
 
 
     }]);
@@ -42,9 +59,10 @@
                 start: new Date(this.travel.start).getTime() / 1000,
                 end: new Date(this.travel.end).getTime() / 1000,
             }).success(function (data, status, headers, config) {
-                if (trvl.message) {
+                console.log(trvl);
+                if (trvl.html) {
                     $http.post('/Post/PostReport', {
-                        text: "Null",
+                        text: trvl.html,
                         travelId: data,
                         title: trvl.title
                     });
