@@ -6,7 +6,6 @@ using System.Net;
 using System.Web.Mvc;
 using TravelMap.Models;
 using nonintanon.Security;
-using System.Threading.Tasks;
 
 namespace TravelMap.Controllers
 {
@@ -306,17 +305,28 @@ namespace TravelMap.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetTravelsForCountry(Guid countryId, Guid userId)
+        public JsonResult GetTravelsForCountry(string countryTitle, Guid userId)
         {
+            var countryId = db.Countries.First(country => country.Title == countryTitle).CountryId;
             var travels = db.Travels.Where(travel => travel.CountryId == countryId && travel.UserId == userId);
             var serializableTravels = new List<dynamic>();
             foreach (var travel in travels)
             {
+                double start = -1;
+                double end = -1;
+                if (travel.StartDate != null)
+                {
+                    start = travel.StartDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+                }
+                if (travel.EndDate != null)
+                {
+                    end = travel.EndDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+                }
                 serializableTravels.Add(new
                 {
                     travelId = travel.TravelId,
-                    startDate = travel.StartDate,
-                    endDate = travel.EndDate,
+                    startDate = start,
+                    endDate = end,
                     userId = travel.UserId,
                     country = travel.Country.Name
                 });

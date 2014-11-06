@@ -7,7 +7,7 @@
     return unfixedDate;
 }
 
-app = angular.module("app");
+app = angular.module("app", ['ngSanitize']);
 
 app.controller("ReportsController", function ($scope, $http) {
     var reports = [];
@@ -54,9 +54,11 @@ app.controller("ReportsController", function ($scope, $http) {
         angular.copy($scope.report, unmodifiedCopy);
         $scope.editMode = true;
         isNew = false;
+        document.getElementsByClassName('nicEdit-main')[0].innerHTML = $scope.report.text;
     };
 
     $scope.saveReport = function () {
+        $scope.report.text = document.getElementsByClassName('nicEdit-main')[0].innerHTML;
         if (!$scope.report.text) {
             alert("Enter some text");
             return;

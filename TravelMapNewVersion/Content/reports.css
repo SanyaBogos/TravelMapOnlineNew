@@ -48,6 +48,20 @@
         cursor: pointer;
     }
 
+.report textarea {
+    width: 100%;
+}
+.report input {
+    width: 100%;
+}
+
+.nicEdit-panelContain {
+    max-width: 100%;
+}
+.nicEdit-main {
+    min-height: 300px !important;  
+}
+
 .prev-report {
     text-align: left;
 }
@@ -73,9 +87,11 @@
     display: block;
     float: right;
 }
-.control-button:hover {
-    color: black;
-}
+
+    .control-button:hover {
+        color: black;
+    }
+
 .disabled-button {
     pointer-events: none;
     color: gray;
