@@ -91,7 +91,7 @@ namespace TravelMap.Controllers
         // (except Dispose)
 
         // GET: UserProfiles/Details/5
-		private ActionResult Details(Guid? id)
+        private ActionResult Details(Guid? id)
         {
             if (id == null)
             {
@@ -106,7 +106,7 @@ namespace TravelMap.Controllers
         }
 
         // GET: UserProfiles/Edit/5
-		private ActionResult Edit(Guid? id)
+        private ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
@@ -139,7 +139,7 @@ namespace TravelMap.Controllers
         }
 
         // GET: UserProfiles/Delete/5
-		private ActionResult Delete(Guid? id)
+        private ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
@@ -156,7 +156,7 @@ namespace TravelMap.Controllers
         // POST: UserProfiles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-		private ActionResult DeleteConfirmed(Guid id)
+        private ActionResult DeleteConfirmed(Guid id)
         {
             UserProfile userProfile = db.UserProfiles.Find(id);
             db.UserProfiles.Remove(userProfile);
@@ -332,7 +332,7 @@ namespace TravelMap.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetFollowersForUser(Nullable<Guid> id)
+        public JsonResult GetFollowersForUser(Guid? id)
         {
             try
             {
@@ -340,14 +340,15 @@ namespace TravelMap.Controllers
                 //var followers
                 if (id == null)
                     followers = db.Followers.Where(u => u.UserId == WebSecurity.CurrentUserId).ToList();
-                followers = db.Followers.Where(u => u.UserId == id).ToList();
+                else
+                    followers = db.Followers.Where(u => u.UserId == id).ToList();
                 var jsonResult = new List<dynamic>();
                 foreach (var follower in followers)
                 {
-                    jsonResult.Add(new Follower
+                    jsonResult.Add(new
                     {
-                        UserFollowerId = follower.UserFollowerId,
-                        UserId = follower.UserId,
+                        //UserFollowerId = follower.UserFollowerId,
+                        //UserId = follower.UserId,
                         FollowerId = follower.FollowerId
                     });
                 }
@@ -381,7 +382,7 @@ namespace TravelMap.Controllers
         //    return searchedUsers;
         //}
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult PeopleSearched(string searchUser)
         {
             List<dynamic> peopleDynamic = new List<dynamic>();
@@ -394,9 +395,10 @@ namespace TravelMap.Controllers
                 {
                     peopleDynamic.Add(new
                     {
-                        Photo = man.Photo,
+                        Id = man.UserId,
+                        Photo = man.Photo != null ? Convert.ToBase64String(man.Photo) : "",
                         UserName = man.UserName,
-                        Surname = man.UserName,
+                        Surname = man.Surname != null ? man.Surname : "",
                         BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
                         Email = man.Email
                     });
@@ -410,10 +412,11 @@ namespace TravelMap.Controllers
             {
                 peopleDynamic.Add(new
                 {
-                    Photo = Convert.ToBase64String(man.Photo),
+                    Id = man.UserId,
+                    Photo = man.Photo != null ? Convert.ToBase64String(man.Photo) : "",
                     UserName = man.UserName,
-                    Surname = man.Surname,
-					BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
+                    Surname = man.Surname != null ? man.Surname : "",
+                    BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
                     Email = man.Email
                 });
             }
@@ -437,10 +440,6 @@ namespace TravelMap.Controllers
         //    var xxx = barada.ToList();
         //    return PartialView(xxx);
         //}
-
-
-
-
 
         protected override void Dispose(bool disposing)
         {

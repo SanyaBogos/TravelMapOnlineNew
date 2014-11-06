@@ -1,13 +1,14 @@
 ﻿<h1>People search</h1>
-    <div ng-app="people" ng-controller="SearchController as search">
+<div ng-app="people" ng-controller="SearchController as search" style="width:1160px; margin-left:-70px">
     <div style="display: block; width: 100%">
         <input type="text" placeholder="Search people" ng-model="search.searchMask" />
         <button ng-click="search.searchPeople()">Search</button>
     </div>
-        {{search.searchMask}}
-    <div ng-repeat="man in search.people" style="float:left; background-color: greenyellow; width: 380px">
-        <img ng-src="data:image/jpg;base64,{{man.Photo}}" style="float:left" width="160" height="200" />
+    {{search.searchMask}}
+    <div ng-repeat="man in search.people" style="float:left; background-color: greenyellow; width: 380px; border:double;">
+        <img ng-src="data:image/jpg;base64,{{man.Photo}}" style="float:left; border:dashed" width="160" height="200" />
         <div style="float:left">
+            @*<p ng-show="search.followers.UserId">{{search.followers.UserId}}</p>*@
             <p ng-show="man.UserName">Name: {{man.UserName}}</p>
             <p ng-show="man.Surname">Surname: {{man.Surname}}</p>
             <p ng-show="true">Birthdate: {{man.BirthDate | date:'medium'}}</p>
@@ -15,53 +16,72 @@
         </div>
 
         @*<button>Messages</button>*@
-        @*<button ng-show="">Follow</button>*@
+        <button ng-hide="search.isShowFollow(man.Id)" ng-click="search.followClick(man.Id)">Follow</button>
 
     </div>
+    @*<div ng-repeat="follow in search.followers">
+            {{follow.FollowerId}}
+            {{follow.UserId}}
+
+        </div>*@
 </div>
 
-    @section scripts{
-        <script src="~/Scripts/angular.js"></script>
-    <script src="~/Scripts/Views/UserProfile/additionFunction.js"></script>
-        <script>
-            (function () {
-                var app = angular.module('people', []);
+@section scripts{
+    <script src="~/Scripts/angular.js"></script>
+    <script>
+        (function () {
+            var app = angular.module('people', []);
 
-                app.controller('SearchController', function ($http) {
-                    this.searchMask = '';
+            app.controller('SearchController', function ($http) {
+                this.searchMask = '';
                 this.people = [];
-                this.followers = null;
+                this.followers = [];
 
-                ppl = this.people;
+                //ppl = this.people;
                 var ppl = this.people;
-                    this.searchPeople = function () {
-                        $http.post('/User/PeopleSearched', { searchUser: this.searchMask }).
-                        success(function (data, status, headers, config) {
+                var flw = this.followers;
+                this.searchPeople = function () {
+                    $http.get('/User/PeopleSearched?searchUser=' + this.searchMask).
+                    success(function (data, status, headers, config) {
+                        //this.people.length = 0;
                         ppl.length = 0;
                         for (var i = 0; i < data.length; i++) {
                             ppl.push(data[i]);
                         }
                     }).
+                error(function (data, status, headers, config) {
+                    console.log(data);
+                });
+
+                    $http.get('/User/GetFollowersForUser?id=null').
+                        success(function (data, status, headers, config) {
+                            flw.length = 0;
+                            for (var i = 0; i < data.length; i++) {
+                                flw.push(data[i]);
+                            }
+                        }).
                     error(function (data, status, headers, config) {
                         console.log(data);
                     });
-
-                    //$http.get('/User/GetFollowersForUser').
-                    //    success(function (data, status, headers, config) {
-                    //        this.followers = data;
-                    //    }).
-                    //error(function (data, status, headers, config) {
-                    //    console.log(data);
-                    //});
                 };
 
-                //this.followClick() = function () {
+                this.isShowFollow = function (userId) {
+                    var result = false;
+                    for (var i = 0; i < this.followers.length; i++) {
+                        if (this.followers[i].FollowerId == userId) { result = true; break; }
+                    }
+                    return result;
+                };
 
-                //};
-
-                //function myfunction() {
-
-                //}
+                this.followClick = function (manId) {
+                    $http.post('/User/SetFollower', { id: manId }).
+                    success(function (data, status, headers, config) {
+                        flw.push({ FollowerId: manId });
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log(data);
+                    });
+                };
 
             });
         })();
