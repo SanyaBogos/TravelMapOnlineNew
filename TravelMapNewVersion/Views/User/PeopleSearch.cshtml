@@ -4,7 +4,7 @@
         <input type="text" placeholder="Search people" ng-model="search.searchMask" />
         <button ng-click="search.searchPeople()">Search</button>
     </div>
-    {{search.searchMask}}
+    @*{{search.searchMask}}*@
     <div ng-repeat="man in search.people" style="float:left; background-color: greenyellow; width: 380px; border:double;">
         <img ng-src="data:image/jpg;base64,{{man.Photo}}" style="float:left; border:dashed" width="160" height="200" />
         <div style="float:left">
@@ -15,19 +15,19 @@
             <p ng-show="man.Email">Email: {{man.Email}}</p>
         </div>
 
-        @*<button>Messages</button>*@
+        <button>Messages</button>
         <button ng-hide="search.isShowFollow(man.Id)" ng-click="search.followClick(man.Id)">Follow</button>
+        <button ng-show="search.isShowFollow(man.Id)" ng-click="search.unfollowClick(man.Id)">UnFollow</button>
 
     </div>
     @*<div ng-repeat="follow in search.followers">
-            {{follow.FollowerId}}
-            {{follow.UserId}}
-
-        </div>*@
+        {{follow.FollowerId}}
+    </div>*@
 </div>
 
 @section scripts{
     <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
     <script>
         (function () {
             var app = angular.module('people', []);
@@ -67,14 +67,15 @@
 
                 this.isShowFollow = function (userId) {
                     var result = false;
-                    for (var i = 0; i < this.followers.length; i++) {
-                        if (this.followers[i].FollowerId == userId) { result = true; break; }
-                    }
+                    $.each(flw, function (index, value) {
+                        console.log('index=' + index + ' value=' + value.FollowerId);
+                        if (value.FollowerId == userId) { result = true; return false; }
+                    });
                     return result;
                 };
 
                 this.followClick = function (manId) {
-                    $http.post('/User/SetFollower', { id: manId }).
+                    $http.get('/User/AddFollower?id=' + manId).
                     success(function (data, status, headers, config) {
                         flw.push({ FollowerId: manId });
                     }).
@@ -82,6 +83,21 @@
                         console.log(data);
                     });
                 };
+
+                this.unfollowClick = function (manId) {
+                    $http.get('/User/RemoveFollower?id=' + manId).
+                    success(function (data, status, headers, config) {
+                        var index;
+                        for (var i = 0; i < flw.length; i++) {
+                            if (flw[i].FollowerId == manId) { index = i; break; }
+                        }
+                        if (index != null && index != undefined) { flw[index].FollowerId = null; }
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log(data);
+                    });
+                };
+
 
             });
         })();

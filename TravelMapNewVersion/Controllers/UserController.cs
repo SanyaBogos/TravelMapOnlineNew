@@ -60,7 +60,7 @@ namespace TravelMap.Controllers
         public JsonResult Save(Guid id, string firstname, string surname, string email, string phone)
         {
             var userProfile = db.UserProfiles.Find(id);
-	        userProfile.FirstName = firstname;
+            userProfile.FirstName = firstname;
             userProfile.Surname = surname;
             userProfile.Email = email;
             userProfile.Phone = phone;
@@ -324,11 +324,21 @@ namespace TravelMap.Controllers
             return Json(serializableTravels, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public void SetFollower(Guid id)
+        [HttpGet]
+        public void AddFollower(Guid id)
         {
             var userId = WebSecurity.CurrentUserId;
-            db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
+            if (db.Followers.Where(f => f.FollowerId == id && f.UserId == userId).ToList().Count == 0)
+                db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
+            db.SaveChanges();
+        }
+
+        [HttpGet]
+        public void RemoveFollower(Guid id)
+        {
+            var userId = WebSecurity.CurrentUserId;
+            var follower = db.Followers.First(f => f.FollowerId == id && f.UserId == userId);
+            db.Followers.Remove(follower);
             db.SaveChanges();
         }
 
@@ -366,53 +376,32 @@ namespace TravelMap.Controllers
             return View(WebSecurity.CurrentUserId);
         }
 
-
-
         [HttpGet]
         public ActionResult PeopleSearch()
         {
             return View();
         }
 
-        //public ActionResult PeopleSearch(string search)
-        //{
-
-        //    //List<UserProfile> searchedUsers;
-        //    //if (!search.Contains(" "))
-        //    var searchedUsers = db.UserProfiles.Where(u => u.Surname == search || u.UserName == search).ToList();
-        //    return searchedUsers;
-        //}
-
         [HttpGet]
         public JsonResult PeopleSearched(string searchUser)
         {
-            List<dynamic> peopleDynamic = new List<dynamic>();
+            UserProfile[] people;
             if (searchUser.Contains(' '))
             {
                 string[] parts = searchUser.Split(' ');
-				// todo: убрать этот быдлокод и написать что-то нармальное :)
-	            var part1 = parts[0];
-	            var part2 = parts[1];
-                var people = db.UserProfiles.Where(u => u.UserName.Contains(part1) &&
-                    u.Surname.Contains(part2)).ToArray();
-                foreach (var man in people)
-                {
-                    peopleDynamic.Add(new
-                    {
-                        Id = man.UserId,
-                        Photo = man.Photo != null ? Convert.ToBase64String(man.Photo) : "",
-                        UserName = man.UserName,
-                        Surname = man.Surname != null ? man.Surname : "",
-                        BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
-                        Email = man.Email
-                    });
-                }
-                return Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet);
+                // todo: убрать этот быдлокод и написать что-то нармальное :) - done (remade duplicates codelines and cut 
+                //                                                                   some string to make it shorter^)
+                //                                                                   but parts also the same... :(((                
+                var part1 = parts[0];
+                var part2 = parts[1];
+                people = db.UserProfiles.Where(u => u.UserName.StartsWith(part1) &&
+                    u.Surname.StartsWith(part2)).ToArray();
             }
-            var barada = db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
-                u.UserName.Contains(searchUser)).ToList();
-            //var xxx = barada.ToList();
-            foreach (var man in barada)
+            else
+                people = db.UserProfiles.Where(u => u.Surname.StartsWith(searchUser) ||
+                    u.UserName.StartsWith(searchUser)).ToArray();
+            List<dynamic> peopleDynamic = new List<dynamic>();
+            foreach (var man in people)
             {
                 peopleDynamic.Add(new
                 {
@@ -428,22 +417,6 @@ namespace TravelMap.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
-
-        //[HttpPost]
-        //public async Task<PartialViewResult> PeopleSearched(string searchUser)
-        //{
-        //    if (searchUser.Contains(' '))
-        //    {
-        //        string[] parts = searchUser.Split(' ');
-        //        var people = await Task.Run(() => (db.UserProfiles.Where(u => u.UserName.Contains(parts[0]) &&
-        //            u.Surname.Contains(parts[1]))));
-        //        return PartialView(people.ToList());
-        //    }
-        //    var barada = await Task.Run(() => (db.UserProfiles.Where(u => u.Surname.Contains(searchUser) ||
-        //        u.UserName.Contains(searchUser))));
-        //    var xxx = barada.ToList();
-        //    return PartialView(xxx);
-        //}
 
         protected override void Dispose(bool disposing)
         {
