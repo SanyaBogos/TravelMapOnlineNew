@@ -45,22 +45,29 @@
                     
                 </div>
             </div>
+            <h3>Add new travel</h3>
             <form class="input-form" name="travelForm" ng-controller="travelController as travelCtrl" novalidate>
-
-                (*)From
-                <input type="date" ng-model="travelCtrl.travel.start" class="date-input" required />
-                (*)To
-                <input type="date" ng-model="travelCtrl.travel.end" class="date-input" required />
-                Title:
-                <input type="text" ng-model="travelCtrl.travel.title" style="width: 100%" />
-                Text:
+                <div class="input-time">
+                    <div class="input-start">
+                        <span class="date-text">(*)From</span>
+                        <input type="date" ng-model="travelCtrl.travel.start" class="date-input" required />                
+                    </div>
+                    <div class="input-end">
+                        <span class="date-text">(*)To</span>
+                        <input type="date" ng-model="travelCtrl.travel.end" class="date-input" required />                        
+                    </div>                    
+                </div>                
+                <h3>Optional report</h3>
+                <div class="form-report">
+                    Title:
+                    <input type="text" ng-model="travelCtrl.travel.title" />                    
                 
-                <textarea class="form-input" name="area1" ng-model="travelCtrl.travel.message" style="width: 100%;"></textarea>
+                    <textarea class="form-input" name="area1" ng-model="travelCtrl.travel.message"></textarea>               
+                </div>
                 
                 
-                
-                <input type="button" value="Ok" ng-click="travelCtrl.clickOK()" />
                 <input type="button" value="Cancel" ng-click="travelCtrl.clickCancel()" />
+                <input class="travel-submit" type="button" value="Submit" ng-click="travelCtrl.clickOK()" />
             </form>
 
         </div>
