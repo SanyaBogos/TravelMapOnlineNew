@@ -8,7 +8,7 @@
             userId = null;
         $scope.travels = [];
         $scope.clickMap = function (newCountry) {
-            
+            var travels = $scope.travels;
             $scope.currentCountry = newCountry.title;            
             currentCountryId = newCountry.id;
             console.log(currentCountryId);
@@ -20,10 +20,16 @@
                 $http.get('/User/GetTravelsForCountry', {
                     params: { countryTitle: currentCountryId, userId: userId }
                 }).success(function (data, status, headers, config) {
-                    for (i in data) {
-                        $scope.travels.push(i);
+                    
+                    for (var i = 0; i<data.length ;i++) {
+                        var travel = {};
+                        //console.log(data);
+                        travel.start = data[i].startDate;
+                        travel.end = data[i].endDate;
+                        travel.id = data[i].travelId;
+                        travels.push(travel);
                     }
-                    console.log(data);//I have I'll show it
+                    //console.log(travels);//I have I'll show it
                 });
             });
             $scope.$apply();
@@ -44,16 +50,13 @@
         this.clickCancel = function () {
             $scope.$parent.currentCountry = null;
             this.travel = {};
+            $scope.$parent.travels = [];
         };
-        this.click = function () {
-            this.travel.html = document.getElementsByClassName('nicEdit-main')[0].innerHTML;
-            console.log(this.travel.html);
-            $scope.$parent.travels.push(this.travel);
-            this.travel = {};
-        }
+        
 
         this.clickOK = function () {
             var trvl = this.travel;
+            trvl.html = document.getElementsByClassName('nicEdit-main')[0].innerHTML;
             $http.post('/Map/SetTravel', {
                 country: $scope.$parent.currentCountry,
                 start: new Date(this.travel.start).getTime() / 1000,
@@ -61,14 +64,13 @@
             }).success(function (data, status, headers, config) {
                 console.log(trvl);
                 if (trvl.html) {
-                    $http.post('/Post/PostReport', {
-                        text: trvl.html,
-                        travelId: data,
-                        title: trvl.title
-                    });
+                    $http.post('/Post/PostReport', { text: trvl.html, travelId: data, title: trvl.title });
+                    
+                        
                 }
 
                 $scope.$parent.currentCountry = null;
+                $scope.$parent.travels = [];
                 trvl = {};
                 updateMap();
 
