@@ -283,8 +283,8 @@ namespace TravelMap.Controllers
                 result.Add(new
                 {
                     travelId = travel.TravelId,
-                    startDate = travel.StartDate,
-                    endDate = travel.EndDate,
+                    startDate = travel.StartDate == null ? "" : travel.StartDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds.ToString(),
+                    endDate = travel.EndDate == null ? "" : travel.EndDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds.ToString(),
                     userId = travel.UserId,
                     country = travel.Country.Name,
                     countryId = travel.CountryId
