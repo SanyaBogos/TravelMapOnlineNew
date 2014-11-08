@@ -1,130 +1,37 @@
 ﻿<h1>People search</h1>
-<div ng-app="people" ng-controller="SearchController as search" style="width:1160px; margin-left:-70px">
-    <div style="display: block; width: 100%">
+<div ng-app="people" ng-controller="SearchController as search" id="generalDiv">
+    <div id="searchPart">
         <input type="text" placeholder="Search people" ng-model="search.searchMask" />
         <button ng-click="search.searchPeople()">Search</button>
     </div>
     @*{{search.searchMask}}*@
-    <div ng-repeat="man in search.people" style="float:left; background-color: greenyellow; width: 380px; border:double;">
-        <img ng-src="data:image/jpg;base64,{{man.Photo}}" style="float:left; border:dashed" width="160" height="200" />
-        <div style="float:left">
+    <div ng-repeat="man in search.people" id="searchedPeopleResult">
+        <img ng-show="man.Photo" ng-src="data:image/jpg;base64,{{man.Photo}}" class="resultImage" />
+        <img ng-hide="man.Photo" ng-src="data:image/jpg;base64,{{search.defaultAvatar[0]}}" class="resultImage" />
+        @*<img ng-hide="false" ng-src="data:image/jpg;base64,{{search.defaultAvatar[0]}}" class="resultImage" />*@
+        <div id="personInfo">
             @*<p ng-show="search.followers.UserId">{{search.followers.UserId}}</p>*@
             <p ng-show="man.UserName">Name: {{man.UserName}}</p>
             <p ng-show="man.Surname">Surname: {{man.Surname}}</p>
-            <p ng-show="true">Birthdate: {{man.BirthDate | date:'medium'}}</p>
+            <p ng-show="man.BirthDate!=-1">Birthdate: {{man.BirthDate | date:'medium'}}</p>
             <p ng-show="man.Email">Email: {{man.Email}}</p>
         </div>
 
-        <button>Messages</button>
-        <button ng-hide="search.isShowFollow(man.Id)" ng-click="search.followClick(man.Id)">Follow</button>
-        <button ng-show="search.isShowFollow(man.Id)" ng-click="search.unfollowClick(man.Id)">UnFollow</button>
-
+        <div id="buttons">
+            <button>Messages</button>
+            <button ng-hide="search.isShowFollow(man.Id)" ng-click="search.followClick(man.Id)">Follow</button>
+            <button ng-show="search.isShowFollow(man.Id)" ng-click="search.unfollowClick(man.Id)">UnFollow</button>
+        </div>
     </div>
-    @*<div ng-repeat="follow in search.followers">
-        {{follow.FollowerId}}
-    </div>*@
+
 </div>
 
 @section scripts{
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/jquery-2.1.1.js"></script>
-    <script>
-        (function () {
-            var app = angular.module('people', []);
-
-            app.controller('SearchController', function ($http) {
-                this.searchMask = '';
-                this.people = [];
-                this.followers = [];
-
-                //ppl = this.people;
-                var ppl = this.people;
-                var flw = this.followers;
-                this.searchPeople = function () {
-                    $http.get('/User/PeopleSearched?searchUser=' + this.searchMask).
-                    success(function (data, status, headers, config) {
-                        //this.people.length = 0;
-                        ppl.length = 0;
-                        for (var i = 0; i < data.length; i++) {
-                            ppl.push(data[i]);
-                        }
-                    }).
-                error(function (data, status, headers, config) {
-                    console.log(data);
-                });
-
-                    $http.get('/User/GetFollowersForUser?id=null').
-                        success(function (data, status, headers, config) {
-                            flw.length = 0;
-                            for (var i = 0; i < data.length; i++) {
-                                flw.push(data[i]);
-                            }
-                        }).
-                    error(function (data, status, headers, config) {
-                        console.log(data);
-                    });
-                };
-
-                this.isShowFollow = function (userId) {
-                    var result = false;
-                    $.each(flw, function (index, value) {
-                        console.log('index=' + index + ' value=' + value.FollowerId);
-                        if (value.FollowerId == userId) { result = true; return false; }
-                    });
-                    return result;
-                };
-
-                this.followClick = function (manId) {
-                    $http.get('/User/AddFollower?id=' + manId).
-                    success(function (data, status, headers, config) {
-                        flw.push({ FollowerId: manId });
-                    }).
-                    error(function (data, status, headers, config) {
-                        console.log(data);
-                    });
-                };
-
-                this.unfollowClick = function (manId) {
-                    $http.get('/User/RemoveFollower?id=' + manId).
-                    success(function (data, status, headers, config) {
-                        var index;
-                        for (var i = 0; i < flw.length; i++) {
-                            if (flw[i].FollowerId == manId) { index = i; break; }
-                        }
-                        if (index != null && index != undefined) { flw[index].FollowerId = null; }
-                    }).
-                    error(function (data, status, headers, config) {
-                        console.log(data);
-                    });
-                };
-
-
-            });
-        })();
-    </script>
+    <script src="~/Scripts/Views/peopleSearch.js"></script>
 }
 
-@*@section scripts{
-        <script src="~/Scripts/angular.js"></script>
-        <script>
-            (function () {
-                var app = angular.module('people', []);
-
-                app.controller('SearchController', function ($scope, $http) {
-                    $scope.searchMask = '';
-                    $scope.people = null;
-
-                    $scope.searchPeople = function () {
-                        $http.post('/User/PeopleSearched', { searchUser: $scope.searchMask }).
-                        success(function (data, status, headers, config) {
-                            $scope.people = data;
-                            console.log($scope.people);
-                        }).
-                        error(function (data, status, headers, config) {
-                            console.log('soem error may be)' + data + status);
-                        });
-                    };
-                });
-            })();
-        </script>
-    }*@
+@section styles{
+    <link href="~/Content/peopleSearch.css" rel="stylesheet" />
+}

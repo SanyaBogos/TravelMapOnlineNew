@@ -1,0 +1,32 @@
+﻿#generalDiv {
+    width: 1160px;
+    margin-left: -70px;
+}
+
+#searchPart {
+    display: block;
+    width: 100%;
+}
+
+#searchedPeopleResult {
+    float: left;
+    background-color: lightgray;
+    width: 380px;
+    border: double;
+}
+
+.resultImage {
+    float: left !important;
+    /*border: dashed;*/
+    /*border-bottom-width: thick;*/
+    width: 160px !important;
+    height: 200px !important;
+}
+
+#buttons {
+    float: inherit;
+}
+
+#personInfo {
+    float: left;
+}

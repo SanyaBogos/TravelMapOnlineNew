@@ -288,6 +288,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\editProfile.css" />
     <Content Include="Content\feed.css" />
+    <Content Include="Content\peopleSearch.css" />
     <Content Include="Content\popUp.css" />
     <Content Include="Content\reports.css" />
     <Content Include="Content\style.css" />
@@ -728,6 +729,7 @@
     <Content Include="Scripts\nicEdit.js" />
     <Content Include="Scripts\Views\app.js" />
     <Content Include="Scripts\Views\feed.js" />
+    <Content Include="Scripts\Views\peopleSearch.js" />
     <Content Include="Scripts\Views\Post\reports.js" />
     <Content Include="Scripts\Views\UserProfile\editProfile.js" />
     <Content Include="Scripts\Views\UserProfile\travels.js" />
@@ -762,7 +764,6 @@
     <Content Include="Views\User\Travels.cshtml" />
     <Content Include="Views\Feed.cshtml" />
     <Content Include="Views\User\PeopleSearch.cshtml" />
-    <Content Include="Views\User\PeopleSearched.cshtml" />
     <Content Include="Views\Post\TravelReports.cshtml" />
   </ItemGroup>
   <ItemGroup>

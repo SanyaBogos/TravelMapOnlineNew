@@ -6,6 +6,9 @@ using System.Net;
 using System.Web.Mvc;
 using TravelMap.Models;
 using nonintanon.Security;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace TravelMap.Controllers
 {
@@ -399,13 +402,11 @@ namespace TravelMap.Controllers
             if (searchUser.Contains(' '))
             {
                 string[] parts = searchUser.Split(' ');
-                // todo: убрать этот быдлокод и написать что-то нармальное :) - done (remade duplicates codelines and cut 
-                //                                                                   some string to make it shorter^)
-                //                                                                   but parts also the same... :(((                
-                var part1 = parts[0];
-                var part2 = parts[1];
-                people = db.UserProfiles.Where(u => u.UserName.StartsWith(part1) &&
-                    u.Surname.StartsWith(part2)).ToArray();
+                var first = parts[0];
+                var second = parts[1];
+                people = db.UserProfiles.Where(u => (u.UserName.StartsWith(first) &&
+                    u.Surname.StartsWith(second)) || (u.UserName.StartsWith(second) &&
+                    u.Surname.StartsWith(first))).ToArray();
             }
             else
                 people = db.UserProfiles.Where(u => u.Surname.StartsWith(searchUser) ||
@@ -417,15 +418,31 @@ namespace TravelMap.Controllers
                 {
                     Id = man.UserId,
                     Photo = man.Photo != null ? Convert.ToBase64String(man.Photo) : "",
-                    UserName = man.UserName,
+                    UserName = man.UserName != null ? man.UserName : "",
                     Surname = man.Surname != null ? man.Surname : "",
-                    BirthDate = man.BirthDate != null ? man.BirthDate.Value.Millisecond : 0,
-                    Email = man.Email
+                    BirthDate = man.BirthDate != null ? ((DateTime)man.BirthDate).Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds : -1,
+                    Email = man.Email != null ? man.Email : ""
                 });
             }
             var jsonResult = Json(peopleDynamic.ToArray(), JsonRequestBehavior.AllowGet); ;
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
+        }
+
+        [HttpGet]
+        public JsonResult GetUserStandartPhoto()
+        {
+            string path = Server.MapPath("~/Images/icon_user.png");
+            Image bitmap = new Bitmap(path);
+            string base64;
+            ImageFormat format = ImageFormat.Png;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, format);
+                base64 = Convert.ToBase64String(ms.ToArray());
+            }
+            return Json(base64, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
