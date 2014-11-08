@@ -31,21 +31,24 @@ namespace TravelMap.Controllers
 				return new JsonResult();
 			}
 			var posts = userProfile.Posts;
+
+			var followers = userProfile.Followers.Select(f => f.FollowerId);
+			var followersPosts = db.Posts.Where(p => followers.Contains(p.UserId));
 			
-			var otherPosts = db.Posts.Where(p => p.UserId != id);
-			posts.AddRange(otherPosts);
+			//var allPosts = db.Posts.Where(p => p.UserId != id);
+			posts.AddRange(followersPosts);
 
 			posts = posts.OrderByDescending(p => p.Time).ToList();
 
-			var postVms = new List<PostViewModel>();
+			var postVms = new List<object>();
 			foreach (var post in posts)
 			{
-				postVms.Add(new PostViewModel
+				postVms.Add(new
 				{
-					Title = post.Title,
+					post.Title,
 					Country = post.Travel.Country.Name,
-					StartDate = dateToJs(post.Travel.StartDate.Value),
-					EndDate = dateToJs(post.Travel.EndDate.Value),
+					StartDate = post.Travel.StartDate == null ? string.Empty : dateToJs(post.Travel.StartDate.Value).ToString(),
+					EndDate = post.Travel.EndDate == null ? string.Empty : dateToJs(post.Travel.EndDate.Value).ToString(),
 					User = post.UserProfile.UserName == userProfile.UserName ? "You" : post.UserProfile.UserName,
 					PostText = post.Text
 				});
@@ -57,15 +60,15 @@ namespace TravelMap.Controllers
 			return result;
 		}
 
-		 private class PostViewModel
-		 {
-			 public string PostText { get; set; }
-			 public string User { get; set; }
-			 public double StartDate { get; set; }
-			 public double EndDate { get; set; }
-			 public string Title { get; set; }
-			 public string Country { get; set; }
-		 }
+		 //private class PostViewModel
+		 //{
+		 //	public string PostText { get; set; }
+		 //	public string User { get; set; }
+		 //	public double StartDate { get; set; }
+		 //	public double EndDate { get; set; }
+		 //	public string Title { get; set; }
+		 //	public string Country { get; set; }
+		 //}
 
 		 private double dateToJs(DateTime date)
 		 {
