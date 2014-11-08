@@ -24,7 +24,7 @@ namespace TravelMap.Controllers
             return View(userCountries);
         }
 
-        
+
 
         [HttpPost]
         public Guid SetTravel(string country, string start, string end)
@@ -36,10 +36,12 @@ namespace TravelMap.Controllers
             {
                 CountryId = countryId,
                 UserId = userId,
-                StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(start)),
-                EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(end)),
+                //StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(start)),
+                //EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(end)),
                 TravelId = Guid.NewGuid()
             };
+            if (start != null) travel.StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(start));
+            if (end != null) travel.EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(end));
             db.Travels.Add(travel);
             db.SaveChanges();
             return travel.TravelId;
