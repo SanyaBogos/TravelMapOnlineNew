@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\Learn\Trash\testProject\TravelMapOnlineNew\TravelMapNewVersion\Models\MapModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\dmytro_kononenko\Documents\Visual Studio 2013\Projects\TravelMapOnlineNew\TravelMapNewVersion\Models\MapModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

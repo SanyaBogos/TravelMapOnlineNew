@@ -15,20 +15,20 @@ namespace TravelMap.Models
 using System;
     using System.Collections.Generic;
     
-public partial class Follower
+public partial class Like
 {
+
+    public System.Guid LikeId { get; set; }
 
     public System.Guid UserId { get; set; }
 
-    public System.Guid FollowerId { get; set; }
-
-    public System.Guid UserFollowerId { get; set; }
+    public System.Guid PostId { get; set; }
 
 
+
+    public virtual Post Post { get; set; }
 
     public virtual UserProfile UserProfile { get; set; }
-
-    public virtual UserProfile UserProfile1 { get; set; }
 
 }
 

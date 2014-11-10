@@ -36,6 +36,14 @@
           <Property Name="FollowerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserFollowerId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="Like">
+          <Key>
+            <PropertyRef Name="LikeId" />
+          </Key>
+          <Property Name="LikeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PostId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Post">
           <Key>
             <PropertyRef Name="PostId" />
@@ -137,6 +145,30 @@
             </Principal>
             <Dependent Role="File">
               <PropertyRef Name="FileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_Post">
+          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+          <End Role="Like" Type="Self.Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_User">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Like" Type="Self.Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -289,6 +321,7 @@
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Follower" EntityType="Self.Follower" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Like" EntityType="Self.Like" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostType" EntityType="Self.PostType" Schema="dbo" store:Type="Tables" />
@@ -301,6 +334,14 @@
           <AssociationSet Name="File_fk1" Association="Self.File_fk1">
             <End Role="FileType" EntitySet="FileType" />
             <End Role="File" EntitySet="File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_Post" Association="Self.FK_Like_Post">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="Like" EntitySet="Like" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_User" Association="Self.FK_Like_User">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Like" EntitySet="Like" />
           </AssociationSet>
           <AssociationSet Name="FK_Post_Post" Association="Self.FK_Post_Post">
             <End Role="Post" EntitySet="Post" />
@@ -415,6 +456,15 @@
           <AssociationSet Name="PostFile_fk1" Association="Model.PostFile_fk1">
             <End Role="Post" EntitySet="Posts" />
             <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <EntitySet Name="Likes" EntityType="Model.Like" />
+          <AssociationSet Name="FK_Like_Post" Association="Model.FK_Like_Post">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Like" EntitySet="Likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_User" Association="Model.FK_Like_User">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Like" EntitySet="Likes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Country">
@@ -536,6 +586,7 @@
           <NavigationProperty Name="security_Roles" Relationship="Model.security_UsersInRoles" FromRole="UserProfile" ToRole="security_Roles" />
           <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
           <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Likes" Relationship="Model.FK_Like_User" FromRole="UserProfile" ToRole="Like" />
         </EntityType>
         <Association Name="Travel_fk2">
           <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
@@ -631,6 +682,7 @@
           <NavigationProperty Name="UserProfile" Relationship="Model.Post_fk1" FromRole="Post" ToRole="UserProfile" />
           <NavigationProperty Name="PostType" Relationship="Model.Post_fk2" FromRole="Post" ToRole="PostType" />
           <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk1" FromRole="Post" ToRole="PostFile" />
+          <NavigationProperty Name="Likes" Relationship="Model.FK_Like_Post" FromRole="Post" ToRole="Like" />
         </EntityType>
         <Association Name="FK_Post_Post">
           <End Type="Model.Post" Role="Post" Multiplicity="1" />
@@ -689,6 +741,40 @@
             </Principal>
             <Dependent Role="PostFile">
               <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Like">
+          <Key>
+            <PropertyRef Name="LikeId" />
+          </Key>
+          <Property Name="LikeId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Post" Relationship="Model.FK_Like_Post" FromRole="Like" ToRole="Post" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Like_User" FromRole="Like" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_Like_Post">
+          <End Type="Model.Post" Role="Post" Multiplicity="1" />
+          <End Type="Model.Like" Role="Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_User">
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.Like" Role="Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -829,6 +915,15 @@
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PostId" ColumnName="PostId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Likes">
+            <EntityTypeMapping TypeName="Model.Like">
+              <MappingFragment StoreEntitySet="Like">
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LikeId" ColumnName="LikeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

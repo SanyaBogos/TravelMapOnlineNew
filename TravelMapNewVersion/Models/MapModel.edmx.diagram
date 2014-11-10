@@ -29,6 +29,9 @@
         <AssociationConnector Association="Model.Post_fk1" />
         <AssociationConnector Association="Model.Post_fk2" />
         <AssociationConnector Association="Model.PostFile_fk1" />
+        <EntityTypeShape EntityType="Model.Like" Width="1.5" PointX="3.625" PointY="9" />
+        <AssociationConnector Association="Model.FK_Like_Post" />
+        <AssociationConnector Association="Model.FK_Like_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

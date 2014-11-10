@@ -235,6 +235,9 @@
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\JsonErrorResponse.cs" />
+    <Compile Include="Models\Like.cs">
+      <DependentUpon>MapModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MapModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
