@@ -243,20 +243,17 @@ namespace TravelMap.Controllers
         [HttpGet]
         public JsonResult GetUserVisitedCountries(Guid id)
         {
-            var userTravels = db.Travels.Where(travel => travel.UserId == id);
-            var result = userTravels.Select(userTravel => userTravel.Country).ToArray();
+            var userTravels = db.Travels.Where(travel => travel.UserId == id).ToList();
             var serializableResult = new List<dynamic>();
-            foreach (var country in result)
+            foreach (var travel in userTravels)
             {
-                serializableResult.Add(new
+                serializableResult.Add(new 
                 {
-                    id = country.CountryId,
-                    name = country.Name,
-                    title = country.Title
+                    title = travel.Country.Title,
+                    color = travel.CountryColor
                 });
             }
             return Json(serializableResult, JsonRequestBehavior.AllowGet);
-
         }
 
         [HttpGet]
@@ -283,8 +280,8 @@ namespace TravelMap.Controllers
                 result.Add(new
                 {
                     travelId = travel.TravelId,
-                    startDate = travel.StartDate,
-                    endDate = travel.EndDate,
+                    startDate = travel.StartDate == null ? "" : travel.StartDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds.ToString(),
+                    endDate = travel.EndDate == null ? "" : travel.EndDate.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds.ToString(),
                     userId = travel.UserId,
                     country = travel.Country.Name,
                     countryId = travel.CountryId

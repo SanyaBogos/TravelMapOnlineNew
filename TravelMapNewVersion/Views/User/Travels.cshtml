@@ -25,7 +25,7 @@
                 <div class="travel-body">
                      <div class="travel-date">
                         <table>
-                            <tr>
+                            <tr ng-show="travel.startDate">
                                 <td>
                                     <b>From:</b>
                                 </td>
@@ -33,7 +33,7 @@
                                     {{travel.startDate |  date:'yyyy-MM-dd'}}
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-show="travel.endDate">
                                 <td>
                                     <b>To:</b>
                                 </td>

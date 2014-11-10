@@ -2,6 +2,7 @@
     var userMap = [],
             userCountries = [],
             user;
+    var defaultColour = '#3366CC';
     $.get("/User/GetCurrentUser", function (data) {
         user = data;
 
@@ -10,9 +11,12 @@
             userCountries = data;
 
             for (var i = 0; i < userCountries.length; i++) {
-                userMap.push({ id: userCountries[i].title + "", showAsSelected: true });
+                //userMap.push({ id: userCountries[i].title + "", showAsSelected: true });
+                userMap.push({
+                    id: userCountries[i].title + "",
+                    color: userCountries[i].color == null ? defaultColour : userCountries[i].color
+                });
             }
-
             AmMyMaps(userMap);
         });
     });

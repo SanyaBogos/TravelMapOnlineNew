@@ -27,11 +27,17 @@
                 </section>
                 <nav>
                     <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Map", "Index", "Map")</li>
-                        <li>@Html.ActionLink("Travels", "Travels", "User")</li>
-                        <li>@Html.ActionLink("Feed", "Index", "Feed")</li>
-                        <li>@Html.ActionLink("People Search", "PeopleSearch", "User")</li>
+                        @if (!Request.IsAuthenticated)
+                        {
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Map", "Index", "Map")</li>
+                            <li>@Html.ActionLink("Travels", "Travels", "User")</li>
+                            <li>@Html.ActionLink("Feed", "Index", "Feed")</li>
+                            <li>@Html.ActionLink("People Search", "PeopleSearch", "User")</li>
+                        }
                     </ul>
                 </nav>
             </div>
@@ -56,7 +62,7 @@
     @RenderSection("scripts", required: false)
     <script>
 
-        $("#body").css('min-height', $(document).height() );
+        $("#body").css('min-height', $(document).height());
     </script>
 </body>
 </html>

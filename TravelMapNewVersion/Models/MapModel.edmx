@@ -113,6 +113,7 @@
           <Property Name="EndDate" Type="datetime" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="TravelId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CountryColor" Type="nchar" MaxLength="7" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -516,6 +517,7 @@
           <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
           <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
           <NavigationProperty Name="Posts" Relationship="Model.FK_Post_ToTable" FromRole="Travel" ToRole="Post" />
+          <Property Name="CountryColor" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -785,6 +787,7 @@
           <EntitySetMapping Name="Travels">
             <EntityTypeMapping TypeName="Model.Travel">
               <MappingFragment StoreEntitySet="Travel">
+                <ScalarProperty Name="CountryColor" ColumnName="CountryColor" />
                 <ScalarProperty Name="CountryId" ColumnName="CountryId" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
