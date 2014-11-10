@@ -6,6 +6,7 @@
         this.people = [];
         this.followers = [];
         this.defaultAvatar = [];
+        //this.currentManId = null;
         //this.fuck = 'baraad';
 
         //ppl = this.people;

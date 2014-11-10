@@ -341,8 +341,9 @@ namespace TravelMap.Controllers
         public void AddFollower(Guid id)
         {
             var userId = WebSecurity.CurrentUserId;
-            if (db.Followers.Where(f => f.FollowerId == id && f.UserId == userId).ToList().Count == 0)
-                db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
+            if (!db.Followers.Where(f => f.FollowerId == id && f.UserId == userId).Any())
+                if (id != userId)
+                    db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
             db.SaveChanges();
         }
 
