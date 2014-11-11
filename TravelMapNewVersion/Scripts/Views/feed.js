@@ -18,17 +18,40 @@ app.controller('FeedController', function ($scope, $http) {
 	$scope.like = function(postId) {
 		$http.post("/Feed/Like", { postId: postId })
 			.success(function(data, status, headers, config) {
-				$scope.post.liked = true;
-				//reports.push($scope.report);
+				for (var i = 0, lenPosts = $scope.posts.length; i < lenPosts; i++) {
+					if ($scope.posts[i].PostId == postId) {
+						$scope.posts[i].Likes = data;
+						break;
+					}
+				}
+			})
+			.error(function(data, status) {
+				$scope.error = status;
 			});
 	}
 
 	$scope.removeLike = function (postId) {
 		$http.post("/Feed/RemoveLike", { postId: postId })
-			.success(function (data, status, headers, config) {
-				$scope.post.liked = false;
-				//reports.push($scope.report);
+			.success(function(data, status, headers, config) {
+				for (var i = 0, lenPosts = $scope.posts.length; i < lenPosts; i++) {
+					if ($scope.posts[i].PostId == postId) {
+						$scope.posts[i].Likes = data;
+						break;
+					}
+				}
+			})
+			.error(function(data, status) {
+				$scope.error = status;
 			});
+	}
+
+	$scope.checkLiked = function(likes) {
+		for (var i = 0, len = likes.length; i < len; i++) {
+			if (likes[i].UserId == $scope.userId) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 

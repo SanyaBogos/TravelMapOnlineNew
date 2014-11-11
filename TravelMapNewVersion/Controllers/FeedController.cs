@@ -52,7 +52,7 @@ namespace TravelMap.Controllers
 					EndDate = post.Travel.EndDate == null ? string.Empty : dateToJs(post.Travel.EndDate.Value).ToString(),
 					User = post.UserProfile.UserName == userProfile.UserName ? "You" : post.UserProfile.UserName,
 					PostText = post.Text,
-					Likes = post.Likes
+					Likes = post.Likes.Select(l => new { l.LikeId, l.PostId, l.UserId, l.UserProfile.UserName})
 				});
 			}
 
@@ -62,21 +62,33 @@ namespace TravelMap.Controllers
 			return result;
 		}
 
-		[HttpPost]
 		public JsonResult Like(Guid postId)
 		{
 			var userId = WebSecurity.CurrentUserId;
 
 			var like = db.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
-			if (like == null)
+			if (like != null)
 			{
-				db.Likes.Add(new Like {UserId = userId, PostId = postId});
-				var result = db.SaveChanges();
-
-				return Json(result, JsonRequestBehavior.AllowGet);
+				throw new Exception("post is already liked");
 			}
-			//todo: check if post is already liked
-			return Json("post is already liked", JsonRequestBehavior.AllowGet);
+			var newLikeId = Guid.NewGuid();
+			db.Likes.Add(new Like {UserId = userId, PostId = postId, LikeId = newLikeId});
+			var result = db.SaveChanges();
+			if (result != 1)
+			{
+				throw new Exception("DB was not saved :(");
+			}
+
+			// Get all OLD likes for current Post
+			var likes = db.Posts.First(p => p.PostId == postId).Likes.Where(l => l.LikeId != newLikeId)
+				.Select(lk => new {lk.LikeId, lk.PostId, lk.UserId, lk.UserProfile.UserName}).ToList();
+
+			// Just added to DB like somehow can't see userProfile reference,
+			// so it is added manually
+			var userName = db.UserProfiles.First(u => u.UserId ==userId).UserName;
+			likes.Add(new {LikeId = newLikeId, PostId = postId, UserId = userId, UserName = userName});
+
+			return Json(likes, JsonRequestBehavior.AllowGet);
 		}
 
 		public JsonResult RemoveLike(Guid postId)
@@ -86,11 +98,17 @@ namespace TravelMap.Controllers
 			var like = db.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
 			if (like == null)
 			{
-				return Json("like was not found :(", JsonRequestBehavior.AllowGet);
+				throw new Exception("like was not found :(");
 			}
 			db.Likes.Remove(like);
 			var result = db.SaveChanges();
-			return Json(result, JsonRequestBehavior.AllowGet);
+			if (result != 1)
+			{
+				throw new Exception("DB was not saved :(");
+			}
+			var likes = db.Posts.First(p => p.PostId == postId)
+				.Likes.Select(l => new {l.LikeId, l.PostId, l.UserId, l.UserProfile.UserName});
+			return Json(likes, JsonRequestBehavior.AllowGet);
 		}
 
 
