@@ -32,6 +32,14 @@
         <EntityTypeShape EntityType="Model.Like" Width="1.5" PointX="3.625" PointY="9" />
         <AssociationConnector Association="Model.FK_Like_Post" />
         <AssociationConnector Association="Model.FK_Like_User" />
+        <EntityTypeShape EntityType="Model.ChatMember" Width="1.5" PointX="10.5" PointY="9.5" />
+        <EntityTypeShape EntityType="Model.Message" Width="1.5" PointX="10.5" PointY="12.25" />
+        <EntityTypeShape EntityType="Model.Room" Width="1.5" PointX="5.25" PointY="14.125" />
+        <AssociationConnector Association="Model.FK_ChatMember_ToRoom" />
+        <AssociationConnector Association="Model.FK_ChatMember_ToUserProfile" />
+        <AssociationConnector Association="Model.FK_Message_ToRoom" />
+        <AssociationConnector Association="Model.FK_Message_ToUserProfile" />
+        <AssociationConnector Association="Model.FK_Room_ToUserProfile" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
