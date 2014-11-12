@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using TravelMap.Models;
 using nonintanon.Security;
 using System.Drawing;
@@ -27,6 +28,12 @@ namespace TravelMap.Controllers
             }
             return View(userId);
         }
+        public byte[] imageToByteArray(System.Drawing.Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+            return ms.ToArray();
+        }
 
         public JsonResult JIndex(Guid id)
         {
@@ -35,6 +42,7 @@ namespace TravelMap.Controllers
             db.Configuration.ProxyCreationEnabled = false;
 
             var userProfile = db.UserProfiles.Find(id);
+            
             if (userProfile == null)
             {
                 return new JsonResult();
@@ -48,6 +56,21 @@ namespace TravelMap.Controllers
         public Guid GetCurrentUser()
         {
             return WebSecurity.CurrentUserId;
+        }
+
+        public ActionResult Profile(Guid? id)
+        {
+            if (id==null && WebSecurity.IsAuthenticated)
+            {
+                id = WebSecurity.CurrentUserId;
+            }
+            return View(id);
+        }
+
+        public ActionResult UserTravels(Guid userId)
+        {
+            ViewBag.IsCurrentUser = (userId == WebSecurity.CurrentUserId);
+            return View("UserTravels");
         }
 
         //

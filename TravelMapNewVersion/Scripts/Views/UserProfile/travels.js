@@ -19,7 +19,7 @@ app.controller("travelController", function ($scope, $http) {
     this.click = function (id) {
 
     };
-    
+
     $scope.show = function (group) {
         group.show = !group.show;
     };
@@ -29,16 +29,11 @@ app.controller("travelController", function ($scope, $http) {
             success(function (data, status, headers, config) {
                 $scope.travelGroups = data;
                 for (var i = 0; i < $scope.travelGroups.length; i++) {
-                    //$scope.travelGroups[i].show = true;
                     for (var j = 0; j < $scope.travelGroups[i].travels.length; j++) {
-                        console.log($scope.travelGroups[i].travels[j]);
                         $scope.travelGroups[i].travels[j].startDate = fixDate($scope.travelGroups[i].travels[j].startDate);
                         $scope.travelGroups[i].travels[j].endDate = fixDate($scope.travelGroups[i].travels[j].endDate);
-
                     }
                 }
-                //$scope.travelGroups.travels[i].startDate = fixDate($scope.travelGroups[i].startDate);
-                //$scope.travelGroups.travels[i].endDate = fixDate($scope.travelGroups[i].endDate);
             }).
             error(function (data, status, headers, config) {
             });

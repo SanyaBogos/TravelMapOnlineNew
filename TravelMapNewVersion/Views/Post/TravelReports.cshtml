@@ -16,12 +16,14 @@
     <link rel="stylesheet" href="~/Content/reports.css" />
 }
 <div ng-app="app" ng-controller="ReportsController" ng-init="init('@Model')">
-    <div class="control-panel">
-        <a ng-class="getControlButtonsClass('delete')" class="report-button control-button" ng-click="deleteReport()">-</a>
-        <a ng-class="getControlButtonsClass('edit')" class="report-button control-button" style="font-size: 3em; " ng-click="editReport()">&#9998;</a>
-        <a ng-class="getControlButtonsClass('add')" class="report-button control-button" ng-click="addReport()">+</a>
-
-    </div>
+    @if (ViewBag.IsCurrentUser)
+    {
+        <div class="control-panel">
+            <a ng-class="getControlButtonsClass('delete')" class="report-button control-button" ng-click="deleteReport()">-</a>
+            <a ng-class="getControlButtonsClass('edit')" class="report-button control-button" style="font-size: 3em; " ng-click="editReport()">&#9998;</a>
+            <a ng-class="getControlButtonsClass('add')" class="report-button control-button" ng-click="addReport()">+</a>
+        </div>
+    }
     <div class="current-report report">
         <div class="report-heading">
             <h3 class="report-title" ng-show="!editMode">{{report.title}}</h3>

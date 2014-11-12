@@ -290,6 +290,7 @@
     <Content Include="Content\feed.css" />
     <Content Include="Content\peopleSearch.css" />
     <Content Include="Content\popUp.css" />
+    <Content Include="Content\profile.css" />
     <Content Include="Content\reports.css" />
     <Content Include="Content\style.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -732,6 +733,7 @@
     <Content Include="Scripts\Views\peopleSearch.js" />
     <Content Include="Scripts\Views\Post\reports.js" />
     <Content Include="Scripts\Views\UserProfile\editProfile.js" />
+    <Content Include="Scripts\Views\UserProfile\profile.js" />
     <Content Include="Scripts\Views\UserProfile\travels.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -765,6 +767,9 @@
     <Content Include="Views\Feed.cshtml" />
     <Content Include="Views\User\PeopleSearch.cshtml" />
     <Content Include="Views\Post\TravelReports.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\User\Notes.cshtml" />
+    <Content Include="Views\User\Friends.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />

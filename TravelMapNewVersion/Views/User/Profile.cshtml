@@ -1,0 +1,58 @@
+﻿@section scripts
+{
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/angular-route.js"></script>
+    <script src="~/Scripts/Views/app.js"></script>
+    <script src="~/Scripts/Views/UserProfile/profile.js"></script>
+    <script src="~/Scripts/Views/UserProfile/travels.js"></script>
+    <script src="~/Scripts/Views/UserProfile/editProfile.js"></script>
+
+}
+@section styles
+{
+    <link rel="stylesheet" href="~/Content/profile.css" />
+    <link rel="stylesheet" href="~/Content/travels.css" />
+    @Styles.Render("~/Content/bootstrap.min.css")
+    @Styles.Render("~/Content/editProfile.css")
+}
+<script>
+</script>
+<div ng-app="app" ng-controller="ProfileController" ng-init="init('@Model')">
+    <div class="profile-header">
+        <h1>{{user.FirstName}} {{user.Surname}}</h1>
+        <img ng-src="{{user.Photo}}" alt="na" class="userPhoto">
+        <div class="profile-header-actions">
+            <a href="#">Follow</a>
+            <a href="#">Chat</a>
+        </div>
+    </div>
+
+    <ul class="horizontal-menu">
+        <li>
+            <a ng-click="showTravels()">Travels</a>
+        </li>
+        <li>
+            <a ng-click="showNotes()">Notes</a>
+        </li>
+        <li>
+            <a ng-click="showFriends()">Friends</a>
+        </li>
+        <li>
+            <a ng-click="showPersonalInfo()">Personal Info</a>
+        </li>
+    </ul>
+    <div>
+        <div ng-show="travelsSelected">
+            @Html.Partial("Travels")
+        </div>
+        <div ng-show="notesSelected">
+            @Html.Partial("Notes")
+        </div>
+        <div ng-show="friendsSelected">
+            @Html.Partial("Friends")
+        </div>
+        <div ng-show="personalInfoSelected">
+            @Html.Partial("Index")
+        </div>
+    </div>
+</div>

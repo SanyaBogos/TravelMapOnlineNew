@@ -1,21 +1,26 @@
-﻿@{
-
+﻿@using System.Web.UI.WebControls
+@{
     ViewBag.Title = "Your travels";
 }
 @section styles
 {
     @Styles.Render("~/Content/bootstrap.css")
     <link href="~/Content/travels.css" rel="stylesheet" />
+    <link href="~/Content/ammap.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
 }
 @section scripts
 {
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/Views/app.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/Views/UserProfile/travels.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
 
 }
+
 <div ng-app="app" ng-controller="travelController as travelCtrl" ng-init="init('@Model')">
+
+
     <div class="travel-groups" ng-repeat="group in travelGroups">
         <div class="travel-heading" ng-click="show(group)">
             <h3>{{group.country}} <sup class="travels-count">{{group.travels.length}}</sup></h3>
@@ -23,7 +28,7 @@
         <div class="travels" style="width: 100%;" ng-show="group.show">
             <div class="travel" ng-repeat="travel in group.travels | orderBy:'startDate'">
                 <div class="travel-body">
-                     <div class="travel-date">
+                    <div class="travel-date">
                         <table>
                             <tr ng-show="travel.startDate">
                                 <td>

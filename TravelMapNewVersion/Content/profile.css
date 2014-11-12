@@ -1,0 +1,35 @@
+﻿    .profile-header {
+        height: 200px;
+        background-color: whitesmoke;
+    }
+
+        .profile-header h1 {
+            padding-left: 20px;
+            margin-top: 20px;
+            font-size: 3em;
+        }
+
+        .profile-header img {
+            height: 145px;
+            float: right;
+        }
+
+    .profile-header-actions {
+        text-decoration: none;
+        float: left;
+        padding-left: 20px;
+    }
+
+
+    .horizontal-menu {
+        width: 100%;
+        list-style: none;
+        background-color: white;
+        font-size: 2em;
+        margin: 0;
+        padding: 0;
+    }
+
+        .horizontal-menu li {
+            display: inline;
+        }
