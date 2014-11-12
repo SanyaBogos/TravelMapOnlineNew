@@ -3,7 +3,7 @@ app  = angular.module("app", ['ngRoute']);
 
 app.controller("ProfileController", function ($scope, $http) {
 
-    $scope.travelsSelected = false;
+    $scope.travelsSelected = true;
     $scope.notesSelected = false;
     $scope.friendsSelected = false;
     $scope.personalInfoSelected = false;

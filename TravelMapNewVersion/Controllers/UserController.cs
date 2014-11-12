@@ -42,7 +42,7 @@ namespace TravelMap.Controllers
             db.Configuration.ProxyCreationEnabled = false;
 
             var userProfile = db.UserProfiles.Find(id);
-            
+
             if (userProfile == null)
             {
                 return new JsonResult();
@@ -60,10 +60,11 @@ namespace TravelMap.Controllers
 
         public ActionResult Profile(Guid? id)
         {
-            if (id==null && WebSecurity.IsAuthenticated)
+            if (id == null && WebSecurity.IsAuthenticated)
             {
                 id = WebSecurity.CurrentUserId;
             }
+            ViewBag.IsCurrentUser = (id == WebSecurity.CurrentUserId);
             return View(id);
         }
 
@@ -270,7 +271,7 @@ namespace TravelMap.Controllers
             var serializableResult = new List<dynamic>();
             foreach (var travel in userTravels)
             {
-                serializableResult.Add(new 
+                serializableResult.Add(new
                 {
                     title = travel.Country.Title,
                     color = travel.CountryColor

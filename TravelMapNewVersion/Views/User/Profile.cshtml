@@ -6,17 +6,21 @@
     <script src="~/Scripts/Views/UserProfile/profile.js"></script>
     <script src="~/Scripts/Views/UserProfile/travels.js"></script>
     <script src="~/Scripts/Views/UserProfile/editProfile.js"></script>
-
+    <script src="~/Scripts/Map/anmap/ammap.js"></script>
+    <script src="~/Scripts/Map/anmap/continentsLow.js"></script>
+    <script src="~/Scripts/Map/anmap/worldLow.js"></script>
+    <script src="~/Scripts/Map/mapDecorator.js"></script>
 }
 @section styles
 {
+    <link href="~/Content/ammap.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/Content/profile.css" />
     <link rel="stylesheet" href="~/Content/travels.css" />
     @Styles.Render("~/Content/bootstrap.min.css")
     @Styles.Render("~/Content/editProfile.css")
 }
-<script>
-</script>
+
 <div ng-app="app" ng-controller="ProfileController" ng-init="init('@Model')">
     <div class="profile-header">
         <h1>{{user.FirstName}} {{user.Surname}}</h1>

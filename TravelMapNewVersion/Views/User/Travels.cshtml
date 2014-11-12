@@ -14,52 +14,24 @@
     <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/Views/app.js"></script>
     <script src="~/Scripts/Views/UserProfile/travels.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Map/anmap/ammap.js"></script>
+    <script src="~/Scripts/Map/anmap/continentsLow.js"></script>
+    <script src="~/Scripts/Map/anmap/worldLow.js"></script>
+    <script src="~/Scripts/Map/mapDecorator.js"></script>
 
 }
 
+
 <div ng-app="app" ng-controller="travelController as travelCtrl" ng-init="init('@Model')">
 
+    <div id="mapdiv"></div>
 
-    <div class="travel-groups" ng-repeat="group in travelGroups">
-        <div class="travel-heading" ng-click="show(group)">
-            <h3>{{group.country}} <sup class="travels-count">{{group.travels.length}}</sup></h3>
+    <a ng-repeat="travel in travels" ng-href="/Post/TravelReports?travelId={{travel.travelId}}">
+        <div class="travel">
+            <span class="date" id="start-date">{{travel.startDate | date:'yyyy-MM-dd'}}</span>
+            <span class="date" id="end-date">{{travel.endDate | date:'yyyy-MM-dd'}}</span>
         </div>
-        <div class="travels" style="width: 100%;" ng-show="group.show">
-            <div class="travel" ng-repeat="travel in group.travels | orderBy:'startDate'">
-                <div class="travel-body">
-                    <div class="travel-date">
-                        <table>
-                            <tr ng-show="travel.startDate">
-                                <td>
-                                    <b>From:</b>
-                                </td>
-                                <td>
-                                    {{travel.startDate |  date:'yyyy-MM-dd'}}
-                                </td>
-                            </tr>
-                            <tr ng-show="travel.endDate">
-                                <td>
-                                    <b>To:</b>
-                                </td>
-                                <td>
-                                    {{travel.endDate |  date:'yyyy-MM-dd'}}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <a href="/Post/TravelReports?travelId={{travel.travelId}}&countryName={{group.country}}" class="show-reports-btn">Reports</a>
-                    @* @Html.ActionLink("Show reports", "TravelReports", "Post",new {travelId = ViewBag.TravelId}, new{@class="show-reports-btn"})*@
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="messages">
-        <div class="message" ng-repeat="message in messages">
-            <span class="text">{{message.text}}</span><br>
-            <span class="time">{{message.time}}</span>
-        </div>
-    </div>
+    </a>
 </div>
 
 
