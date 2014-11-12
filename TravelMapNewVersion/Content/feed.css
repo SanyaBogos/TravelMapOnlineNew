@@ -19,10 +19,14 @@
 	position: absolute;
 	right: 0;
 	top: -5px;
-	width: 20px;
+	width: 40px;
 }
 .heart-pic {
-	width: 100%;
+	width: 20px;
+}
+.heart-num {
+	font-size: 15px;
+	margin-left: 3px;
 }
 header {
 	margin-bottom: 5px;

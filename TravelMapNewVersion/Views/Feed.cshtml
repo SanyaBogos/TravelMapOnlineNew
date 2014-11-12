@@ -24,14 +24,16 @@
 				<span class="post-user">{{post.User}}</span>
 				<span>have been to</span>
 				<span class="post-country">{{post.Country}}</span>
-				<span class="post-dates">from {{post.StartDate | date:'yyyy-MMM-dd'}} to {{post.EndDate | date:'yyyy-MMM-dd'}}</span>	
+				<span class="post-dates">from {{post.StartDate | date:'yyyy-MMM-dd'}} to {{post.EndDate | date:'yyyy-MMM-dd'}}</span>
 			</header>
 			<span>{{post.Title}}</span>
 			<span>{{post.PostText}}</span>
+			<br />
 			<footer>
-				<span class="heart" ng-click="liked = !liked">
-					<img ng-show="!liked" class="heart-pic" src="~/Images/heart.png" />
-					<img ng-show="liked" class="heart-pic" src="~/Images/heart2.png" />
+				<span class="heart">
+					<img ng-show="!checkLiked(post.Likes)" ng-click="like(post.PostId)" class="heart-pic" src="~/Images/heart.png" />
+					<img ng-show="checkLiked(post.Likes)" ng-click="removeLike(post.PostId)" class="heart-pic" src="~/Images/heart2.png" />
+					<span ng-show="{{post.Likes.length > 0}}" class="heart-num">{{post.Likes.length}}</span>
 				</span>
 			</footer>
 			<br>

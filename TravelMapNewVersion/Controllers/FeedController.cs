@@ -8,20 +8,20 @@ using TravelMap.Models;
 
 namespace TravelMap.Controllers
 {
-	 [Authorize]
-    public class FeedController : Controller
-    {
-		 private Entities db = new Entities();
+	[Authorize]
+	public class FeedController : Controller
+	{
+		private Entities db = new Entities();
 
-        // GET: Feed
-        public ActionResult Index()
-        {
+		// GET: Feed
+		public ActionResult Index()
+		{
 			var userId = WebSecurity.CurrentUserId;
 			return View("~/Views/Feed.cshtml", userId);
-        }
-		
+		}
+
 		//todo: create class to send all kinds of news: reports, new followers etc.
-		 
+
 		[HttpGet]
 		public JsonResult GetPosts(Guid id)
 		{
@@ -34,7 +34,7 @@ namespace TravelMap.Controllers
 
 			var followers = userProfile.Followers.Select(f => f.FollowerId);
 			var followersPosts = db.Posts.Where(p => followers.Contains(p.UserId));
-			
+
 			//var allPosts = db.Posts.Where(p => p.UserId != id);
 			posts.AddRange(followersPosts);
 
@@ -45,34 +45,76 @@ namespace TravelMap.Controllers
 			{
 				postVms.Add(new
 				{
+					post.PostId,
 					post.Title,
 					Country = post.Travel.Country.Name,
 					StartDate = post.Travel.StartDate == null ? string.Empty : dateToJs(post.Travel.StartDate.Value).ToString(),
 					EndDate = post.Travel.EndDate == null ? string.Empty : dateToJs(post.Travel.EndDate.Value).ToString(),
 					User = post.UserProfile.UserName == userProfile.UserName ? "You" : post.UserProfile.UserName,
-					PostText = post.Text
+					PostText = post.Text,
+					Likes = post.Likes.Select(l => new { l.LikeId, l.PostId, l.UserId, l.UserProfile.UserName})
 				});
 			}
 
 			var result = Json(postVms, JsonRequestBehavior.AllowGet);
 			// todo: add friends reports to result
-			
+
 			return result;
 		}
 
-		 //private class PostViewModel
-		 //{
-		 //	public string PostText { get; set; }
-		 //	public string User { get; set; }
-		 //	public double StartDate { get; set; }
-		 //	public double EndDate { get; set; }
-		 //	public string Title { get; set; }
-		 //	public string Country { get; set; }
-		 //}
+		public JsonResult Like(Guid postId)
+		{
+			var userId = WebSecurity.CurrentUserId;
 
-		 private double dateToJs(DateTime date)
-		 {
-			 return date.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
-		 }
-    }
+			var like = db.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
+			if (like != null)
+			{
+				throw new Exception("post is already liked");
+			}
+			var newLikeId = Guid.NewGuid();
+			db.Likes.Add(new Like {UserId = userId, PostId = postId, LikeId = newLikeId});
+			var result = db.SaveChanges();
+			if (result != 1)
+			{
+				throw new Exception("DB was not saved :(");
+			}
+
+			// Get all OLD likes for current Post
+			var likes = db.Posts.First(p => p.PostId == postId).Likes.Where(l => l.LikeId != newLikeId)
+				.Select(lk => new {lk.LikeId, lk.PostId, lk.UserId, lk.UserProfile.UserName}).ToList();
+
+			// Just added to DB like somehow can't see userProfile reference,
+			// so it is added manually
+			var userName = db.UserProfiles.First(u => u.UserId ==userId).UserName;
+			likes.Add(new {LikeId = newLikeId, PostId = postId, UserId = userId, UserName = userName});
+
+			return Json(likes, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult RemoveLike(Guid postId)
+		{
+			var userId = WebSecurity.CurrentUserId;
+
+			var like = db.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
+			if (like == null)
+			{
+				throw new Exception("like was not found :(");
+			}
+			db.Likes.Remove(like);
+			var result = db.SaveChanges();
+			if (result != 1)
+			{
+				throw new Exception("DB was not saved :(");
+			}
+			var likes = db.Posts.First(p => p.PostId == postId)
+				.Likes.Select(l => new {l.LikeId, l.PostId, l.UserId, l.UserProfile.UserName});
+			return Json(likes, JsonRequestBehavior.AllowGet);
+		}
+
+
+		private double dateToJs(DateTime date)
+		{
+			return date.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+		}
+	}
 }

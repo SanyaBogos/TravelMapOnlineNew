@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ChatMember">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoomId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Country">
           <Key>
             <PropertyRef Name="CountryId" />
@@ -36,6 +44,24 @@
           <Property Name="FollowerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserFollowerId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="Like">
+          <Key>
+            <PropertyRef Name="LikeId" />
+          </Key>
+          <Property Name="LikeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PostId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SenderId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Message" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="RoomId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Post">
           <Key>
             <PropertyRef Name="PostId" />
@@ -63,6 +89,15 @@
           </Key>
           <Property Name="PostTypeId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoomName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CreatorId" Type="uniqueidentifier" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="security_Membership">
           <Key>
@@ -113,6 +148,7 @@
           <Property Name="EndDate" Type="datetime" />
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="TravelId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CountryColor" Type="nchar" MaxLength="7" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -136,6 +172,78 @@
             </Principal>
             <Dependent Role="File">
               <PropertyRef Name="FileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMember_ToRoom">
+          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+          <End Role="ChatMember" Type="Self.ChatMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMember">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMember_ToUserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="ChatMember" Type="Self.ChatMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ChatMember">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_Post">
+          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+          <End Role="Like" Type="Self.Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_User">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Like" Type="Self.Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_ToRoom">
+          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_ToUserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="SenderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -172,6 +280,18 @@
             </Principal>
             <Dependent Role="security_UsersInRoles">
               <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Room_ToUserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="Room" Type="Self.Room" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Room">
+              <PropertyRef Name="CreatorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -284,13 +404,17 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="ChatMember" EntityType="Self.ChatMember" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Follower" EntityType="Self.Follower" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Like" EntityType="Self.Like" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostType" EntityType="Self.PostType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Room" EntityType="Self.Room" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="security_Membership" EntityType="Self.security_Membership" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="security_OAuthMembership" EntityType="Self.security_OAuthMembership" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="security_Roles" EntityType="Self.security_Roles" Schema="dbo" store:Type="Tables" />
@@ -300,6 +424,30 @@
           <AssociationSet Name="File_fk1" Association="Self.File_fk1">
             <End Role="FileType" EntitySet="FileType" />
             <End Role="File" EntitySet="File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMember_ToRoom" Association="Self.FK_ChatMember_ToRoom">
+            <End Role="Room" EntitySet="Room" />
+            <End Role="ChatMember" EntitySet="ChatMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMember_ToUserProfile" Association="Self.FK_ChatMember_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="ChatMember" EntitySet="ChatMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_Post" Association="Self.FK_Like_Post">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="Like" EntitySet="Like" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_User" Association="Self.FK_Like_User">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Like" EntitySet="Like" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_ToRoom" Association="Self.FK_Message_ToRoom">
+            <End Role="Room" EntitySet="Room" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_ToUserProfile" Association="Self.FK_Message_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Message" EntitySet="Message" />
           </AssociationSet>
           <AssociationSet Name="FK_Post_Post" Association="Self.FK_Post_Post">
             <End Role="Post" EntitySet="Post" />
@@ -312,6 +460,10 @@
           <AssociationSet Name="fk_RoleId" Association="Self.fk_RoleId">
             <End Role="security_Roles" EntitySet="security_Roles" />
             <End Role="security_UsersInRoles" EntitySet="security_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Room_ToUserProfile" Association="Self.FK_Room_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Room" EntitySet="Room" />
           </AssociationSet>
           <AssociationSet Name="FK_Travel_ToTable" Association="Self.FK_Travel_ToTable">
             <End Role="UserProfile" EntitySet="UserProfile" />
@@ -415,6 +567,38 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="PostFile" EntitySet="PostFiles" />
           </AssociationSet>
+          <EntitySet Name="Likes" EntityType="Model.Like" />
+          <AssociationSet Name="FK_Like_Post" Association="Model.FK_Like_Post">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Like" EntitySet="Likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_User" Association="Model.FK_Like_User">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Like" EntitySet="Likes" />
+          </AssociationSet>
+          <EntitySet Name="ChatMembers" EntityType="Model.ChatMember" />
+          <EntitySet Name="Messages" EntityType="Model.Message" />
+          <EntitySet Name="Rooms" EntityType="Model.Room" />
+          <AssociationSet Name="FK_ChatMember_ToRoom" Association="Model.FK_ChatMember_ToRoom">
+            <End Role="Room" EntitySet="Rooms" />
+            <End Role="ChatMember" EntitySet="ChatMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMember_ToUserProfile" Association="Model.FK_ChatMember_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="ChatMember" EntitySet="ChatMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_ToRoom" Association="Model.FK_Message_ToRoom">
+            <End Role="Room" EntitySet="Rooms" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_ToUserProfile" Association="Model.FK_Message_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Room_ToUserProfile" Association="Model.FK_Room_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Room" EntitySet="Rooms" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Country">
           <Key>
@@ -516,6 +700,7 @@
           <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
           <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
           <NavigationProperty Name="Posts" Relationship="Model.FK_Post_ToTable" FromRole="Travel" ToRole="Post" />
+          <Property Name="CountryColor" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -534,6 +719,10 @@
           <NavigationProperty Name="security_Roles" Relationship="Model.security_UsersInRoles" FromRole="UserProfile" ToRole="security_Roles" />
           <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
           <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Likes" Relationship="Model.FK_Like_User" FromRole="UserProfile" ToRole="Like" />
+          <NavigationProperty Name="ChatMembers" Relationship="Model.FK_ChatMember_ToUserProfile" FromRole="UserProfile" ToRole="ChatMember" />
+          <NavigationProperty Name="Messages" Relationship="Model.FK_Message_ToUserProfile" FromRole="UserProfile" ToRole="Message" />
+          <NavigationProperty Name="Rooms" Relationship="Model.FK_Room_ToUserProfile" FromRole="UserProfile" ToRole="Room" />
         </EntityType>
         <Association Name="Travel_fk2">
           <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
@@ -629,6 +818,7 @@
           <NavigationProperty Name="UserProfile" Relationship="Model.Post_fk1" FromRole="Post" ToRole="UserProfile" />
           <NavigationProperty Name="PostType" Relationship="Model.Post_fk2" FromRole="Post" ToRole="PostType" />
           <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk1" FromRole="Post" ToRole="PostFile" />
+          <NavigationProperty Name="Likes" Relationship="Model.FK_Like_Post" FromRole="Post" ToRole="Like" />
         </EntityType>
         <Association Name="FK_Post_Post">
           <End Type="Model.Post" Role="Post" Multiplicity="1" />
@@ -687,6 +877,134 @@
             </Principal>
             <Dependent Role="PostFile">
               <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Like">
+          <Key>
+            <PropertyRef Name="LikeId" />
+          </Key>
+          <Property Name="LikeId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Post" Relationship="Model.FK_Like_Post" FromRole="Like" ToRole="Post" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Like_User" FromRole="Like" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_Like_Post">
+          <End Type="Model.Post" Role="Post" Multiplicity="1" />
+          <End Type="Model.Like" Role="Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_User">
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.Like" Role="Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChatMember">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RoomId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Room" Relationship="Model.FK_ChatMember_ToRoom" FromRole="ChatMember" ToRole="Room" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_ChatMember_ToUserProfile" FromRole="ChatMember" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="SenderId" Type="Guid" Nullable="false" />
+          <Property Name="Message1" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RoomId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Room" Relationship="Model.FK_Message_ToRoom" FromRole="Message" ToRole="Room" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Message_ToUserProfile" FromRole="Message" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RoomName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorId" Type="Guid" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ChatMembers" Relationship="Model.FK_ChatMember_ToRoom" FromRole="Room" ToRole="ChatMember" />
+          <NavigationProperty Name="Messages" Relationship="Model.FK_Message_ToRoom" FromRole="Room" ToRole="Message" />
+          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Room_ToUserProfile" FromRole="Room" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_ChatMember_ToRoom">
+          <End Type="Model.Room" Role="Room" Multiplicity="1" />
+          <End Type="Model.ChatMember" Role="ChatMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMember">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMember_ToUserProfile">
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.ChatMember" Role="ChatMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ChatMember">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_ToRoom">
+          <End Type="Model.Room" Role="Room" Multiplicity="1" />
+          <End Type="Model.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_ToUserProfile">
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="Model.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="SenderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Room_ToUserProfile">
+          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="Model.Room" Role="Room" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Room">
+              <PropertyRef Name="CreatorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -785,6 +1103,7 @@
           <EntitySetMapping Name="Travels">
             <EntityTypeMapping TypeName="Model.Travel">
               <MappingFragment StoreEntitySet="Travel">
+                <ScalarProperty Name="CountryColor" ColumnName="CountryColor" />
                 <ScalarProperty Name="CountryId" ColumnName="CountryId" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
@@ -826,6 +1145,45 @@
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PostId" ColumnName="PostId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Likes">
+            <EntityTypeMapping TypeName="Model.Like">
+              <MappingFragment StoreEntitySet="Like">
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LikeId" ColumnName="LikeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatMembers">
+            <EntityTypeMapping TypeName="Model.ChatMember">
+              <MappingFragment StoreEntitySet="ChatMember">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="Model.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Message1" ColumnName="Message" />
+                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="Model.Room">
+              <MappingFragment StoreEntitySet="Room">
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

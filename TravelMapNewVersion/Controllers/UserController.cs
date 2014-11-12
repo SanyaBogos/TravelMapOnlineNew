@@ -266,20 +266,17 @@ namespace TravelMap.Controllers
         [HttpGet]
         public JsonResult GetUserVisitedCountries(Guid id)
         {
-            var userTravels = db.Travels.Where(travel => travel.UserId == id);
-            var result = userTravels.Select(userTravel => userTravel.Country).ToArray();
+            var userTravels = db.Travels.Where(travel => travel.UserId == id).ToList();
             var serializableResult = new List<dynamic>();
-            foreach (var country in result)
+            foreach (var travel in userTravels)
             {
-                serializableResult.Add(new
+                serializableResult.Add(new 
                 {
-                    id = country.CountryId,
-                    name = country.Name,
-                    title = country.Title
+                    title = travel.Country.Title,
+                    color = travel.CountryColor
                 });
             }
             return Json(serializableResult, JsonRequestBehavior.AllowGet);
-
         }
 
         [HttpGet]
@@ -364,8 +361,9 @@ namespace TravelMap.Controllers
         public void AddFollower(Guid id)
         {
             var userId = WebSecurity.CurrentUserId;
-            if (db.Followers.Where(f => f.FollowerId == id && f.UserId == userId).ToList().Count == 0)
-                db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
+            if (!db.Followers.Where(f => f.FollowerId == id && f.UserId == userId).Any())
+                if (id != userId)
+                    db.Followers.Add(new Follower { UserId = userId, FollowerId = id, UserFollowerId = Guid.NewGuid() });
             db.SaveChanges();
         }
 
