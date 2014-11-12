@@ -85,6 +85,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.AspNet.Membership.OpenAuth.2.0.1\lib\net45\Microsoft.AspNet.Membership.OpenAuth.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,6 +100,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>packages\Microsoft.Owin.2.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>packages\Microsoft.Owin.Host.SystemWeb.2.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>packages\Microsoft.Owin.Security.2.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.WebPages.OAuth, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Microsoft.AspNet.WebPages.OAuth.3.2.0\lib\net45\Microsoft.Web.WebPages.OAuth.dll</HintPath>
@@ -101,6 +116,9 @@
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="SimpleGuidMembershipProvider">
       <HintPath>packages\SimpleGuidMembershipProvider.1.0.4\lib\SimpleGuidMembershipProvider.dll</HintPath>
@@ -211,6 +229,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\FeedController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MapController.cs" />
@@ -220,8 +239,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MyHtmlExtensionMethods.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Annotations\UserProfile.cs" />
+    <Compile Include="Models\ChatMember.cs">
+      <DependentUpon>MapModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Country.cs">
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
@@ -253,6 +276,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MapModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Message.cs">
+      <DependentUpon>MapModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Post.cs">
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
@@ -260,6 +286,9 @@
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PostType.cs">
+      <DependentUpon>MapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Room.cs">
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\security_Membership.cs">
@@ -278,6 +307,7 @@
       <DependentUpon>MapModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\aspnet-TravelMap-20130501011533.mdf" />
@@ -667,6 +697,8 @@
     <Content Include="Scripts\i18n\angular-locale_zu.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.1.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -768,6 +800,7 @@
     <Content Include="Views\Feed.cshtml" />
     <Content Include="Views\User\PeopleSearch.cshtml" />
     <Content Include="Views\Post\TravelReports.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />
