@@ -43,7 +43,9 @@
                 //console.log(avatar);
                 //avatar = new String(data);
                 //avatar = [data];
-                avatar.push(data.substring(1, data.length - 1));
+
+                //avatar.push(data.substring(1, data.length - 1));
+                avatar.push(data);
                 console.log(avatar);
             }).
             error(function (data, status, headers, config) {
