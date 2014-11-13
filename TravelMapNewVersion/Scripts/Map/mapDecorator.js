@@ -1,10 +1,21 @@
-﻿function updateMap() {
+﻿
+var user;
+
+function setUser(id) {
+    user = id;
+}
+
+function updateMap(userId) {
     var userMap = [],
-            userCountries = [],
-            user;
+        userCountries = [];
     var defaultColour = '#3366CC';
+
     $.get("/User/GetCurrentUser", function (data) {
-        user = data;
+        if (!userId) {
+            user = data;
+        } else {
+            user = userId;
+        }
 
     }).done(function () {
         $.get("/User/GetUserVisitedCountries?id=" + user, function (data) {

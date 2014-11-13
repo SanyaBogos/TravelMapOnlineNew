@@ -2,10 +2,13 @@
 
 app.controller("travelController", function ($scope, $http) {
 
+    
     $scope.travels = [];
 
     $scope.init = function (userId) {
         $scope.userId = userId;
+        console.log(userId);
+        updateMap(userId);
     };
 
     $scope.clickMap = function (selectedCountry) {
