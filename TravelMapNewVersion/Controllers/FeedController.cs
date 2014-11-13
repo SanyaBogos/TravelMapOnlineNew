@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using DotNetOpenAuth.Messaging;
+using HtmlAgilityPack;
 using nonintanon.Security;
 using TravelMap.Models;
 
@@ -52,7 +53,7 @@ namespace TravelMap.Controllers
 					StartDate = post.Travel.StartDate == null ? string.Empty : dateToJs(post.Travel.StartDate.Value).ToString(),
 					EndDate = post.Travel.EndDate == null ? string.Empty : dateToJs(post.Travel.EndDate.Value).ToString(),
 					User = post.UserProfile.UserName == userProfile.UserName ? "You" : post.UserProfile.UserName,
-					PostText = post.Text,
+					PostText = HtmlToPlainText(post.Text),
 					Likes = post.Likes.Select(l => new { l.LikeId, l.PostId, l.UserId, l.UserProfile.UserName})
 				});
 			}
@@ -119,6 +120,16 @@ namespace TravelMap.Controllers
 		private double dateToJs(DateTime date)
 		{
 			return date.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+		}
+
+		private static string HtmlToPlainText(string htmlText)
+		{
+			var htmlDoc = new HtmlDocument();
+			htmlDoc.LoadHtml(htmlText);
+
+			var result = htmlDoc.DocumentNode.InnerText;
+			//todo: remove &nbsp
+			return result;
 		}
 	}
 }
