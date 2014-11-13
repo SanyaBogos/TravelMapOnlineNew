@@ -23,7 +23,7 @@ app.controller('FeedController', function ($scope, $http) {
 						$scope.posts[i].Likes = data;
 						break;
 					}
-				}
+				};
 			})
 			.error(function(data, status) {
 				$scope.error = status;
@@ -38,11 +38,15 @@ app.controller('FeedController', function ($scope, $http) {
 						$scope.posts[i].Likes = data;
 						break;
 					}
-				}
+				};
 			})
 			.error(function(data, status) {
 				$scope.error = status;
 			});
+	}
+
+	$scope.showNumLikes = function(likes) {
+		return likes.length > 0;
 	}
 
 	$scope.checkLiked = function(likes) {

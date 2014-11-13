@@ -28,12 +28,20 @@
 			</header>
 			<span>{{post.Title}}</span>
 			<span>{{post.PostText}}</span>
+			@*<span>{{post.Likes}}</span>*@
 			<br />
 			<footer>
 				<span class="heart">
 					<img ng-show="!checkLiked(post.Likes)" ng-click="like(post.PostId)" class="heart-pic" src="~/Images/heart.png" />
 					<img ng-show="checkLiked(post.Likes)" ng-click="removeLike(post.PostId)" class="heart-pic" src="~/Images/heart2.png" />
-					<span ng-show="{{post.Likes.length > 0}}" class="heart-num">{{post.Likes.length}}</span>
+					<div ng-show="showNumLikes(post.Likes)" class="heart-num"
+						 ng-mouseover="overLikes = true" ng-mouseleave="overLikes = false">
+						{{post.Likes.length}}
+					</div>
+					<div ng-show="overLikes" class="ttip">
+						<span class="ttext" ng-repeat="like in post.Likes">
+							{{like.UserName}}</span>
+					</div>
 				</span>
 			</footer>
 			<br>

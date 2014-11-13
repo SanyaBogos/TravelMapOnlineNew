@@ -68,13 +68,6 @@ namespace TravelMap.Controllers
             return View(id);
         }
 
-        public ActionResult UserTravels(Guid userId)
-        {
-            ViewBag.IsCurrentUser = (userId == WebSecurity.CurrentUserId);
-            return View("UserTravels");
-        }
-
-        //
         public JsonResult SaveEmail(Guid id, string newEmail)
         {
             var userProfile = db.UserProfiles.Find(id);
@@ -406,9 +399,9 @@ namespace TravelMap.Controllers
             }
         }
 
-        public ActionResult Travels()
+        public ActionResult Travels(Guid userId)
         {
-            return View(WebSecurity.CurrentUserId);
+            return View(userId);
         }
 
         [HttpGet]
