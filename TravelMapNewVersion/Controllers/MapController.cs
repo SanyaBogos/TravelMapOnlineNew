@@ -48,12 +48,6 @@ namespace TravelMap.Controllers
             return travel.TravelId;
         }
 
-        //drop it if is not need!!!
-        public ActionResult Barada()
-        {
-            return View();
-        }
-
     }
 
 }

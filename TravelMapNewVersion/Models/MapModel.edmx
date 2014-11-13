@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ChatMember">
           <Key>
             <PropertyRef Name="Id" />
@@ -44,6 +44,16 @@
           <Property Name="FollowerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserFollowerId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="GroupMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SenderId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Message" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="RoomId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Like">
           <Key>
             <PropertyRef Name="LikeId" />
@@ -58,9 +68,9 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SenderId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Message" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="RecieverId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Message" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="Time" Type="datetime" Nullable="false" />
-          <Property Name="RoomId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="Post">
           <Key>
@@ -199,6 +209,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_GroupMessage_ToRoom">
+          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+          <End Role="GroupMessage" Type="Self.GroupMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupMessage">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupMessage_ToUserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="GroupMessage" Type="Self.GroupMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupMessage">
+              <PropertyRef Name="SenderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Like_Post">
           <End Role="Post" Type="Self.Post" Multiplicity="1" />
           <End Role="Like" Type="Self.Like" Multiplicity="*" />
@@ -223,19 +257,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Message_ToRoom">
-          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+        <Association Name="FK_Message_ToUserProfile_Reciever">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
           <End Role="Message" Type="Self.Message" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Room">
-              <PropertyRef Name="Id" />
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
             </Principal>
             <Dependent Role="Message">
-              <PropertyRef Name="RoomId" />
+              <PropertyRef Name="RecieverId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Message_ToUserProfile">
+        <Association Name="FK_Message_ToUserProfile_Sender">
           <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
           <End Role="Message" Type="Self.Message" Multiplicity="*" />
           <ReferentialConstraint>
@@ -409,6 +443,7 @@
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileType" EntityType="Self.FileType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Follower" EntityType="Self.Follower" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupMessage" EntityType="Self.GroupMessage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Like" EntityType="Self.Like" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="dbo" store:Type="Tables" />
@@ -433,6 +468,14 @@
             <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="ChatMember" EntitySet="ChatMember" />
           </AssociationSet>
+          <AssociationSet Name="FK_GroupMessage_ToRoom" Association="Self.FK_GroupMessage_ToRoom">
+            <End Role="Room" EntitySet="Room" />
+            <End Role="GroupMessage" EntitySet="GroupMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMessage_ToUserProfile" Association="Self.FK_GroupMessage_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="GroupMessage" EntitySet="GroupMessage" />
+          </AssociationSet>
           <AssociationSet Name="FK_Like_Post" Association="Self.FK_Like_Post">
             <End Role="Post" EntitySet="Post" />
             <End Role="Like" EntitySet="Like" />
@@ -441,11 +484,11 @@
             <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="Like" EntitySet="Like" />
           </AssociationSet>
-          <AssociationSet Name="FK_Message_ToRoom" Association="Self.FK_Message_ToRoom">
-            <End Role="Room" EntitySet="Room" />
+          <AssociationSet Name="FK_Message_ToUserProfile_Reciever" Association="Self.FK_Message_ToUserProfile_Reciever">
+            <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="Message" EntitySet="Message" />
           </AssociationSet>
-          <AssociationSet Name="FK_Message_ToUserProfile" Association="Self.FK_Message_ToUserProfile">
+          <AssociationSet Name="FK_Message_ToUserProfile_Sender" Association="Self.FK_Message_ToUserProfile_Sender">
             <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="Message" EntitySet="Message" />
           </AssociationSet>
@@ -502,112 +545,29 @@
             <End Role="Travel" EntitySet="Travel" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="Model" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="Entities" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="Countries" EntityType="Model.Country" />
-          <EntitySet Name="Files" EntityType="Model.File" />
-          <EntitySet Name="FileTypes" EntityType="Model.FileType" />
-          <EntitySet Name="Followers" EntityType="Model.Follower" />
-          <EntitySet Name="PostFiles" EntityType="Model.PostFile" />
-          <EntitySet Name="PostTypes" EntityType="Model.PostType" />
-          <EntitySet Name="security_Membership" EntityType="Model.security_Membership" />
-          <EntitySet Name="security_OAuthMembership" EntityType="Model.security_OAuthMembership" />
-          <EntitySet Name="security_Roles" EntityType="Model.security_Roles" />
-          <EntitySet Name="Travels" EntityType="Model.Travel" />
-          <EntitySet Name="UserProfiles" EntityType="Model.UserProfile" />
-          <AssociationSet Name="Travel_fk2" Association="Model.Travel_fk2">
-            <End Role="Country" EntitySet="Countries" />
-            <End Role="Travel" EntitySet="Travels" />
-          </AssociationSet>
-          <AssociationSet Name="File_fk1" Association="Model.File_fk1">
-            <End Role="FileType" EntitySet="FileTypes" />
-            <End Role="File" EntitySet="Files" />
-          </AssociationSet>
-          <AssociationSet Name="PostFile_fk2" Association="Model.PostFile_fk2">
-            <End Role="File" EntitySet="Files" />
-            <End Role="PostFile" EntitySet="PostFiles" />
-          </AssociationSet>
-          <AssociationSet Name="Follower_fk1" Association="Model.Follower_fk1">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Follower" EntitySet="Followers" />
-          </AssociationSet>
-          <AssociationSet Name="Follower_fk2" Association="Model.Follower_fk2">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Follower" EntitySet="Followers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Travel_ToTable" Association="Model.FK_Travel_ToTable">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Travel" EntitySet="Travels" />
-          </AssociationSet>
-          <AssociationSet Name="security_UsersInRoles" Association="Model.security_UsersInRoles">
-            <End Role="security_Roles" EntitySet="security_Roles" />
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-          </AssociationSet>
-          <EntitySet Name="Posts" EntityType="Model.Post" />
-          <AssociationSet Name="FK_Post_Post" Association="Model.FK_Post_Post">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Post1" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Post_ToTable" Association="Model.FK_Post_ToTable">
-            <End Role="Travel" EntitySet="Travels" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="Post_fk1" Association="Model.Post_fk1">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="Post_fk2" Association="Model.Post_fk2">
-            <End Role="PostType" EntitySet="PostTypes" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="PostFile_fk1" Association="Model.PostFile_fk1">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="PostFile" EntitySet="PostFiles" />
-          </AssociationSet>
-          <EntitySet Name="Likes" EntityType="Model.Like" />
-          <AssociationSet Name="FK_Like_Post" Association="Model.FK_Like_Post">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Like" EntitySet="Likes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Like_User" Association="Model.FK_Like_User">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Like" EntitySet="Likes" />
-          </AssociationSet>
-          <EntitySet Name="ChatMembers" EntityType="Model.ChatMember" />
-          <EntitySet Name="Messages" EntityType="Model.Message" />
-          <EntitySet Name="Rooms" EntityType="Model.Room" />
-          <AssociationSet Name="FK_ChatMember_ToRoom" Association="Model.FK_ChatMember_ToRoom">
-            <End Role="Room" EntitySet="Rooms" />
-            <End Role="ChatMember" EntitySet="ChatMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChatMember_ToUserProfile" Association="Model.FK_ChatMember_ToUserProfile">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="ChatMember" EntitySet="ChatMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Message_ToRoom" Association="Model.FK_Message_ToRoom">
-            <End Role="Room" EntitySet="Rooms" />
-            <End Role="Message" EntitySet="Messages" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Message_ToUserProfile" Association="Model.FK_Message_ToUserProfile">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Message" EntitySet="Messages" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Room_ToUserProfile" Association="Model.FK_Room_ToUserProfile">
-            <End Role="UserProfile" EntitySet="UserProfiles" />
-            <End Role="Room" EntitySet="Rooms" />
-          </AssociationSet>
-        </EntityContainer>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ChatMember">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RoomId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Room" Relationship="Self.FK_ChatMember_ToRoom" FromRole="ChatMember" ToRole="Room" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_ChatMember_ToUserProfile" FromRole="ChatMember" ToRole="UserProfile" />
+        </EntityType>
         <EntityType Name="Country">
           <Key>
             <PropertyRef Name="CountryId" />
           </Key>
           <Property Name="CountryId" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Title" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="Travels" Relationship="Model.Travel_fk2" FromRole="Country" ToRole="Travel" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Travels" Relationship="Self.Travel_fk2" FromRole="Country" ToRole="Travel" />
         </EntityType>
         <EntityType Name="File">
           <Key>
@@ -615,17 +575,17 @@
           </Key>
           <Property Name="FileId" Type="Guid" Nullable="false" />
           <Property Name="FileTypeId" Type="Guid" />
-          <Property Name="URL" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="FileType" Relationship="Model.File_fk1" FromRole="File" ToRole="FileType" />
-          <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk2" FromRole="File" ToRole="PostFile" />
+          <Property Name="URL" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="FileType" Relationship="Self.File_fk1" FromRole="File" ToRole="FileType" />
+          <NavigationProperty Name="PostFiles" Relationship="Self.PostFile_fk2" FromRole="File" ToRole="PostFile" />
         </EntityType>
         <EntityType Name="FileType">
           <Key>
             <PropertyRef Name="FileTypeId" />
           </Key>
           <Property Name="FileTypeId" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="Files" Relationship="Model.File_fk1" FromRole="FileType" ToRole="File" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Files" Relationship="Self.File_fk1" FromRole="FileType" ToRole="File" />
         </EntityType>
         <EntityType Name="Follower">
           <Key>
@@ -634,172 +594,43 @@
           <Property Name="UserId" Type="Guid" Nullable="false" />
           <Property Name="FollowerId" Type="Guid" Nullable="false" />
           <Property Name="UserFollowerId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.Follower_fk1" FromRole="Follower" ToRole="UserProfile" />
-          <NavigationProperty Name="UserProfile1" Relationship="Model.Follower_fk2" FromRole="Follower" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.Follower_fk1" FromRole="Follower" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="Self.Follower_fk2" FromRole="Follower" ToRole="UserProfile" />
         </EntityType>
-        <EntityType Name="PostFile">
+        <EntityType Name="GroupMessage">
           <Key>
-            <PropertyRef Name="PostFileId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="PostFileId" Type="Guid" Nullable="false" />
-          <Property Name="PostId" Type="Guid" />
-          <Property Name="FileId" Type="Guid" />
-          <NavigationProperty Name="File" Relationship="Model.PostFile_fk2" FromRole="PostFile" ToRole="File" />
-          <NavigationProperty Name="Post" Relationship="Model.PostFile_fk1" FromRole="PostFile" ToRole="Post" />
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="SenderId" Type="Guid" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RoomId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Room" Relationship="Self.FK_GroupMessage_ToRoom" FromRole="GroupMessage" ToRole="Room" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_GroupMessage_ToUserProfile" FromRole="GroupMessage" ToRole="UserProfile" />
         </EntityType>
-        <EntityType Name="PostType">
+        <EntityType Name="Like">
           <Key>
-            <PropertyRef Name="PostTypeId" />
+            <PropertyRef Name="LikeId" />
           </Key>
-          <Property Name="PostTypeId" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="Posts" Relationship="Model.Post_fk2" FromRole="PostType" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="security_Membership">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
+          <Property Name="LikeId" Type="Guid" Nullable="false" />
           <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <Property Name="ConfirmationToken" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="IsConfirmed" Type="Boolean" />
-          <Property Name="LastPasswordFailureDate" Type="DateTime" Precision="3" />
-          <Property Name="PasswordFailuresSinceLastSuccess" Type="Int32" Nullable="false" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="PasswordChangedDate" Type="DateTime" Precision="3" />
-          <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="PasswordVerificationToken" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="PasswordVerificationTokenExpirationDate" Type="DateTime" Precision="3" />
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Post" Relationship="Self.FK_Like_Post" FromRole="Like" ToRole="Post" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_Like_User" FromRole="Like" ToRole="UserProfile" />
         </EntityType>
-        <EntityType Name="security_OAuthMembership">
+        <EntityType Name="Message">
           <Key>
-            <PropertyRef Name="Provider" />
-            <PropertyRef Name="ProviderUserId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Provider" Type="String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="ProviderUserId" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="SenderId" Type="Guid" Nullable="false" />
+          <Property Name="RecieverId" Type="Guid" Nullable="false" />
+          <Property Name="Message1" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_Message_ToUserProfile_Reciever" FromRole="Message" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="Self.FK_Message_ToUserProfile_Sender" FromRole="Message" ToRole="UserProfile" />
         </EntityType>
-        <EntityType Name="security_Roles">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="Guid" Nullable="false" />
-          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="UserProfiles" Relationship="Model.security_UsersInRoles" FromRole="security_Roles" ToRole="UserProfile" />
-        </EntityType>
-        <EntityType Name="Travel">
-          <Key>
-            <PropertyRef Name="TravelId" />
-          </Key>
-          <Property Name="CountryId" Type="Guid" />
-          <Property Name="StartDate" Type="DateTime" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Precision="3" />
-          <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="TravelId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Country" Relationship="Model.Travel_fk2" FromRole="Travel" ToRole="Country" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
-          <NavigationProperty Name="Posts" Relationship="Model.FK_Post_ToTable" FromRole="Travel" ToRole="Post" />
-          <Property Name="CountryColor" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
-        </EntityType>
-        <EntityType Name="UserProfile">
-          <Key>
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="UserName" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" Nullable="false" />
-          <Property Name="Surname" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="BirthDate" Type="DateTime" Precision="3" Nullable="true" />
-          <Property Name="Phone" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="Email" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="Followers" Relationship="Model.Follower_fk1" FromRole="UserProfile" ToRole="Follower" />
-          <NavigationProperty Name="Followers1" Relationship="Model.Follower_fk2" FromRole="UserProfile" ToRole="Follower" />
-          <NavigationProperty Name="Travels" Relationship="Model.FK_Travel_ToTable" FromRole="UserProfile" ToRole="Travel" />
-          <NavigationProperty Name="security_Roles" Relationship="Model.security_UsersInRoles" FromRole="UserProfile" ToRole="security_Roles" />
-          <NavigationProperty Name="Posts" Relationship="Model.Post_fk1" FromRole="UserProfile" ToRole="Post" />
-          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Likes" Relationship="Model.FK_Like_User" FromRole="UserProfile" ToRole="Like" />
-          <NavigationProperty Name="ChatMembers" Relationship="Model.FK_ChatMember_ToUserProfile" FromRole="UserProfile" ToRole="ChatMember" />
-          <NavigationProperty Name="Messages" Relationship="Model.FK_Message_ToUserProfile" FromRole="UserProfile" ToRole="Message" />
-          <NavigationProperty Name="Rooms" Relationship="Model.FK_Room_ToUserProfile" FromRole="UserProfile" ToRole="Room" />
-        </EntityType>
-        <Association Name="Travel_fk2">
-          <End Role="Country" Type="Model.Country" Multiplicity="0..1" />
-          <End Role="Travel" Type="Model.Travel" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="CountryId" />
-            </Principal>
-            <Dependent Role="Travel">
-              <PropertyRef Name="CountryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="File_fk1">
-          <End Role="FileType" Type="Model.FileType" Multiplicity="0..1" />
-          <End Role="File" Type="Model.File" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FileType">
-              <PropertyRef Name="FileTypeId" />
-            </Principal>
-            <Dependent Role="File">
-              <PropertyRef Name="FileTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="PostFile_fk2">
-          <End Role="File" Type="Model.File" Multiplicity="0..1" />
-          <End Role="PostFile" Type="Model.PostFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="File">
-              <PropertyRef Name="FileId" />
-            </Principal>
-            <Dependent Role="PostFile">
-              <PropertyRef Name="FileId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Follower_fk1">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
-          <End Role="Follower" Type="Model.Follower" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserProfile">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Follower">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Follower_fk2">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
-          <End Role="Follower" Type="Model.Follower" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserProfile">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Follower">
-              <PropertyRef Name="FollowerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Travel_ToTable">
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="1" />
-          <End Role="Travel" Type="Model.Travel" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserProfile">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Travel">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="security_UsersInRoles">
-          <End Role="security_Roles" Type="Model.security_Roles" Multiplicity="*" />
-          <End Role="UserProfile" Type="Model.UserProfile" Multiplicity="*" />
-        </Association>
         <EntityType Name="Post">
           <Key>
             <PropertyRef Name="PostId" />
@@ -812,145 +643,118 @@
           <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="TravelId" Type="Guid" />
           <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Post1" Relationship="Model.FK_Post_Post" FromRole="Post" ToRole="Post1" />
-          <NavigationProperty Name="Post2" Relationship="Model.FK_Post_Post" FromRole="Post1" ToRole="Post" />
-          <NavigationProperty Name="Travel" Relationship="Model.FK_Post_ToTable" FromRole="Post" ToRole="Travel" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.Post_fk1" FromRole="Post" ToRole="UserProfile" />
-          <NavigationProperty Name="PostType" Relationship="Model.Post_fk2" FromRole="Post" ToRole="PostType" />
-          <NavigationProperty Name="PostFiles" Relationship="Model.PostFile_fk1" FromRole="Post" ToRole="PostFile" />
-          <NavigationProperty Name="Likes" Relationship="Model.FK_Like_Post" FromRole="Post" ToRole="Like" />
+          <NavigationProperty Name="Likes" Relationship="Self.FK_Like_Post" FromRole="Post" ToRole="Like" />
+          <NavigationProperty Name="Post1" Relationship="Self.FK_Post_Post" FromRole="Post" ToRole="Post1" />
+          <NavigationProperty Name="Post2" Relationship="Self.FK_Post_Post" FromRole="Post1" ToRole="Post" />
+          <NavigationProperty Name="Travel" Relationship="Self.FK_Post_ToTable" FromRole="Post" ToRole="Travel" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.Post_fk1" FromRole="Post" ToRole="UserProfile" />
+          <NavigationProperty Name="PostType" Relationship="Self.Post_fk2" FromRole="Post" ToRole="PostType" />
+          <NavigationProperty Name="PostFiles" Relationship="Self.PostFile_fk1" FromRole="Post" ToRole="PostFile" />
         </EntityType>
-        <Association Name="FK_Post_Post">
-          <End Type="Model.Post" Role="Post" Multiplicity="1" />
-          <End Type="Model.Post" Role="Post1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="PostId" />
-            </Principal>
-            <Dependent Role="Post1">
-              <PropertyRef Name="ParentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Post_ToTable">
-          <End Type="Model.Travel" Role="Travel" Multiplicity="0..1" />
-          <End Type="Model.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Travel">
-              <PropertyRef Name="TravelId" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="TravelId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Post_fk1">
-          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
-          <End Type="Model.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserProfile">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Post_fk2">
-          <End Type="Model.PostType" Role="PostType" Multiplicity="1" />
-          <End Type="Model.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PostType">
-              <PropertyRef Name="PostTypeId" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="TypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="PostFile_fk1">
-          <End Type="Model.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="Model.PostFile" Role="PostFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="PostId" />
-            </Principal>
-            <Dependent Role="PostFile">
-              <PropertyRef Name="PostId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Like">
+        <EntityType Name="PostFile">
           <Key>
-            <PropertyRef Name="LikeId" />
+            <PropertyRef Name="PostFileId" />
           </Key>
-          <Property Name="LikeId" Type="Guid" Nullable="false" />
-          <Property Name="UserId" Type="Guid" Nullable="false" />
-          <Property Name="PostId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Post" Relationship="Model.FK_Like_Post" FromRole="Like" ToRole="Post" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Like_User" FromRole="Like" ToRole="UserProfile" />
+          <Property Name="PostFileId" Type="Guid" Nullable="false" />
+          <Property Name="PostId" Type="Guid" />
+          <Property Name="FileId" Type="Guid" />
+          <NavigationProperty Name="File" Relationship="Self.PostFile_fk2" FromRole="PostFile" ToRole="File" />
+          <NavigationProperty Name="Post" Relationship="Self.PostFile_fk1" FromRole="PostFile" ToRole="Post" />
         </EntityType>
-        <Association Name="FK_Like_Post">
-          <End Type="Model.Post" Role="Post" Multiplicity="1" />
-          <End Type="Model.Like" Role="Like" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="PostId" />
-            </Principal>
-            <Dependent Role="Like">
-              <PropertyRef Name="PostId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Like_User">
-          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
-          <End Type="Model.Like" Role="Like" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserProfile">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="Like">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="ChatMember">
+        <EntityType Name="PostType">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="PostTypeId" />
           </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="RoomId" Type="Guid" Nullable="false" />
-          <Property Name="UserId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Room" Relationship="Model.FK_ChatMember_ToRoom" FromRole="ChatMember" ToRole="Room" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.FK_ChatMember_ToUserProfile" FromRole="ChatMember" ToRole="UserProfile" />
-        </EntityType>
-        <EntityType Name="Message">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="SenderId" Type="Guid" Nullable="false" />
-          <Property Name="Message1" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RoomId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Room" Relationship="Model.FK_Message_ToRoom" FromRole="Message" ToRole="Room" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Message_ToUserProfile" FromRole="Message" ToRole="UserProfile" />
+          <Property Name="PostTypeId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Posts" Relationship="Self.Post_fk2" FromRole="PostType" ToRole="Post" />
         </EntityType>
         <EntityType Name="Room">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="RoomName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CreatorId" Type="Guid" />
           <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="ChatMembers" Relationship="Model.FK_ChatMember_ToRoom" FromRole="Room" ToRole="ChatMember" />
-          <NavigationProperty Name="Messages" Relationship="Model.FK_Message_ToRoom" FromRole="Room" ToRole="Message" />
-          <NavigationProperty Name="UserProfile" Relationship="Model.FK_Room_ToUserProfile" FromRole="Room" ToRole="UserProfile" />
+          <NavigationProperty Name="ChatMembers" Relationship="Self.FK_ChatMember_ToRoom" FromRole="Room" ToRole="ChatMember" />
+          <NavigationProperty Name="GroupMessages" Relationship="Self.FK_GroupMessage_ToRoom" FromRole="Room" ToRole="GroupMessage" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_Room_ToUserProfile" FromRole="Room" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="security_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ConfirmationToken" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="LastPasswordFailureDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordChangedDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordSalt" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordVerificationToken" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="security_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderUserId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="security_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Guid" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserProfiles" Relationship="Self.security_UsersInRoles" FromRole="security_Roles" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Travel">
+          <Key>
+            <PropertyRef Name="TravelId" />
+          </Key>
+          <Property Name="CountryId" Type="Guid" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="TravelId" Type="Guid" Nullable="false" />
+          <Property Name="CountryColor" Type="String" MaxLength="7" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Country" Relationship="Self.Travel_fk2" FromRole="Travel" ToRole="Country" />
+          <NavigationProperty Name="Posts" Relationship="Self.FK_Post_ToTable" FromRole="Travel" ToRole="Post" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_Travel_ToTable" FromRole="Travel" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BirthDate" Type="DateTime" Precision="3" />
+          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ChatMembers" Relationship="Self.FK_ChatMember_ToUserProfile" FromRole="UserProfile" ToRole="ChatMember" />
+          <NavigationProperty Name="Followers" Relationship="Self.Follower_fk1" FromRole="UserProfile" ToRole="Follower" />
+          <NavigationProperty Name="Followers1" Relationship="Self.Follower_fk2" FromRole="UserProfile" ToRole="Follower" />
+          <NavigationProperty Name="GroupMessages" Relationship="Self.FK_GroupMessage_ToUserProfile" FromRole="UserProfile" ToRole="GroupMessage" />
+          <NavigationProperty Name="Likes" Relationship="Self.FK_Like_User" FromRole="UserProfile" ToRole="Like" />
+          <NavigationProperty Name="Messages" Relationship="Self.FK_Message_ToUserProfile_Reciever" FromRole="UserProfile" ToRole="Message" />
+          <NavigationProperty Name="Messages1" Relationship="Self.FK_Message_ToUserProfile_Sender" FromRole="UserProfile" ToRole="Message" />
+          <NavigationProperty Name="Posts" Relationship="Self.Post_fk1" FromRole="UserProfile" ToRole="Post" />
+          <NavigationProperty Name="Rooms" Relationship="Self.FK_Room_ToUserProfile" FromRole="UserProfile" ToRole="Room" />
+          <NavigationProperty Name="Travels" Relationship="Self.FK_Travel_ToTable" FromRole="UserProfile" ToRole="Travel" />
+          <NavigationProperty Name="security_Roles" Relationship="Self.security_UsersInRoles" FromRole="UserProfile" ToRole="security_Roles" />
         </EntityType>
         <Association Name="FK_ChatMember_ToRoom">
-          <End Type="Model.Room" Role="Room" Multiplicity="1" />
-          <End Type="Model.ChatMember" Role="ChatMember" Multiplicity="*" />
+          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+          <End Role="ChatMember" Type="Self.ChatMember" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Room">
               <PropertyRef Name="Id" />
@@ -961,8 +765,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ChatMember_ToUserProfile">
-          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
-          <End Type="Model.ChatMember" Role="ChatMember" Multiplicity="*" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="ChatMember" Type="Self.ChatMember" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -972,21 +776,129 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Message_ToRoom">
-          <End Type="Model.Room" Role="Room" Multiplicity="1" />
-          <End Type="Model.Message" Role="Message" Multiplicity="*" />
+        <Association Name="Travel_fk2">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="File_fk1">
+          <End Role="FileType" Type="Self.FileType" Multiplicity="0..1" />
+          <End Role="File" Type="Self.File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileType">
+              <PropertyRef Name="FileTypeId" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="FileTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PostFile_fk2">
+          <End Role="File" Type="Self.File" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="File">
+              <PropertyRef Name="FileId" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="FileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Follower_fk1">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Follower" Type="Self.Follower" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Follower">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Follower_fk2">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Follower" Type="Self.Follower" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Follower">
+              <PropertyRef Name="FollowerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupMessage_ToRoom">
+          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+          <End Role="GroupMessage" Type="Self.GroupMessage" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Room">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Message">
+            <Dependent Role="GroupMessage">
               <PropertyRef Name="RoomId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Message_ToUserProfile">
-          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="1" />
-          <End Type="Model.Message" Role="Message" Multiplicity="*" />
+        <Association Name="FK_GroupMessage_ToUserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="GroupMessage" Type="Self.GroupMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupMessage">
+              <PropertyRef Name="SenderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_Post">
+          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+          <End Role="Like" Type="Self.Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Like_User">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Like" Type="Self.Like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Like">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_ToUserProfile_Reciever">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="RecieverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_ToUserProfile_Sender">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -996,9 +908,69 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Post_Post">
+          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+          <End Role="Post1" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="Post1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Post_ToTable">
+          <End Role="Travel" Type="Self.Travel" Multiplicity="0..1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Travel">
+              <PropertyRef Name="TravelId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="TravelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Post_fk1">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Post_fk2">
+          <End Role="PostType" Type="Self.PostType" Multiplicity="1" />
+          <End Role="Post" Type="Self.Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostType">
+              <PropertyRef Name="PostTypeId" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PostFile_fk1">
+          <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="PostId" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Room_ToUserProfile">
-          <End Type="Model.UserProfile" Role="UserProfile" Multiplicity="0..1" />
-          <End Type="Model.Room" Role="Room" Multiplicity="*" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="Room" Type="Self.Room" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -1008,12 +980,140 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Travel_ToTable">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="Travel" Type="Self.Travel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Travel">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="security_UsersInRoles">
+          <End Role="security_Roles" Type="Self.security_Roles" Multiplicity="*" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ChatMembers" EntityType="Self.ChatMember" />
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Files" EntityType="Self.File" />
+          <EntitySet Name="FileTypes" EntityType="Self.FileType" />
+          <EntitySet Name="Followers" EntityType="Self.Follower" />
+          <EntitySet Name="GroupMessages" EntityType="Self.GroupMessage" />
+          <EntitySet Name="Likes" EntityType="Self.Like" />
+          <EntitySet Name="Messages" EntityType="Self.Message" />
+          <EntitySet Name="Posts" EntityType="Self.Post" />
+          <EntitySet Name="PostFiles" EntityType="Self.PostFile" />
+          <EntitySet Name="PostTypes" EntityType="Self.PostType" />
+          <EntitySet Name="Rooms" EntityType="Self.Room" />
+          <EntitySet Name="security_Membership" EntityType="Self.security_Membership" />
+          <EntitySet Name="security_OAuthMembership" EntityType="Self.security_OAuthMembership" />
+          <EntitySet Name="security_Roles" EntityType="Self.security_Roles" />
+          <EntitySet Name="Travels" EntityType="Self.Travel" />
+          <EntitySet Name="UserProfiles" EntityType="Self.UserProfile" />
+          <AssociationSet Name="FK_ChatMember_ToRoom" Association="Self.FK_ChatMember_ToRoom">
+            <End Role="Room" EntitySet="Rooms" />
+            <End Role="ChatMember" EntitySet="ChatMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMember_ToUserProfile" Association="Self.FK_ChatMember_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="ChatMember" EntitySet="ChatMembers" />
+          </AssociationSet>
+          <AssociationSet Name="Travel_fk2" Association="Self.Travel_fk2">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Travel" EntitySet="Travels" />
+          </AssociationSet>
+          <AssociationSet Name="File_fk1" Association="Self.File_fk1">
+            <End Role="FileType" EntitySet="FileTypes" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk2" Association="Self.PostFile_fk2">
+            <End Role="File" EntitySet="Files" />
+            <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk1" Association="Self.Follower_fk1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Follower" EntitySet="Followers" />
+          </AssociationSet>
+          <AssociationSet Name="Follower_fk2" Association="Self.Follower_fk2">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Follower" EntitySet="Followers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMessage_ToRoom" Association="Self.FK_GroupMessage_ToRoom">
+            <End Role="Room" EntitySet="Rooms" />
+            <End Role="GroupMessage" EntitySet="GroupMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupMessage_ToUserProfile" Association="Self.FK_GroupMessage_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="GroupMessage" EntitySet="GroupMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_Post" Association="Self.FK_Like_Post">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Like" EntitySet="Likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Like_User" Association="Self.FK_Like_User">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Like" EntitySet="Likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_ToUserProfile_Reciever" Association="Self.FK_Message_ToUserProfile_Reciever">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_ToUserProfile_Sender" Association="Self.FK_Message_ToUserProfile_Sender">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Post_Post" Association="Self.FK_Post_Post">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Post1" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Post_ToTable" Association="Self.FK_Post_ToTable">
+            <End Role="Travel" EntitySet="Travels" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk1" Association="Self.Post_fk1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="Post_fk2" Association="Self.Post_fk2">
+            <End Role="PostType" EntitySet="PostTypes" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="PostFile_fk1" Association="Self.PostFile_fk1">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Room_ToUserProfile" Association="Self.FK_Room_ToUserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Room" EntitySet="Rooms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Travel_ToTable" Association="Self.FK_Travel_ToTable">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Travel" EntitySet="Travels" />
+          </AssociationSet>
+          <AssociationSet Name="security_UsersInRoles" Association="Self.security_UsersInRoles">
+            <End Role="security_Roles" EntitySet="security_Roles" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="ChatMembers">
+            <EntityTypeMapping TypeName="Model.ChatMember">
+              <MappingFragment StoreEntitySet="ChatMember">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Countries">
             <EntityTypeMapping TypeName="Model.Country">
               <MappingFragment StoreEntitySet="Country">
@@ -1049,6 +1149,51 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="GroupMessages">
+            <EntityTypeMapping TypeName="Model.GroupMessage">
+              <MappingFragment StoreEntitySet="GroupMessage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Likes">
+            <EntityTypeMapping TypeName="Model.Like">
+              <MappingFragment StoreEntitySet="Like">
+                <ScalarProperty Name="LikeId" ColumnName="LikeId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="Model.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+                <ScalarProperty Name="RecieverId" ColumnName="RecieverId" />
+                <ScalarProperty Name="Message1" ColumnName="Message" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Posts">
+            <EntityTypeMapping TypeName="Model.Post">
+              <MappingFragment StoreEntitySet="Post">
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="TravelId" ColumnName="TravelId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="PostFiles">
             <EntityTypeMapping TypeName="Model.PostFile">
               <MappingFragment StoreEntitySet="PostFile">
@@ -1063,6 +1208,16 @@
               <MappingFragment StoreEntitySet="PostType">
                 <ScalarProperty Name="PostTypeId" ColumnName="PostTypeId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="Model.Room">
+              <MappingFragment StoreEntitySet="Room">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1103,21 +1258,21 @@
           <EntitySetMapping Name="Travels">
             <EntityTypeMapping TypeName="Model.Travel">
               <MappingFragment StoreEntitySet="Travel">
-                <ScalarProperty Name="CountryColor" ColumnName="CountryColor" />
                 <ScalarProperty Name="CountryId" ColumnName="CountryId" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="TravelId" ColumnName="TravelId" />
+                <ScalarProperty Name="CountryColor" ColumnName="CountryColor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="Model.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
@@ -1134,59 +1289,6 @@
               <ScalarProperty Name="UserId" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="Posts">
-            <EntityTypeMapping TypeName="Model.Post">
-              <MappingFragment StoreEntitySet="Post">
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="TravelId" ColumnName="TravelId" />
-                <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Likes">
-            <EntityTypeMapping TypeName="Model.Like">
-              <MappingFragment StoreEntitySet="Like">
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="LikeId" ColumnName="LikeId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ChatMembers">
-            <EntityTypeMapping TypeName="Model.ChatMember">
-              <MappingFragment StoreEntitySet="ChatMember">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Messages">
-            <EntityTypeMapping TypeName="Model.Message">
-              <MappingFragment StoreEntitySet="Message">
-                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
-                <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="Message1" ColumnName="Message" />
-                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Rooms">
-            <EntityTypeMapping TypeName="Model.Room">
-              <MappingFragment StoreEntitySet="Room">
-                <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
-                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1201,10 +1303,10 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

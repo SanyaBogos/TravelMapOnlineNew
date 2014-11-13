@@ -4,42 +4,45 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b770f1a45219436fa4b9e1b89f010075" Name="Diagram1" ZoomLevel="61">
-        <EntityTypeShape EntityType="Model.Country" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.File" Width="1.5" PointX="8.25" PointY="11.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.FileType" Width="1.5" PointX="6" PointY="11.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Follower" Width="1.5" PointX="5.25" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.PostFile" Width="1.5" PointX="10.5" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.PostType" Width="1.5" PointX="6" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.security_Membership" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.security_OAuthMembership" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.security_Roles" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Travel" Width="1.5" PointX="5.25" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.UserProfile" Width="1.5" PointX="3" PointY="4.375" IsExpanded="true" />
+      <Diagram DiagramId="1267062a700d42fea3edf6401f1b6eed" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.ChatMember" Width="1.5" PointX="7.5" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Country" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.File" Width="1.5" PointX="8.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.FileType" Width="1.5" PointX="6" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Follower" Width="1.5" PointX="5.25" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.GroupMessage" Width="1.5" PointX="7.5" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Like" Width="1.5" PointX="5.25" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Message" Width="1.5" PointX="5.25" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Post" Width="1.5" PointX="8.25" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PostFile" Width="1.5" PointX="10.5" PointY="13.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PostType" Width="1.5" PointX="6" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Room" Width="1.5" PointX="5.25" PointY="29.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.security_Membership" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.security_OAuthMembership" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.security_Roles" Width="1.5" PointX="0.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Travel" Width="1.5" PointX="5.25" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.UserProfile" Width="1.5" PointX="3" PointY="12.25" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK_ChatMember_ToRoom" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_ChatMember_ToUserProfile" ManuallyRouted="false" />
         <AssociationConnector Association="Model.Travel_fk2" ManuallyRouted="false" />
         <AssociationConnector Association="Model.File_fk1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.PostFile_fk2" ManuallyRouted="false" />
         <AssociationConnector Association="Model.Follower_fk1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.Follower_fk2" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_GroupMessage_ToRoom" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_GroupMessage_ToUserProfile" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Like_Post" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Like_User" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Message_ToUserProfile_Reciever" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Message_ToUserProfile_Sender" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Post_Post" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Post_ToTable" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Post_fk1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Post_fk2" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PostFile_fk1" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_Room_ToUserProfile" ManuallyRouted="false" />
         <AssociationConnector Association="Model.FK_Travel_ToTable" ManuallyRouted="false" />
         <AssociationConnector Association="Model.security_UsersInRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="Model.Post" Width="1.5" PointX="8.25" PointY="4" />
-        <AssociationConnector Association="Model.FK_Post_Post" />
-        <AssociationConnector Association="Model.FK_Post_ToTable" />
-        <AssociationConnector Association="Model.Post_fk1" />
-        <AssociationConnector Association="Model.Post_fk2" />
-        <AssociationConnector Association="Model.PostFile_fk1" />
-        <EntityTypeShape EntityType="Model.Like" Width="1.5" PointX="3.625" PointY="9" />
-        <AssociationConnector Association="Model.FK_Like_Post" />
-        <AssociationConnector Association="Model.FK_Like_User" />
-        <EntityTypeShape EntityType="Model.ChatMember" Width="1.5" PointX="10.5" PointY="9.5" />
-        <EntityTypeShape EntityType="Model.Message" Width="1.5" PointX="10.5" PointY="12.25" />
-        <EntityTypeShape EntityType="Model.Room" Width="1.5" PointX="5.25" PointY="14.125" />
-        <AssociationConnector Association="Model.FK_ChatMember_ToRoom" />
-        <AssociationConnector Association="Model.FK_ChatMember_ToUserProfile" />
-        <AssociationConnector Association="Model.FK_Message_ToRoom" />
-        <AssociationConnector Association="Model.FK_Message_ToUserProfile" />
-        <AssociationConnector Association="Model.FK_Room_ToUserProfile" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
