@@ -15,18 +15,32 @@ namespace TravelMap.Models
 using System;
     using System.Collections.Generic;
     
-public partial class Like
+public partial class Room
 {
 
-    public System.Guid LikeId { get; set; }
+    public Room()
+    {
 
-    public System.Guid UserId { get; set; }
+        this.ChatMembers = new HashSet<ChatMember>();
 
-    public System.Guid PostId { get; set; }
+        this.Messages = new HashSet<Message>();
+
+    }
+
+
+    public System.Guid Id { get; set; }
+
+    public string RoomName { get; set; }
+
+    public Nullable<System.Guid> CreatorId { get; set; }
+
+    public System.DateTime Time { get; set; }
 
 
 
-    public virtual Post Post { get; set; }
+    public virtual ICollection<ChatMember> ChatMembers { get; set; }
+
+    public virtual ICollection<Message> Messages { get; set; }
 
     public virtual UserProfile UserProfile { get; set; }
 

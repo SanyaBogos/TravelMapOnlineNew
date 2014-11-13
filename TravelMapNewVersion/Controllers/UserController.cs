@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using TravelMap.Models;
 using nonintanon.Security;
 using System.Drawing;
@@ -27,6 +28,12 @@ namespace TravelMap.Controllers
             }
             return View(userId);
         }
+        public byte[] imageToByteArray(System.Drawing.Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+            return ms.ToArray();
+        }
 
         public JsonResult JIndex(Guid id)
         {
@@ -35,6 +42,7 @@ namespace TravelMap.Controllers
             db.Configuration.ProxyCreationEnabled = false;
 
             var userProfile = db.UserProfiles.Find(id);
+
             if (userProfile == null)
             {
                 return new JsonResult();
@@ -50,7 +58,16 @@ namespace TravelMap.Controllers
             return WebSecurity.CurrentUserId;
         }
 
-        //
+        public ActionResult Profile(Guid? id)
+        {
+            if (id == null && WebSecurity.IsAuthenticated)
+            {
+                id = WebSecurity.CurrentUserId;
+            }
+            ViewBag.IsCurrentUser = (id == WebSecurity.CurrentUserId);
+            return View(id);
+        }
+
         public JsonResult SaveEmail(Guid id, string newEmail)
         {
             var userProfile = db.UserProfiles.Find(id);
@@ -247,7 +264,7 @@ namespace TravelMap.Controllers
             var serializableResult = new List<dynamic>();
             foreach (var travel in userTravels)
             {
-                serializableResult.Add(new 
+                serializableResult.Add(new
                 {
                     title = travel.Country.Title,
                     color = travel.CountryColor
@@ -382,9 +399,9 @@ namespace TravelMap.Controllers
             }
         }
 
-        public ActionResult Travels()
+        public ActionResult Travels(Guid userId)
         {
-            return View(WebSecurity.CurrentUserId);
+            return View(userId);
         }
 
         [HttpGet]

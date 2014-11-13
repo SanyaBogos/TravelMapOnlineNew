@@ -15,20 +15,24 @@ namespace TravelMap.Models
 using System;
     using System.Collections.Generic;
     
-public partial class Follower
+public partial class Message
 {
 
-    public System.Guid UserId { get; set; }
+    public System.Guid Id { get; set; }
 
-    public System.Guid FollowerId { get; set; }
+    public System.Guid SenderId { get; set; }
 
-    public System.Guid UserFollowerId { get; set; }
+    public string Message1 { get; set; }
+
+    public System.DateTime Time { get; set; }
+
+    public System.Guid RoomId { get; set; }
 
 
+
+    public virtual Room Room { get; set; }
 
     public virtual UserProfile UserProfile { get; set; }
-
-    public virtual UserProfile UserProfile1 { get; set; }
 
 }
 

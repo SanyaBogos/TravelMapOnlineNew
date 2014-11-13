@@ -65,6 +65,8 @@ namespace TravelMap.Controllers
         public ActionResult TravelReports(Guid travelId, string countryName = "")
         {
             ViewBag.CountryName = countryName;
+            ViewBag.IsCurrentUser = (db.Travels.First(travel => travel.TravelId == travelId).UserId ==
+                                     WebSecurity.CurrentUserId);
             return View(travelId);
         }
 

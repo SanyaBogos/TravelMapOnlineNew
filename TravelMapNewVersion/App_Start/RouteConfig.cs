@@ -8,6 +8,12 @@ namespace TravelMap
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+           
+            routes.MapRoute(
+                name: "Profile",
+                url: "User/{action}/{id}",
+                defaults: new { controller = "User", action = "Profile", id = UrlParameter.Optional }
+            ); 
 
             routes.MapRoute(
                 name: "Default",
