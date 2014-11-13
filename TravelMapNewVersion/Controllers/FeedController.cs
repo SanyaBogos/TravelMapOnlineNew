@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using DotNetOpenAuth.Messaging;
 using nonintanon.Security;
@@ -62,6 +63,7 @@ namespace TravelMap.Controllers
 			return result;
 		}
 
+		[HttpPost]
 		public JsonResult Like(Guid postId)
 		{
 			var userId = WebSecurity.CurrentUserId;
@@ -69,14 +71,14 @@ namespace TravelMap.Controllers
 			var like = db.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
 			if (like != null)
 			{
-				throw new Exception("post is already liked");
+				return Json(new JsonErrorResponse("post is already liked"), JsonRequestBehavior.AllowGet);
 			}
 			var newLikeId = Guid.NewGuid();
 			db.Likes.Add(new Like {UserId = userId, PostId = postId, LikeId = newLikeId});
 			var result = db.SaveChanges();
 			if (result != 1)
 			{
-				throw new Exception("DB was not saved :(");
+				return Json(new JsonErrorResponse("DB was not saved :("), JsonRequestBehavior.AllowGet);
 			}
 
 			// Get all OLD likes for current Post
@@ -91,6 +93,7 @@ namespace TravelMap.Controllers
 			return Json(likes, JsonRequestBehavior.AllowGet);
 		}
 
+		[HttpPost]
 		public JsonResult RemoveLike(Guid postId)
 		{
 			var userId = WebSecurity.CurrentUserId;
@@ -98,13 +101,14 @@ namespace TravelMap.Controllers
 			var like = db.Likes.FirstOrDefault(l => l.PostId == postId && l.UserId == userId);
 			if (like == null)
 			{
-				throw new Exception("like was not found :(");
+				Response.StatusCode = (int) HttpStatusCode.BadRequest;
+				return new JsonResult {Data = new JsonErrorResponse("like was not found"), JsonRequestBehavior = JsonRequestBehavior.AllowGet};
 			}
 			db.Likes.Remove(like);
 			var result = db.SaveChanges();
 			if (result != 1)
 			{
-				throw new Exception("DB was not saved :(");
+				return Json(new JsonErrorResponse("DB was not saved :("), JsonRequestBehavior.AllowGet);
 			}
 			var likes = db.Posts.First(p => p.PostId == postId)
 				.Likes.Select(l => new {l.LikeId, l.PostId, l.UserId, l.UserProfile.UserName});
