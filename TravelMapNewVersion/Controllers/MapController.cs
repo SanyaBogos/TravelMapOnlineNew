@@ -27,7 +27,7 @@ namespace TravelMap.Controllers
 
 
         [HttpPost]
-        public Guid SetTravel(string country, string start, string end)
+        public Guid SetTravel(string country, string start, string end, string color)
         {
             var countryId = db.Countries.First(c => c.Name == country).CountryId;
             var userId = WebSecurity.CurrentUserId;
@@ -38,7 +38,8 @@ namespace TravelMap.Controllers
                 UserId = userId,
                 //StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(start)),
                 //EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(end)),
-                TravelId = Guid.NewGuid()
+                TravelId = Guid.NewGuid(),
+                CountryColor = color!=null ? color : ""
             };
             if (start != null) travel.StartDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(start));
             if (end != null) travel.EndDate = (new DateTime(1970, 1, 1, 0, 0, 0, 0)).AddSeconds(long.Parse(end));
@@ -46,6 +47,13 @@ namespace TravelMap.Controllers
             db.SaveChanges();
             return travel.TravelId;
         }
+
+        //drop it if is not need!!!
+        public ActionResult Barada()
+        {
+            return View();
+        }
+
     }
 
 }

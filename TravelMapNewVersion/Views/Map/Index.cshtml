@@ -1,27 +1,39 @@
-﻿@*<script src="~/Scripts/Map/mapDecorator.js"></script>*@
-@section scripts{
+﻿@section scripts{
     <script src="~/Scripts/Map/anmap/ammap.js"></script>
     <script src="~/Scripts/Map/anmap/continentsLow.js"></script>
     <script src="~/Scripts/Map/anmap/worldLow.js"></script>
     <script src="~/Scripts/Map/mapDecorator.js"></script>
-    <script src="~/Scripts/angular.js"></script>
     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
-    <script src="~/Scripts/Map/popUp.js"></script>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/spectrum.js"></script>
+    <script src="~/Scripts/spectrumColorpicker.module.js"></script>
+    <script src="~/Scripts/spectrumColorpicker.directive.js"></script>
+    <script src="~/Scripts/Map/app.js"></script>
+
     <script src="~/Scripts/angular-sanitize.js"></script>
+    <script src="~/Scripts/Map/popUp.js"></script>
+
     <script src="~/Scripts/nicEdit.js" type="text/javascript"></script>
     <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
-
+    @*<script src="~/Scripts/spectrum.js"></script>
+        <script src="~/Scripts/spectrumColorpicker.module.js"></script>
+        <script src="~/Scripts/spectrumColorpicker.directive.js"></script>
+        <script src="~/Scripts/Map/app.js"></script>*@
 }
 
 @section styles{
+    <link href="~/Content/spectrum.css" rel="stylesheet" />
     <link href="~/Content/ammap.css" rel="stylesheet" />
     <link href="~/Content/style.css" rel="stylesheet" />
     <link href="~/Content/popUp.css" rel="stylesheet" />
 }
 
+
+
 <div ng-app="app" ng-controller="PopUpController">
+
+    
     <div id="mapdiv"></div>
-    <!--<div ng-show="currentCountry != null">-->
     <div class="b-popup" ng-show="currentCountry">
         <div class="b-popup-content">
             <h2>My travels to {{currentCountry}}</h2>
@@ -33,11 +45,10 @@
                         <div class="travel-time">
                             <div class="time-start">start: {{travel.start  | date:'yyyy-MM-dd'}}</div>
                             <div class="time-end">end: {{travel.end | date:'yyyy-MM-dd'}}</div>
-                        </div>
+                        </div>                        
                     </div>
-                    @*<div class="travel-body" ng-bind-html="travel.html">       *@
-                    <a class="travel-body" ng-href="/Post/TravelReports?travelId={{travel.id}}">   
-                        Reports                
+                    <a class="travel-body" ng-href="/Post/TravelReports?travelId={{travel.id}}">
+                        Reports
                     </a>
                     
                 </div>
@@ -47,28 +58,62 @@
                 <div class="input-time">
                     <div class="input-start">
                         <span class="date-text">(*)From</span>
-                        <input type="date" ng-model="travelCtrl.travel.start" class="date-input" required />                
+                        <input type="date" ng-model="travelCtrl.travel.start" class="date-input" required />
                     </div>
                     <div class="input-end">
                         <span class="date-text">(*)To</span>
-                        <input type="date" ng-model="travelCtrl.travel.end" class="date-input" required />                        
-                    </div>                    
-                </div>                
+                        <input type="date" ng-model="travelCtrl.travel.end" class="date-input" required />
+                    </div>
+                </div>
                 <h3>Optional report</h3>
                 <div class="form-report">
                     Title:
-                    <input type="text" ng-model="travelCtrl.travel.title" />                    
-                
-                    <textarea class="form-input" name="area1" ng-model="travelCtrl.travel.message"></textarea>               
+                    <input type="text" ng-model="travelCtrl.travel.title" />
+                    <spectrum-colorpicker trigger-id="theTrigger" format="'hex'"
+                                          ng-model="travelCtrl.travel.color"
+                                          options="{
+                           showInput: true,
+                           showAlpha: true,
+                           allowEmpty: true,
+                           showPalette: true,
+                           palette: [['black', 'white', 'blanchedalmond'],['rgb(255, 128, 0);', 'hsv 100 70 50', 'lightyellow']]
+                         }">
+                    </spectrum-colorpicker>
+                    {{travelCtrl.travel.color}}
+
+                    <textarea class="form-input" name="area1" ng-model="travelCtrl.travel.message"></textarea>
                 </div>
-                
-                
+
+
                 <input type="button" value="Cancel" ng-click="travelCtrl.clickCancel()" />
                 <input class="travel-submit" type="button" value="Submit" ng-click="travelCtrl.clickOK()" />
             </form>
 
         </div>
     </div>
-    @*</div>*@
-
 </div>
+
+
+@*<div ng-app="colorpickerApp" ng-controller="ColorPickerCtrl" ng-init="color = 'red'">
+        {{3+5}}
+        <h1 style="color: {{color}}">My Angular spectrum demo</h1>
+
+
+        <input type="text" name="color" ng-model="color">
+        <label id="theTrigger">Click here to open colorpicker</label>
+
+        <spectrum-colorpicker trigger-id="theTrigger"
+                              ng-model="color"
+                              options="{
+        showInput: true,
+        showAlpha: true,
+        allowEmpty: true,
+        showPalette: true,
+        palette: [['black', 'white', 'blanchedalmond'],['rgb(255, 128, 0);', 'hsv 100 70 50', 'lightyellow']]
+      }">
+        </spectrum-colorpicker>
+
+        <br>
+        <button ng-click="color='#ffffff'">set color to #ffffff</button>
+
+    </div>*@
