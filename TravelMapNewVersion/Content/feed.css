@@ -15,6 +15,9 @@
 .post-dates {
 	font-size: 14px;
 }
+.post-text {
+    word-wrap: break-word;
+}
 .heart {
 	position: absolute;
 	right: 0;

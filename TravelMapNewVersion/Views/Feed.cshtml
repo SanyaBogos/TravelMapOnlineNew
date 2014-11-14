@@ -27,7 +27,7 @@
 				<span class="post-dates">from {{post.StartDate | date:'yyyy-MMM-dd'}} to {{post.EndDate | date:'yyyy-MMM-dd'}}</span>
 			</header>
 			<span>{{post.Title}}</span>
-			<span>{{post.PostText}}</span>
+			<span class="post-text">{{post.PostText | limitTo : 300}}...</span>
 			@*<span>{{post.Likes}}</span>*@
 			<br />
 			<footer>
