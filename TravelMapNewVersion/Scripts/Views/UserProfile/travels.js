@@ -2,12 +2,19 @@
 
 app.controller("travelController", function ($scope, $http) {
 
-    
+
     $scope.travels = [];
 
     $scope.init = function (userId) {
         $scope.userId = userId;
-        console.log(userId);
+        $http.get('/User/GetUserTravels', {
+            params: { id: $scope.userId }
+        }).success(function (data, status, headers, config) {
+            $scope.travels.length = 0;
+            for (var i = 0; i < data.length ; i++) {
+                $scope.travels.push(data[i]);
+            }
+        });
         updateMap(userId);
     };
 
@@ -22,7 +29,7 @@ app.controller("travelController", function ($scope, $http) {
         });
     };
 
-    $scope.showReports = function(travel) {
+    $scope.showReports = function (travel) {
         console.log(travel);
     };
 
